@@ -33,8 +33,17 @@ public class MedflkApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (args.length == 0) {
-            log.info("Usage: java -jar medflk.jar filename.zip");
-            return;
+            log.info("Usage:");
+            log.info("java -jar medflk.jar filename.zip to check file");
+            log.info("java -jar medflk.jar update-nsi to update nsi");
+
+            System.exit(0);
+        }
+
+
+        if (args[0].equals("update-nsi")) {
+            nsiReaderService.downloadNsi();
+            System.exit(0);
         }
 
         String filename = args[0];
@@ -45,8 +54,6 @@ public class MedflkApplication implements CommandLineRunner {
             log.error("File not found: {}", filename);
             return;
         }
-
-        nsiReaderService.readNsi();
 
         AZlList zlList = null;
         APersList persList = null;

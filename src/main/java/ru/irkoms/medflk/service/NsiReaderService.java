@@ -1,12 +1,76 @@
 package ru.irkoms.medflk.service;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import static org.apache.commons.io.IOUtils.copy;
+
+@Log4j2
 @Service
+@RequiredArgsConstructor
 public class NsiReaderService {
 
-    public void readNsi() {
+    public static <T> T readNsi(Class<T> cls) throws Exception {
+        String nsi = cls.getSimpleName().replaceAll("Packet$", "");
+        try (ZipFile zf = new ZipFile("nsi/nsi.zip")) {
+            final Enumeration<? extends ZipEntry> entries = zf.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                String entryNsiName = entry.getName().replaceAll("\\.[A-Za-z]{3}$", "");
+                if (!entryNsiName.equals(nsi)) {
+                    continue;
+                }
 
+                Unmarshaller unmarshaller = JAXBContext.newInstance(cls).createUnmarshaller();
+                try (InputStream is = zf.getInputStream(entry)) {
+                    return cls.cast(unmarshaller.unmarshal(is));
+                }
+            }
+        } catch (IOException e) {
+            log.error("Error while reading ZIP: {}", e.getMessage());
+            throw e;
+        } catch (JAXBException | ClassCastException e) {
+            log.error("Error while reading XML: {}", e.getMessage());
+            throw e;
+        }
+
+        throw new Exception(cls.getSimpleName() + " not found!");
     }
 
+    public void downloadNsi() {
+        String uri = "http://nsi.ffoms.ru/fedPack?type=FULL";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .GET()
+                .build();
+
+        HttpClient client = HttpClient.newHttpClient();
+        try (
+                FileOutputStream out = new FileOutputStream("nsi/nsi.zip");
+        ) {
+            InputStream is = client
+                    .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
+                    .thenApply(HttpResponse::body).join();
+            copy(is, out, 1024);
+            log.info("nsi.zip downloaded");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 }

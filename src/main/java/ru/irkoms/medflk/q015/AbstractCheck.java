@@ -8,6 +8,10 @@ import java.util.List;
 
 public abstract class AbstractCheck {
 
+    public String getErrorMessage() {
+        return "";
+    }
+
     public abstract List<FlkP.Pr> check(AZlList zlList, APersList persList);
 
     List<FlkP.Pr> iterateOverZap(AZlList zlList, APersList persList, IFunctionOverZap func) {

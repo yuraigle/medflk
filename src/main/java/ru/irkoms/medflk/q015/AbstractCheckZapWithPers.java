@@ -8,6 +8,10 @@ import java.util.List;
 
 public abstract class AbstractCheckZapWithPers {
 
+    public String getErrorMessage() {
+        return "";
+    }
+
     public abstract List<FlkP.Pr> check(AZap zap, APers pers);
 
 }

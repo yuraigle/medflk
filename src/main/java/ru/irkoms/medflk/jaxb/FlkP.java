@@ -7,6 +7,8 @@ import ru.irkoms.medflk.jaxb.meta.APers;
 import ru.irkoms.medflk.jaxb.meta.ASl;
 import ru.irkoms.medflk.jaxb.meta.AUsl;
 import ru.irkoms.medflk.jaxb.meta.AZap;
+import ru.irkoms.medflk.q015.AbstractCheck;
+import ru.irkoms.medflk.q015.AbstractCheckZapWithPers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +119,13 @@ public class FlkP {
                 if (parts.size() > 1) {
                     this.basEl = parts.get(parts.size() - 2);
                 }
+            }
+
+            Object bean = q015.getBean();
+            if (bean instanceof AbstractCheck) {
+                this.comment = ((AbstractCheck) bean).getErrorMessage();
+            } else if (bean instanceof AbstractCheckZapWithPers) {
+                this.comment = ((AbstractCheckZapWithPers) bean).getErrorMessage();
             }
         }
     }

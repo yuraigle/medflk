@@ -1,0 +1,37 @@
+package ru.irkoms.medflk.q015;
+
+import org.springframework.stereotype.Component;
+import ru.irkoms.medflk.jaxb.FlkP;
+import ru.irkoms.medflk.jaxb.meta.AOnkSl;
+import ru.irkoms.medflk.jaxb.meta.APersList;
+import ru.irkoms.medflk.jaxb.meta.AZlList;
+
+import java.util.List;
+
+@Component
+public class Check_003F_00_1050 extends AbstractCheck {
+
+    @Override
+    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
+        return iterateOverSl(zlList, persList, check1());
+    }
+
+    private IFunctionOverSl check1() {
+        return (zlList, zap, sl) -> {
+            AOnkSl onkSl = sl.getOnkSl();
+            if (onkSl == null) return List.of();
+
+            boolean hasOnkUsl34 = false;
+            if (onkSl.getOnkUslList() != null) {
+                hasOnkUsl34 = onkSl.getOnkUslList().stream()
+                        .anyMatch(u -> u.getUslTip() != null && List.of(3, 4).contains(u.getUslTip()));
+            }
+
+            if (hasOnkUsl34 && onkSl.getKFr() == null) {
+                return List.of(new FlkP.Pr(zap, sl, null));
+            }
+
+            return List.of();
+        };
+    }
+}

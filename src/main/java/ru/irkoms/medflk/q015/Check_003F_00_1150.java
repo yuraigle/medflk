@@ -1,0 +1,30 @@
+package ru.irkoms.medflk.q015;
+
+import org.springframework.stereotype.Component;
+import ru.irkoms.medflk.jaxb.FlkP;
+import ru.irkoms.medflk.jaxb.meta.APersList;
+import ru.irkoms.medflk.jaxb.meta.AZlList;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@Component
+public class Check_003F_00_1150 extends AbstractCheck {
+
+    @Override
+    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
+        return iterateOverSl(zlList, persList, (a, zap, sl) -> {
+            if (sl.getKsgKpg() == null) return List.of();
+
+            boolean hasSlKoef = sl.getKsgKpg().getSlKoefList() != null
+                                && !sl.getKsgKpg().getSlKoefList().isEmpty();
+
+            BigDecimal itSl = sl.getKsgKpg().getItSl();
+            if (!hasSlKoef && itSl != null) {
+                return List.of(new FlkP.Pr(zap, sl, itSl));
+            }
+
+            return List.of();
+        });
+    }
+}

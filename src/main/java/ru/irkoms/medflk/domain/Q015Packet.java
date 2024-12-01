@@ -1,14 +1,13 @@
 package ru.irkoms.medflk.domain;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import ru.irkoms.medflk.jaxb.util.LocalDateRusAdapter;
 
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -49,8 +48,15 @@ public class Q015Packet {
 
             @XmlElement(name = "TYPE_D")
             private List<String> typeD;
-
         }
+
+        @Setter
+        @XmlTransient
+        private Object bean;
+
+        @Setter
+        @XmlTransient
+        private Method method;
     }
 
 }

@@ -6,10 +6,15 @@ import org.springframework.stereotype.Service;
 import ru.irkoms.medflk.domain.Q015Packet;
 import ru.irkoms.medflk.domain.Q015Service;
 import ru.irkoms.medflk.jaxb.FlkP;
+import ru.irkoms.medflk.jaxb.meta.APers;
 import ru.irkoms.medflk.jaxb.meta.APersList;
+import ru.irkoms.medflk.jaxb.meta.AZap;
 import ru.irkoms.medflk.jaxb.meta.AZlList;
+import ru.irkoms.medflk.q015.AbstractCheck;
+import ru.irkoms.medflk.q015.AbstractCheckZapWithPers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.right;
@@ -25,10 +30,74 @@ public class Q015ValidationService {
         String zlType = right(zlList.getClass().getSimpleName(), 1); // [CHTX]
 
         List<Q015Packet.Q015> q015List = new ArrayList<>();
-        q015List.addAll(q015Service.getTestsForType(zlType));
-        q015List.addAll(q015Service.getTestsForType("L"));
+        q015List.addAll(q015Service.getChecksForType(zlType));
+        q015List.addAll(q015Service.getChecksForType("L"));
 
-        return List.of();
+        List<FlkP.Pr> errors = new ArrayList<>();
+
+        // для этих тестов можно для каждого пробежать по всему дереву
+        for (Q015Packet.Q015 check : q015List) {
+            if (check.getBean() != null && check.getBean() instanceof AbstractCheck) {
+                errors.addAll(applyCheck(check, zlList, persList));
+            }
+        }
+
+        // для эти тестов надо находить персону из L-файла, делаем это 1 раз
+        for (AZap zap : zlList.getZapList()) {
+            APers pers = getPersById(persList, zap.getPacient().getIdPac());
+            if (pers == null) {
+                continue;
+            }
+
+            for (Q015Packet.Q015 check : q015List) {
+                if (check.getBean() != null && check.getBean() instanceof AbstractCheckZapWithPers) {
+                    errors.addAll(applyCheck(check, zap, pers));
+                }
+            }
+        }
+
+        return errors;
     }
 
+    private List<FlkP.Pr> applyCheck(Q015Packet.Q015 q015, Object a, Object b) {
+        long startedAt = System.nanoTime();
+        List<FlkP.Pr> errors = new ArrayList<>();
+
+        try {
+            Object result = q015.getMethod().invoke(q015.getBean(), a, b);
+            if (result != null) {
+                errors = castList(FlkP.Pr.class, (List<?>) result);
+                errors.forEach(e -> e.fillFromQ015(q015));
+            }
+        } catch (Exception e) {
+            log.error("Error while applying check {}: {}", q015.getIdTest(), e.getMessage());
+            e.printStackTrace();
+        }
+
+        long executionTimeMs = (System.nanoTime() - startedAt) / 1_000_000;
+        if (executionTimeMs > 100) {
+            log.warn("Check {} took too long: {}ms", q015.getIdTest(), executionTimeMs);
+        }
+
+        return errors;
+    }
+
+    public static APers getPersById(APersList persList, String idPac) {
+        return persList.getPersList().stream()
+                .filter(p -> p.getIdPac().equals(idPac))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static <T> List<T> castList(Class<? extends T> clazz, Collection<?> rawCollection) {
+        List<T> result = new ArrayList<>(rawCollection.size());
+        for (Object o : rawCollection) {
+            try {
+                result.add(clazz.cast(o));
+            } catch (ClassCastException e) {
+                log.error("Error while casting: {}", e.getMessage());
+            }
+        }
+        return result;
+    }
 }

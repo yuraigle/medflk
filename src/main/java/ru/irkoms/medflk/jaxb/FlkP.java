@@ -2,6 +2,7 @@ package ru.irkoms.medflk.jaxb;
 
 import jakarta.xml.bind.annotation.*;
 import lombok.*;
+import ru.irkoms.medflk.domain.Q015Packet;
 import ru.irkoms.medflk.jaxb.meta.APers;
 import ru.irkoms.medflk.jaxb.meta.ASl;
 import ru.irkoms.medflk.jaxb.meta.AUsl;
@@ -104,6 +105,19 @@ public class FlkP {
         public Pr(APers pers, Object value) {
             this.idPac = pers.getIdPac();
             this.znPol = value == null ? "" : value.toString();
+        }
+
+        public void fillFromQ015(Q015Packet.Q015 q015) {
+            this.oshib = q015.getIdTest();
+
+            // ZL_LIST/ZAP/Z_SL/SL/ONK_SL => (SL, ONK_SL)
+            if (q015.getIdEl() != null && q015.getIdEl().contains("/")) {
+                List<String> parts = List.of(q015.getIdEl().split("/"));
+                this.imPol = parts.get(parts.size() - 1);
+                if (parts.size() > 1) {
+                    this.basEl = parts.get(parts.size() - 2);
+                }
+            }
         }
     }
 }

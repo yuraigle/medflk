@@ -53,24 +53,28 @@ public class NsiReaderService {
     }
 
     public void downloadNsi() {
-        String uri = "http://nsi.ffoms.ru/fedPack?type=FULL";
+        downloadNsi("http://nsi.ffoms.ru/fedPack?type=FULL", "nsi/nsi.zip");
+        downloadNsi("http://nsi.ffoms.ru/refbook?type=XML&id=119", "nsi/f002.zip");
+        downloadNsi("http://nsi.ffoms.ru/refbook?type=XML&id=216", "nsi/f032.zip");
+    }
+
+    private void downloadNsi(String uri, String filename) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri))
-                .GET()
-                .build();
+                .uri(URI.create(uri)).GET().build();
 
         HttpClient client = HttpClient.newHttpClient();
         try (
-                FileOutputStream out = new FileOutputStream("nsi/nsi.zip");
+                FileOutputStream out = new FileOutputStream(filename);
         ) {
             InputStream is = client
                     .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
                     .thenApply(HttpResponse::body).join();
             copy(is, out, 1024);
-            log.info("nsi.zip downloaded");
+            log.info("{} updated", filename);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
+
 }

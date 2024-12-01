@@ -6,9 +6,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
-import ru.irkoms.medflk.jaxb.util.LocalDateAdapter;
 import ru.irkoms.medflk.jaxb.util.LocalDateRusAdapter;
 
 import java.time.LocalDate;

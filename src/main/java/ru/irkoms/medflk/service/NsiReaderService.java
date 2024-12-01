@@ -17,6 +17,7 @@ import java.net.http.HttpResponse;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.io.File;
 
 import static org.apache.commons.io.IOUtils.copy;
 
@@ -53,6 +54,11 @@ public class NsiReaderService {
     }
 
     public void downloadNsi() {
+        File nsiDir = new File("nsi");
+        if (!nsiDir.exists()) {
+            nsiDir.mkdir();
+        }
+
         downloadNsi("http://nsi.ffoms.ru/fedPack?type=FULL", "nsi/nsi.zip");
         downloadNsi("http://nsi.ffoms.ru/refbook?type=XML&id=119", "nsi/f002.zip");
         downloadNsi("http://nsi.ffoms.ru/refbook?type=XML&id=216", "nsi/f032.zip");

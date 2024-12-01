@@ -39,7 +39,7 @@ public class Q015Service {
         LocalDate d1 = LocalDate.now();
         return getChecks().stream()
                 .filter(q015 -> q015.getTypeMd().getTypeD().contains(type))
-                .filter(q015 -> q015.getDatebeg().isBefore(d1))
+                .filter(q015 -> !q015.getDatebeg().isAfter(d1))
                 .filter(q015 -> q015.getDateend() == null || q015.getDateend().isAfter(d1))
                 .toList();
     }

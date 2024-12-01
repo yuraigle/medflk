@@ -14,10 +14,10 @@ import ru.irkoms.medflk.q015.AbstractCheck;
 import ru.irkoms.medflk.q015.AbstractCheckZapWithPers;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.right;
+import static ru.irkoms.medflk.Utils.castList;
+import static ru.irkoms.medflk.Utils.getZlListMdType;
 
 @Log4j2
 @Service
@@ -27,7 +27,7 @@ public class Q015ValidationService {
     private final Q015Service q015Service;
 
     public List<FlkP.Pr> validate(AZlList zlList, APersList persList) {
-        String zlType = right(zlList.getClass().getSimpleName(), 1); // [CHTX]
+        String zlType = getZlListMdType(zlList);
 
         List<Q015Packet.Q015> q015List = new ArrayList<>();
         q015List.addAll(q015Service.getChecksForType(zlType));
@@ -42,7 +42,7 @@ public class Q015ValidationService {
             }
         }
 
-        // для эти тестов надо находить персону из L-файла, делаем это 1 раз
+        // для этих тестов надо находить персону из L-файла, делаем это 1 раз
         for (AZap zap : zlList.getZapList()) {
             APers pers = getPersById(persList, zap.getPacient().getIdPac());
             if (pers == null) {
@@ -81,22 +81,10 @@ public class Q015ValidationService {
         return errors;
     }
 
-    public static APers getPersById(APersList persList, String idPac) {
+    private APers getPersById(APersList persList, String idPac) {
         return persList.getPersList().stream()
                 .filter(p -> p.getIdPac().equals(idPac))
                 .findFirst()
                 .orElse(null);
-    }
-
-    public static <T> List<T> castList(Class<? extends T> clazz, Collection<?> rawCollection) {
-        List<T> result = new ArrayList<>(rawCollection.size());
-        for (Object o : rawCollection) {
-            try {
-                result.add(clazz.cast(o));
-            } catch (ClassCastException e) {
-                log.error("Error while casting: {}", e.getMessage());
-            }
-        }
-        return result;
     }
 }

@@ -1,10 +1,28 @@
 package ru.irkoms.medflk;
 
+import lombok.extern.log4j.Log4j2;
 import ru.irkoms.medflk.jaxb.meta.AZlList;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.right;
 
+@Log4j2
 public class Utils {
+
+    public static <T> List<T> castList(Class<? extends T> clazz, Collection<?> rawCollection) {
+        List<T> result = new ArrayList<>(rawCollection.size());
+        for (Object o : rawCollection) {
+            try {
+                result.add(clazz.cast(o));
+            } catch (ClassCastException e) {
+                log.error("Error while casting: {}", e.getMessage());
+            }
+        }
+        return result;
+    }
 
     public static String getZlListMdType(AZlList zlList) {
         return right(zlList.getClass().getSimpleName(), 1); // CHTX

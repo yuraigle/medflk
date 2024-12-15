@@ -10,8 +10,9 @@ import java.util.List;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Component
-public class Check_003F_00_0460 {
+public class Check_003F_00_0460 extends AbstractCheckZapWithPers {
 
+    @Override
     public List<FlkP.Pr> check(AZap zap, APers pers) {
         String novor = zap.getPacient().getNovor();
         String ot = pers.getOt();

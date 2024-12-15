@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class Check_003F_00_0340 {
+public class Check_003F_00_0340 extends AbstractCheckZapWithPers {
 
+    @Override
     public List<FlkP.Pr> check(AZap zap, APers pers) {
         if (pers == null || zap == null) return List.of();
 

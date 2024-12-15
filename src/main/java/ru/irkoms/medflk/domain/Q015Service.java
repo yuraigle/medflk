@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -42,6 +43,15 @@ public class Q015Service {
                 .filter(q015 -> !q015.getDatebeg().isAfter(d1))
                 .filter(q015 -> q015.getDateend() == null || q015.getDateend().isAfter(d1))
                 .toList();
+    }
+
+    public Optional<Q015Packet.Q015> getCheckById(String id) {
+        LocalDate d1 = LocalDate.now();
+        return getChecks().stream()
+                .filter(q015 -> q015.getIdTest().equals(id))
+                .filter(q015 -> !q015.getDatebeg().isAfter(d1))
+                .filter(q015 -> q015.getDateend() == null || q015.getDateend().isAfter(d1))
+                .findFirst();
     }
 
     private void fillFromNsi() {

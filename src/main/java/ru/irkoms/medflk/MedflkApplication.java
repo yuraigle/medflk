@@ -40,20 +40,18 @@ public class MedflkApplication implements CommandLineRunner {
             System.exit(0);
         }
 
-
         if (args[0].equals("update-nsi")) {
             nsiReaderService.downloadNsi();
             System.exit(0);
         }
 
-        String filename = args[0];
-        log.info("Processing file: {}", filename);
-
-        File zip = new File(filename);
+        File zip = new File(args[0]);
         if (!zip.exists()) {
-            log.error("File not found: {}", filename);
+            log.error("File not found: {}", zip.getName());
             return;
         }
+
+        log.info("Processing file: {} ({}Kb)", zip.getName(), zip.length() / 1024);
 
         AZlList zlList = null;
         APersList persList = null;
@@ -66,7 +64,7 @@ public class MedflkApplication implements CommandLineRunner {
         }
 
         if (zlList == null || persList == null) {
-            log.error("Error while reading file {}", filename);
+            log.error("Error while reading file {}", zip.getName());
             System.exit(1);
         }
 

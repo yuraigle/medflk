@@ -10,13 +10,14 @@ import java.util.List;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Component
-public class Check_003F_00_0480 {
+public class Check_003F_00_0480 extends AbstractCheckZapWithPers {
 
+    @Override
     public List<FlkP.Pr> check(AZap zap, APers pers) {
         String novor = zap.getPacient().getNovor();
         String ot = pers.getOt();
         boolean hasOsSlush = zap.getZSl().getOsSluchList() != null
-                             && !zap.getZSl().getOsSluchList().isEmpty();
+                && !zap.getZSl().getOsSluchList().isEmpty();
 
         if ("0".equals(novor) && !isBlank(ot) && hasOsSlush) {
             return List.of(new FlkP.Pr(zap, null, null));

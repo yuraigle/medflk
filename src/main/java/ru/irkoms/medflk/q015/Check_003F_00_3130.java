@@ -12,12 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class Check_003F_00_3130 {
+public class Check_003F_00_3130 extends AbstractCheckZapWithPers {
 
     // WEI Обязательно для заполнения с 01.01.2022, если в DS1 указано значение заболевания
     // (U07.1 или U07.2) и REAB <> 1 и CRIT <> STT5 и USL_OK = 1 и DS2 <> IN (O00-O99, Z34-Z35)
     // и возраст пациента на дату начала лечения больше или равно 18 лет
 
+    @Override
     public List<FlkP.Pr> check(AZap zap, APers pers) {
         List<FlkP.Pr> errors = new ArrayList<>();
 

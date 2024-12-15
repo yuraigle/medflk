@@ -14,10 +14,11 @@ import ru.irkoms.medflk.q015.AbstractCheck;
 import ru.irkoms.medflk.q015.AbstractCheckZapWithPers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static ru.irkoms.medflk.Utils.castList;
-import static ru.irkoms.medflk.Utils.getZlListMdType;
+import static ru.irkoms.medflk.Utils.*;
 
 @Log4j2
 @Service
@@ -25,6 +26,12 @@ import static ru.irkoms.medflk.Utils.getZlListMdType;
 public class Q015ValidationService {
 
     private final Q015Service q015Service;
+
+    private static final Map<String, APers> persCache = new HashMap<>();
+
+    public static APers getPersById(String idPac) {
+        return persCache.getOrDefault(idPac, null);
+    }
 
     public List<FlkP.Pr> validate(AZlList zlList, APersList persList) {
         String zlType = getZlListMdType(zlList);
@@ -35,24 +42,24 @@ public class Q015ValidationService {
 
         List<FlkP.Pr> errors = new ArrayList<>();
 
-        // для этих тестов можно для каждого пробежать по всему дереву
-        for (Q015Packet.Q015 check : q015List) {
-            if (check.getBean() != null && check.getBean() instanceof AbstractCheck) {
-                errors.addAll(applyCheck(check, zlList, persList));
+        persCache.clear();
+        for (AZap zap : zlList.getZapList()) {
+            APers pers = persList.getPersList().stream()
+                    .filter(p -> p.getIdPac().equals(zap.getPacient().getIdPac()))
+                    .findFirst()
+                    .orElse(null);
+            persCache.put(zap.getPacient().getIdPac(), pers);
+
+            if (pers == null) {
+                FlkP.Pr persNotFound = new FlkP.Pr(zap, null, null);
+                q015Service.getCheckById("003F.00.3070").ifPresent(persNotFound::fillFromQ015);
+                errors.add(persNotFound);
             }
         }
 
-        // для этих тестов надо находить персону из L-файла, делаем это 1 раз
-        for (AZap zap : zlList.getZapList()) {
-            APers pers = getPersById(persList, zap.getPacient().getIdPac());
-            if (pers == null) {
-                continue;
-            }
-
-            for (Q015Packet.Q015 check : q015List) {
-                if (check.getBean() != null && check.getBean() instanceof AbstractCheckZapWithPers) {
-                    errors.addAll(applyCheck(check, zap, pers));
-                }
+        for (Q015Packet.Q015 check : q015List) {
+            if (check.getBean() != null && check.getBean() instanceof AbstractCheck) {
+                errors.addAll(applyCheck(check, zlList, persList));
             }
         }
 
@@ -79,12 +86,5 @@ public class Q015ValidationService {
         }
 
         return errors;
-    }
-
-    private APers getPersById(APersList persList, String idPac) {
-        return persList.getPersList().stream()
-                .filter(p -> p.getIdPac().equals(idPac))
-                .findFirst()
-                .orElse(null);
     }
 }

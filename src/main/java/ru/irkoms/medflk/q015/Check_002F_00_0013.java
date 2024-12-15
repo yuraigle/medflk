@@ -13,6 +13,11 @@ import static org.apache.commons.lang3.StringUtils.right;
 public class Check_002F_00_0013 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Версия файла должна быть 4.0";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
         String version = zlList.getZglv().getVersion();
         String typeMd = right(zlList.getClass().getSimpleName(), 1);

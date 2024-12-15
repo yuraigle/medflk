@@ -3,34 +3,46 @@ package ru.irkoms.medflk.q015;
 import org.springframework.stereotype.Component;
 import ru.irkoms.medflk.jaxb.FlkP;
 import ru.irkoms.medflk.jaxb.meta.APers;
-import ru.irkoms.medflk.jaxb.meta.AZap;
+import ru.irkoms.medflk.jaxb.meta.APersList;
+import ru.irkoms.medflk.jaxb.meta.AZlList;
 
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static ru.irkoms.medflk.service.Q015ValidationService.getPersById;
 
 @Component
-public class Check_003F_00_0460 extends AbstractCheckZapWithPers {
+public class Check_003F_00_0460 extends AbstractCheck {
 
     @Override
-    public List<FlkP.Pr> check(AZap zap, APers pers) {
-        String novor = zap.getPacient().getNovor();
-        String ot = pers.getOt();
-        boolean hasOsSlush = zap.getZSl().getOsSluchList() != null
-                             && !zap.getZSl().getOsSluchList().isEmpty();
+    public String getErrorMessage() {
+        return "Признак особого случая не заполнен";
+    }
 
-        // (PERS.OT отсутствует и NOVOR=0)
-        // или (PERS.OT_P отсутствует и NOVOR<>0)
-        // или (NOVOR<>0 и последний символ NOVOR не равен 1)
+    @Override
+    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
 
-        if ("0".equals(novor) && isBlank(ot) && !hasOsSlush) {
-            return List.of(new FlkP.Pr(zap, null, null));
-        } else if (!"0".equals(novor) && isBlank(pers.getOtP()) && !hasOsSlush) {
-            return List.of(new FlkP.Pr(zap, null, null));
-        } else if (!"0".equals(novor) && !novor.endsWith("1") && !hasOsSlush) {
-            return List.of(new FlkP.Pr(zap, null, null));
-        }
+        return iterateOverZap(zlList, persList, (a, zap) -> {
+            APers pers = getPersById(zap.getPacient().getIdPac());
 
-        return List.of();
+            String novor = zap.getPacient().getNovor();
+            String ot = pers.getOt();
+            boolean hasOsSlush = zap.getZSl().getOsSluchList() != null
+                    && !zap.getZSl().getOsSluchList().isEmpty();
+
+            // (PERS.OT отсутствует и NOVOR=0)
+            // или (PERS.OT_P отсутствует и NOVOR<>0)
+            // или (NOVOR<>0 и последний символ NOVOR не равен 1)
+
+            if ("0".equals(novor) && isBlank(ot) && !hasOsSlush) {
+                return List.of(new FlkP.Pr(zap, null, null));
+            } else if (!"0".equals(novor) && isBlank(pers.getOtP()) && !hasOsSlush) {
+                return List.of(new FlkP.Pr(zap, null, null));
+            } else if (!"0".equals(novor) && !novor.endsWith("1") && !hasOsSlush) {
+                return List.of(new FlkP.Pr(zap, null, null));
+            }
+
+            return List.of();
+        });
     }
 }

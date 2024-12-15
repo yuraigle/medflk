@@ -15,11 +15,16 @@ import static ru.irkoms.medflk.service.Q015ValidationService.getPersById;
 public class Check_003F_00_0330 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Дата выдачи документа не заполнена для полиса типа <>3";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
 
         return iterateOverZap(zlList, persList, (a, zap) -> {
-            Integer vPolis = zap.getPacient().getVpolis();
             APers pers = getPersById(zap.getPacient().getIdPac());
+            Integer vPolis = zap.getPacient().getVpolis();
 
             if (!Objects.equals(3, vPolis) && pers.getDocDate() == null) {
                 return List.of(new FlkP.Pr(zap, null, null));

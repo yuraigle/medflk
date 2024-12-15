@@ -10,7 +10,6 @@ import ru.irkoms.medflk.jaxb.meta.APersList;
 import ru.irkoms.medflk.jaxb.meta.AZap;
 import ru.irkoms.medflk.jaxb.meta.AZlList;
 import ru.irkoms.medflk.q015.AbstractCheck;
-import ru.irkoms.medflk.q015.AbstractCheckZapWithPers;
 import ru.irkoms.medflk.service.NsiReaderService;
 
 import java.time.LocalDate;
@@ -80,8 +79,6 @@ public class Q015Service {
                 check.setBean(bean);
                 if (bean instanceof AbstractCheck) {
                     check.setMethod(ReflectionUtils.findMethod(bean.getClass(), "check", AZlList.class, APersList.class));
-                } else if (bean instanceof AbstractCheckZapWithPers) {
-                    check.setMethod(ReflectionUtils.findMethod(bean.getClass(), "check", AZap.class, APers.class));
                 }
             }
         }

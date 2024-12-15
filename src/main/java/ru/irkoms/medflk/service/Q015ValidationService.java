@@ -11,7 +11,6 @@ import ru.irkoms.medflk.jaxb.meta.APersList;
 import ru.irkoms.medflk.jaxb.meta.AZap;
 import ru.irkoms.medflk.jaxb.meta.AZlList;
 import ru.irkoms.medflk.q015.AbstractCheck;
-import ru.irkoms.medflk.q015.AbstractCheckZapWithPers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,12 +48,6 @@ public class Q015ValidationService {
                     .findFirst()
                     .orElse(null);
             persCache.put(zap.getPacient().getIdPac(), pers);
-
-            if (pers == null) {
-                FlkP.Pr persNotFound = new FlkP.Pr(zap, null, null);
-                q015Service.getCheckById("003F.00.3070").ifPresent(persNotFound::fillFromQ015);
-                errors.add(persNotFound);
-            }
         }
 
         for (Q015Packet.Q015 check : q015List) {

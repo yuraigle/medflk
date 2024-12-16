@@ -17,7 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ru.irkoms.medflk.Utils.*;
+import static ru.irkoms.medflk.Utils.castList;
+import static ru.irkoms.medflk.Utils.getZlListMdType;
 
 @Log4j2
 @Service
@@ -39,8 +40,6 @@ public class Q015ValidationService {
         q015List.addAll(q015Service.getChecksForType(zlType));
         q015List.addAll(q015Service.getChecksForType("L"));
 
-        List<FlkP.Pr> errors = new ArrayList<>();
-
         persCache.clear();
         for (AZap zap : zlList.getZapList()) {
             APers pers = persList.getPersList().stream()
@@ -50,11 +49,15 @@ public class Q015ValidationService {
             persCache.put(zap.getPacient().getIdPac(), pers);
         }
 
+        List<FlkP.Pr> errors = new ArrayList<>();
+        int cntActiveChecks = 0;
         for (Q015Packet.Q015 check : q015List) {
             if (check.getBean() != null && check.getBean() instanceof AbstractCheck) {
+                cntActiveChecks++;
                 errors.addAll(applyCheck(check, zlList, persList));
             }
         }
+        log.info("{} / {} checks applied", cntActiveChecks, q015List.size());
 
         return errors;
     }

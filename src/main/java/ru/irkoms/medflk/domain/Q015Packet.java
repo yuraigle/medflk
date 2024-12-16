@@ -4,7 +4,6 @@ import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import ru.irkoms.medflk.jaxb.util.LocalDateRusAdapter;
 
 import java.lang.reflect.Method;
@@ -17,10 +16,9 @@ import java.util.List;
 public class Q015Packet {
 
     @XmlElement(name = "zap")
-    private List<Q015> q015List;
+    private List<Q015> zapList;
 
     @Getter
-    @ToString
     @XmlAccessorType(XmlAccessType.NONE)
     public static class Q015 {
 
@@ -42,7 +40,6 @@ public class Q015Packet {
         private LocalDate dateend;
 
         @Getter
-        @ToString
         @XmlAccessorType(XmlAccessType.NONE)
         public static class TypeMd {
 

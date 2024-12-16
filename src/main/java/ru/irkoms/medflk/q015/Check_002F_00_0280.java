@@ -11,6 +11,11 @@ import java.util.List;
 public class Check_002F_00_0280 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Признак диспансерного наблюдения DN должен быть 1, 2, 4 или 6";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
         return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             Integer dn = sl.getDn();

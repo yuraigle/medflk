@@ -11,6 +11,11 @@ import java.util.List;
 public class Check_002F_00_0050 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Версия файла L должна быть 3.2";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
         String version = persList.getZglv().getVersion();
 

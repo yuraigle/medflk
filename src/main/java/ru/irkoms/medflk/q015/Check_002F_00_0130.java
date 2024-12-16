@@ -13,6 +13,11 @@ import java.util.List;
 public class Check_002F_00_0130 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Признак новорожденного NOVOR должен быть 0 или ПДДММГГН";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
             if (zap.getPacient() == null) return List.of();

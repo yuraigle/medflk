@@ -11,6 +11,11 @@ import java.util.List;
 public class Check_002F_00_0460 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Версия КСГ VER_KSG должна быть равна году счета";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
         Integer yr = zlList.getSchet().getYear();
         if (yr == null) return List.of();

@@ -14,7 +14,7 @@ public class Check_002F_00_0013 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Версия файла должна быть 4.0";
+        return "Версия файла C,H должна быть 4.0";
     }
 
     @Override

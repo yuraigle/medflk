@@ -5,13 +5,12 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
-import ru.irkoms.medflk.jaxb.meta.APers;
 import ru.irkoms.medflk.jaxb.meta.APersList;
-import ru.irkoms.medflk.jaxb.meta.AZap;
 import ru.irkoms.medflk.jaxb.meta.AZlList;
 import ru.irkoms.medflk.q015.AbstractCheck;
 import ru.irkoms.medflk.service.NsiReaderService;
 
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,7 +54,7 @@ public class Q015Service {
 
     private void fillFromNsi() {
         try {
-            Q015Packet packet = NsiReaderService.readNsi(Q015Packet.class);
+            Q015Packet packet = NsiReaderService.readNsi(Q015Packet.class, "nsi/Q015.ZIP");
             q015List.addAll(packet.getQ015List());
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -78,7 +77,9 @@ public class Q015Service {
 
                 check.setBean(bean);
                 if (bean instanceof AbstractCheck) {
-                    check.setMethod(ReflectionUtils.findMethod(bean.getClass(), "check", AZlList.class, APersList.class));
+                    Method method = ReflectionUtils.findMethod(bean.getClass(), "check",
+                            AZlList.class, APersList.class);
+                    check.setMethod(method);
                 }
             }
         }

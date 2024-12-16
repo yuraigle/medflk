@@ -8,10 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ru.irkoms.medflk.jaxb.FlkP;
 import ru.irkoms.medflk.jaxb.meta.APersList;
 import ru.irkoms.medflk.jaxb.meta.AZlList;
-import ru.irkoms.medflk.service.NsiReaderService;
-import ru.irkoms.medflk.service.Q015ValidationService;
-import ru.irkoms.medflk.service.RegistryReaderService;
-import ru.irkoms.medflk.service.SchemaValidationService;
+import ru.irkoms.medflk.service.*;
 
 import java.io.File;
 import java.util.List;
@@ -21,7 +18,7 @@ import java.util.List;
 @SpringBootApplication
 public class MedflkApplication implements CommandLineRunner {
 
-    private final NsiReaderService nsiReaderService;
+    private final NsiDownloaderService nsiDownloaderService;
     private final RegistryReaderService registryReaderService;
     private final SchemaValidationService schemaValidationService;
     private final Q015ValidationService q015ValidationService;
@@ -41,7 +38,7 @@ public class MedflkApplication implements CommandLineRunner {
         }
 
         if (args[0].equals("update-nsi")) {
-            nsiReaderService.downloadNsi();
+            nsiDownloaderService.updateAll();
             System.exit(0);
         }
 

@@ -14,6 +14,11 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class Check_003F_00_0401 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Код направляющей МО обязателен при указании даты направления";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
             String nprMo = zap.getZSl().getNprMo();

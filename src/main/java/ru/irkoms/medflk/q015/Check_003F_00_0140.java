@@ -15,13 +15,17 @@ import static org.apache.commons.lang3.StringUtils.right;
 public class Check_003F_00_0140 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "ОКАТО территории страхования должен быть заполнен, если не указана СМО";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
         String typeMd = right(zlList.getClass().getSimpleName(), 1);
         if ("H".equals(typeMd)) return List.of(); // в версии 4.0 поля нет по Q018
 
         return iterateOverZap(zlList, persList, (a, zap) -> {
             APacient pac = zap.getPacient();
-            // если SMO отсутствует, SMO_OK должен быть задан
             if (isBlank(pac.getSmo()) && isBlank(pac.getSmoOk())) {
                 return List.of(new FlkP.Pr(zap, null, null));
             }

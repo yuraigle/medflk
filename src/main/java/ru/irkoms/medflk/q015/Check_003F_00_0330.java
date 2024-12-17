@@ -16,7 +16,7 @@ public class Check_003F_00_0330 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Дата выдачи документа не заполнена для полиса типа <>3";
+        return "Дата выдачи документа не заполнена для полиса отличного от ПЕО";
     }
 
     @Override

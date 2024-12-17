@@ -11,12 +11,13 @@ import java.util.List;
 public class Check_003F_00_0440 extends AbstractCheck {
 
     @Override
-    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
-        return iterateOverZap(zlList, persList, check1());
+    public String getErrorMessage() {
+        return "Количество кайко-дней должно отсутствовать при помощи в АПУ, СМП";
     }
 
-    private IFunctionOverZap check1() {
-        return (zlList, zap) -> {
+    @Override
+    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
+        return iterateOverZap(zlList, persList, (a, zap) -> {
             Integer kdZ = zap.getZSl().getKdZ();
             Integer uslOk = zap.getZSl().getUslOk();
 
@@ -25,6 +26,6 @@ public class Check_003F_00_0440 extends AbstractCheck {
             }
 
             return List.of();
-        };
+        });
     }
 }

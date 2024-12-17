@@ -12,6 +12,11 @@ import java.util.List;
 public class Check_003F_00_0410 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Дата направления обязательна для ДС или плановой помощи в КС";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
             Integer forPom = zap.getZSl().getForPom();

@@ -17,7 +17,7 @@ public class Check_003F_00_0340 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Орган выдавший документ не заполнен для полиса типа <>3";
+        return "Орган выдавший документ не заполнен для полиса отличного от ПЕО";
     }
 
     @Override

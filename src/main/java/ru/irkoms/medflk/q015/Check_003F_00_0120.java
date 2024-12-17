@@ -13,10 +13,14 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class Check_003F_00_0120 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "СМО должна быть заполнена при указании плательщика";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
         if (isBlank(zlList.getSchet().getPlat())) return List.of();
 
-        // если указан плательщик, то SMO должен быть заполнен
         return iterateOverZap(zlList, persList, (a, zap) -> {
             if (zap.getPacient().getSmo() == null) {
                 return List.of(new FlkP.Pr(zap, null, null));

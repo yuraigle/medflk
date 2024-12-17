@@ -12,12 +12,13 @@ import java.util.Objects;
 public class Check_003F_00_0500 extends AbstractCheck {
 
     @Override
-    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
-        return iterateOverZap(zlList, persList, check1());
+    public String getErrorMessage() {
+        return "Признак внутрибольничного перевода должен присутствовать при P_PER=4";
     }
 
-    private IFunctionOverZap check1() {
-        return (zlList, zap) -> {
+    @Override
+    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
+        return iterateOverZap(zlList, persList, (a, zap) -> {
             Integer vbP = zap.getZSl().getVbP();
             Integer idsp = zap.getZSl().getIdsp();
             boolean hasPper4 = zap.getZSl().getSlList().stream()
@@ -28,6 +29,6 @@ public class Check_003F_00_0500 extends AbstractCheck {
             }
 
             return List.of();
-        };
+        });
     }
 }

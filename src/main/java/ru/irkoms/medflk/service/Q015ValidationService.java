@@ -12,10 +12,7 @@ import ru.irkoms.medflk.jaxb.meta.AZap;
 import ru.irkoms.medflk.jaxb.meta.AZlList;
 import ru.irkoms.medflk.q015.AbstractCheck;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ru.irkoms.medflk.Utils.castList;
 import static ru.irkoms.medflk.Utils.getZlListMdType;
@@ -39,6 +36,7 @@ public class Q015ValidationService {
         List<Q015Packet.Q015> q015List = new ArrayList<>();
         q015List.addAll(q015Service.getChecksForType(zlType));
         q015List.addAll(q015Service.getChecksForType("L"));
+        q015List.sort(Comparator.comparing(Q015Packet.Q015::getIdTest));
 
         persCache.clear();
         for (AZap zap : zlList.getZapList()) {

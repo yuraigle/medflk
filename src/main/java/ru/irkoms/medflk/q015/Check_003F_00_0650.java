@@ -11,6 +11,11 @@ import java.util.List;
 public class Check_003F_00_0650 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Профиль койки задан для случая не стационара";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
         return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             Integer profilK = sl.getProfilK();

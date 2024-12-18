@@ -11,6 +11,11 @@ import java.util.List;
 public class Check_003F_00_0810 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Сведения о КСГ/КПГ заполнены при способе оплаты не 33";
+    }
+
+    @Override
     public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
         return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             Integer idsp = zap.getZSl().getIdsp();

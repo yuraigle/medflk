@@ -28,8 +28,8 @@ public class Check_003F_00_0990 extends AbstractCheck {
             @NonNull APers pers = getPersById(zap.getPacient().getIdPac());
             @NonNull LocalDate dr = pers.getDr();
             @NonNull LocalDate d1 = zap.getZSl().getDateZ1();
-            int age = Period.between(dr, d1).getYears();
 
+            int age = Period.between(dr, d1).getYears();
             Integer ds1T = sl.getOnkSl().getDs1T();
             Integer onkT = sl.getOnkSl().getOnkT();
 

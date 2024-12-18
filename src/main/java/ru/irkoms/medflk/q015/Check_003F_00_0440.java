@@ -12,7 +12,7 @@ public class Check_003F_00_0440 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Количество кайко-дней должно отсутствовать при помощи в АПУ, СМП";
+        return "Количество койко-дней должно отсутствовать при помощи не в стационаре";
     }
 
     @Override

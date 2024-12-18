@@ -1,6 +1,7 @@
 package ru.irkoms.medflk.domain;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class Q015Service {
@@ -62,7 +64,7 @@ public class Q015Service {
     private void attachCheckerBeans() {
         List<Object> allCheckers = new ArrayList<>();
         Arrays.stream(ctx.getBeanDefinitionNames())
-                .filter(s -> s.contains("check_"))
+                .filter(s -> s.toLowerCase().contains("check_"))
                 .forEach(s -> allCheckers.add(ctx.getBean(s)));
 
         for (Object bean : allCheckers) {
@@ -75,7 +77,6 @@ public class Q015Service {
                     if (bean.getClass().getSimpleName().equals(checkId)) {
                         check.setBean(bean);
                         check.setMethod(method);
-                        break;
                     }
                 }
             }

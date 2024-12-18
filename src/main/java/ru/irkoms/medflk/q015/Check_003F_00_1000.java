@@ -1,30 +1,34 @@
 package ru.irkoms.medflk.q015;
 
+import lombok.NonNull;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import ru.irkoms.medflk.jaxb.FlkP;
 import ru.irkoms.medflk.jaxb.meta.APers;
-import ru.irkoms.medflk.jaxb.meta.ASl;
-import ru.irkoms.medflk.jaxb.meta.AZap;
+import ru.irkoms.medflk.jaxb.meta.APersList;
+import ru.irkoms.medflk.jaxb.meta.AZlList;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
+import static ru.irkoms.medflk.service.Q015ValidationService.getPersById;
+
 @Component
-public class Check_003F_00_1000 {
+public class Check_003F_00_1000 extends AbstractCheck {
 
-    public List<FlkP.Pr> check(AZap zap, APers pers) {
-        Assert.notNull(pers, "PERS must not be null");
+    @Override
+    public String getErrorMessage() {
+        return "Значение Nodus должно быть заполнено при DS1_T=0 и возрасте >18";
+    }
 
-        LocalDate dr = pers.getDr();
-        LocalDate d1 = zap.getZSl().getDateZ1();
-        if (dr == null || d1 == null) return List.of();
-        int age = Period.between(dr, d1).getYears();
+    @Override
+    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
+        return iterateOverOnkSl(zlList, persList, (a, zap, sl, onkSl) -> {
+            @NonNull APers pers = getPersById(zap.getPacient().getIdPac());
+            @NonNull LocalDate dr = pers.getDr();
+            @NonNull LocalDate d1 = zap.getZSl().getDateZ1();
 
-        for (ASl sl : zap.getZSl().getSlList()) {
-            if (sl.getOnkSl() == null) continue;
-
+            int age = Period.between(dr, d1).getYears();
             Integer ds1T = sl.getOnkSl().getDs1T();
             Integer onkN = sl.getOnkSl().getOnkN();
 
@@ -32,8 +36,8 @@ public class Check_003F_00_1000 {
             if (ds1T == 0 && age >= 18 && onkN == null) {
                 return List.of(new FlkP.Pr(zap, sl, null));
             }
-        }
 
-        return List.of();
+            return List.of();
+        });
     }
 }

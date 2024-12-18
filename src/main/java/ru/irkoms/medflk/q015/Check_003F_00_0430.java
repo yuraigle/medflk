@@ -12,7 +12,7 @@ public class Check_003F_00_0430 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Количество койко-дней обязательно для КС, ДС";
+        return "Количество койко-дней не заполнено в законченном случае стационарной помощи";
     }
 
     @Override

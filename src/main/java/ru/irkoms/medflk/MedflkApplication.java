@@ -18,6 +18,7 @@ import java.util.List;
 @SpringBootApplication
 public class MedflkApplication implements CommandLineRunner {
 
+    private final NsiReaderService nsiReaderService;
     private final NsiDownloaderService nsiDownloaderService;
     private final RegistryReaderService registryReaderService;
     private final SchemaValidationService schemaValidationService;
@@ -48,11 +49,11 @@ public class MedflkApplication implements CommandLineRunner {
             return;
         }
 
+        nsiReaderService.readAll();
         log.info("Processing file: {} ({}Kb)", zip.getName(), zip.length() / 1024);
 
         AZlList zlList = null;
         APersList persList = null;
-
         try {
             zlList = registryReaderService.parseZlList(zip);
             persList = registryReaderService.parsePersList(zip);

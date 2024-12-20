@@ -7,15 +7,15 @@ import java.time.LocalDate;
 
 @Setter
 @Service
-public class F011Service {
+public class V008Service {
 
-    private F011Packet packet;
+    private V008Packet packet;
 
-    public boolean isValidIdDocOnDate(Integer idDoc, LocalDate d1) {
+    public boolean isValidVidPomOnDate(Integer vidPom, LocalDate d1) {
         return packet.getZapList().stream()
                 .filter(o -> !o.getDatebeg().isAfter(d1))
                 .filter(o -> o.getDateend() == null || !o.getDateend().isBefore(d1))
-                .anyMatch(o -> o.getIdDoc().equals(idDoc));
+                .anyMatch(o -> o.getIdvmp().equals(vidPom));
     }
 
 }

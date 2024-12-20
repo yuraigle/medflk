@@ -31,7 +31,11 @@ public class NsiDownloaderService {
             throw new RuntimeException("Can't create directory: " + nsiDir.getAbsolutePath());
         }
 
-        List<String> packets = List.of("F002", "F011", "F032", "Q015");
+        List<String> packets = List.of("F002", "F011", "F032", "Q015", "V002",
+                "V006", "V008", "V009", "V010", "V012", "V014", "V015", "V016", "V017",
+                "V018", "V020", "V021", "V024", "V025", "V026", "V027", "V028"
+        );
+
         for (String packet : packets) {
             downloadFfomsNsi(packet, "nsi/" + packet + ".ZIP");
         }

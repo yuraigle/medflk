@@ -24,6 +24,7 @@ public class Q015ValidationService {
 
     private final Q015Service q015Service;
 
+    // все персоны из L-файла уходят в кэш для ускорения поиска по ним
     private static final Map<String, APers> persCache = new HashMap<>();
 
     public static APers getPersById(String idPac) {

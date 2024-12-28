@@ -41,7 +41,7 @@ public class RegistryReaderService {
 
     public APersList parsePersList(File zip) throws Exception {
         try {
-            return parseList(zip, PersListL32.class);
+            return parseList(zip, PersList.class);
         } catch (Exception e) {
             log.warn(e.getMessage());
             throw new Exception("XML/ZIP не читается");
@@ -81,8 +81,8 @@ public class RegistryReaderService {
         Pattern pattern1 = Pattern.compile("^HM\\d{5}[HPS]\\d{6}\\w{1,8}\\.ZIP$");
 
         // федеральный стандарт именования
-        Pattern pattern2 = Pattern.compile("^[HCT]M\\d{6}[ST]\\d{5}_\\d+\\.ZIP$");
-        Pattern pattern3 = Pattern.compile("^D[A-Z]M\\d{6}[ST]\\d{5}_\\d+\\.ZIP$");
+        Pattern pattern2 = Pattern.compile("^[HCT]M\\d{6}[ST]\\d{2,5}_\\d+\\.ZIP$");
+        Pattern pattern3 = Pattern.compile("^D[A-Z]M\\d{6}[ST]\\d{2,5}_\\d+\\.ZIP$");
 
         String fn = filename.toUpperCase();
         if (pattern1.matcher(fn).matches()) {

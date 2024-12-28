@@ -23,7 +23,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @XmlRootElement(name = "PERS_LIST")
 @XmlAccessorType(XmlAccessType.NONE)
-public class PersListL32 extends APersList {
+public class PersList extends APersList {
 
     @Valid
     @NotNull

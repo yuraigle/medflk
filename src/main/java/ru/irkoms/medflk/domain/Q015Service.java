@@ -20,10 +20,16 @@ import java.util.List;
 @Setter
 @Service
 @RequiredArgsConstructor
-public class Q015Service {
+public class Q015Service extends AbstractNsiService {
 
     private final ApplicationContext ctx;
     private Q015Packet packet;
+
+    @Override
+    public void initPacket() {
+        packet = readNsi(Q015Packet.class, "nsi/Q015.ZIP");
+        attachCheckerBeans();
+    }
 
     public List<Q015Packet.Q015> getChecksForType(String type) {
         LocalDate d1 = LocalDate.now();

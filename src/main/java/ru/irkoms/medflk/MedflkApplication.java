@@ -5,12 +5,18 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import ru.irkoms.medflk.domain.AbstractNsiService;
 import ru.irkoms.medflk.jaxb.FlkP;
 import ru.irkoms.medflk.jaxb.meta.APersList;
 import ru.irkoms.medflk.jaxb.meta.AZlList;
-import ru.irkoms.medflk.service.*;
+import ru.irkoms.medflk.service.NsiDownloaderService;
+import ru.irkoms.medflk.service.Q015ValidationService;
+import ru.irkoms.medflk.service.RegistryReaderService;
+import ru.irkoms.medflk.service.SchemaValidationService;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 @Log4j2
@@ -18,7 +24,7 @@ import java.util.List;
 @SpringBootApplication
 public class MedflkApplication implements CommandLineRunner {
 
-    private final NsiReaderService nsiReaderService;
+    private final ApplicationContext ctx;
     private final NsiDownloaderService nsiDownloaderService;
     private final RegistryReaderService registryReaderService;
     private final SchemaValidationService schemaValidationService;
@@ -49,7 +55,7 @@ public class MedflkApplication implements CommandLineRunner {
             return;
         }
 
-        nsiReaderService.readAll();
+        initNsiPackets();
         log.info("Processing file: {} ({}Kb)", zip.getName(), zip.length() / 1024);
 
         AZlList zlList = null;
@@ -88,5 +94,20 @@ public class MedflkApplication implements CommandLineRunner {
 
         log.info("OK");
         System.exit(0);
+    }
+
+    private void initNsiPackets() {
+        long start = System.currentTimeMillis();
+
+        Arrays.stream(ctx.getBeanDefinitionNames())
+                .filter(name -> name.matches("^.*[a-zA-Z][0-9]{3}Service$"))
+                .forEach(name -> {
+                    Object bean = ctx.getBean(name);
+                    if (bean instanceof AbstractNsiService) {
+                        ((AbstractNsiService) bean).initPacket();
+                    }
+                });
+
+        log.info("Nsi packets initialized in {} ms", System.currentTimeMillis() - start);
     }
 }

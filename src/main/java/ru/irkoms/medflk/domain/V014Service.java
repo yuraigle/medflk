@@ -1,15 +1,18 @@
 package ru.irkoms.medflk.domain;
 
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-@Setter
 @Service
-public class V014Service {
+public class V014Service extends AbstractNsiService {
 
     private V014Packet packet;
+
+    @Override
+    public void initPacket() {
+        packet = readNsi(V014Packet.class, "nsi/V014.ZIP");
+    }
 
     public boolean isValidForPomOnDate(Integer forPom, LocalDate d1) {
         return packet.getZapList().stream()

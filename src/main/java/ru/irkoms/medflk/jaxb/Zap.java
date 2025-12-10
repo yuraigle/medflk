@@ -1,0 +1,21 @@
+package ru.irkoms.medflk.jaxb;
+
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@EqualsAndHashCode
+@XmlAccessorType(XmlAccessType.NONE)
+public class Zap {
+
+    @NotNull
+    @XmlElement(name = "N_ZAP")
+    private Integer nZap;
+
+}

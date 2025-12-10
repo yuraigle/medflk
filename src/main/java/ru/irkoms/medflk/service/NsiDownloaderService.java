@@ -55,7 +55,7 @@ public class NsiDownloaderService {
                     .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
                     .thenApply(HttpResponse::body).join();
             copy(is, out, 1024);
-            log.info("{} updated", filename);
+            log.info("Справочник {} загружен с сайта ФФОМС", filename);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -64,7 +64,7 @@ public class NsiDownloaderService {
     private void downloadFfomsNsi(String id, String filename) {
         try {
             String version = getLatestFfomsVersion(id);
-            String url = "http://nsi.ffoms.ru/refbook?type=XML&id=-1&version=" + version;
+            String url = "https://nsi.ffoms.ru/refbook?type=XML&id=-1&version=" + version;
             downloadFile(url, filename);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -82,7 +82,7 @@ public class NsiDownloaderService {
     }
 
     private String getLatestFfomsVersion(String id) throws Exception {
-        String url = "http://nsi.ffoms.ru/export?pageId=refbookList" +
+        String url = "https://nsi.ffoms.ru/export?pageId=refbookList" +
                 "&containerId=refbookList&size=-1&contentType=csv&columns=d.code";
 
         HttpRequest req = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
@@ -97,7 +97,7 @@ public class NsiDownloaderService {
             }
         }
 
-        throw new Exception("Version " + id + " not found on Ffoms site");
+        throw new Exception("Версия " + id + " не найдена на сайте ФФОМС");
     }
 
     private String getLatestRmzVersion(String oid) throws Exception {
@@ -115,6 +115,6 @@ public class NsiDownloaderService {
             }
         }
 
-        throw new Exception("Version " + oid + " not found on RMZ site");
+        throw new Exception("Версия " + oid + " не найдена на сайте РосМинЗдрав");
     }
 }

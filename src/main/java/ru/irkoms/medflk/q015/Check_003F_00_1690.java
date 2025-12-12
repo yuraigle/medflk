@@ -4,10 +4,8 @@ import lombok.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import ru.irkoms.medflk.jaxb.FlkP;
-import ru.irkoms.medflk.jaxb.meta.APers;
-import ru.irkoms.medflk.jaxb.meta.APersList;
-import ru.irkoms.medflk.jaxb.meta.AZap;
-import ru.irkoms.medflk.jaxb.meta.AZlList;
+import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.ZlList;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,9 +21,9 @@ public class Check_003F_00_1690 extends AbstractCheck {
     }
 
     @Override
-    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
+    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
-            @NonNull APers pers = getPersById(zap.getPacient().getIdPac());
+            @NonNull PersList.Pers pers = getPersById(zap.getPacient().getIdPac());
             String novor = zap.getPacient().getNovor();
 
             if (!"0".equals(novor) && pers.getDrP() == null) {

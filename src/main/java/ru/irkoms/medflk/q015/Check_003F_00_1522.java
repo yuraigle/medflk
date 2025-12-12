@@ -2,8 +2,8 @@ package ru.irkoms.medflk.q015;
 
 import org.springframework.stereotype.Component;
 import ru.irkoms.medflk.jaxb.FlkP;
-import ru.irkoms.medflk.jaxb.meta.APersList;
-import ru.irkoms.medflk.jaxb.meta.AZlList;
+import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.ZlList;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class Check_003F_00_1522 extends AbstractCheck {
 
     // (C00.0<=DS1<D10 или D45<=DS1<D48) и USL_TIP={1,3,4,6}
     @Override
-    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
+    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverUsl(zlList, persList, (a, zap, sl, usl) -> {
             String vidVme = usl.getVidVme();
 

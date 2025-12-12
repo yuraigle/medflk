@@ -1,5 +1,6 @@
 package ru.irkoms.medflk.jaxb;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -18,4 +19,16 @@ public class Zap {
     @XmlElement(name = "N_ZAP")
     private Integer nZap;
 
+    @XmlElement(name = "PR_NOV")
+    private Integer prNov;
+
+    @Valid
+    @NotNull
+    @XmlElement(name = "PACIENT")
+    private Pacient pacient;
+
+    @Valid
+    @NotNull
+    @XmlElement(name = "Z_SL")
+    private ZSl zSl;
 }

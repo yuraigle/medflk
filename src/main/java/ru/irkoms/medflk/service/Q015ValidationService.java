@@ -6,16 +6,14 @@ import org.springframework.stereotype.Service;
 import ru.irkoms.medflk.domain.Q015Packet;
 import ru.irkoms.medflk.domain.Q015Service;
 import ru.irkoms.medflk.jaxb.FlkP;
-import ru.irkoms.medflk.jaxb.meta.APers;
-import ru.irkoms.medflk.jaxb.meta.APersList;
-import ru.irkoms.medflk.jaxb.meta.AZap;
-import ru.irkoms.medflk.jaxb.meta.AZlList;
+import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.Zap;
+import ru.irkoms.medflk.jaxb.ZlList;
 import ru.irkoms.medflk.q015.AbstractCheck;
 
 import java.util.*;
 
 import static ru.irkoms.medflk.Utils.castList;
-import static ru.irkoms.medflk.Utils.getZlListMdType;
 
 @Log4j2
 @Service
@@ -25,14 +23,17 @@ public class Q015ValidationService {
     private final Q015Service q015Service;
 
     // все персоны из L-файла уходят в кэш для ускорения поиска по ним
-    private static final Map<String, APers> persCache = new HashMap<>();
+    private static final Map<String, PersList.Pers> persCache = new HashMap<>();
 
-    public static APers getPersById(String idPac) {
+    public static PersList.Pers getPersById(String idPac) {
         return persCache.getOrDefault(idPac, null);
     }
 
-    public List<FlkP.Pr> validate(AZlList zlList, APersList persList) {
-        String zlType = getZlListMdType(zlList);
+    public List<FlkP.Pr> validate(ZlList zlList, PersList persList) {
+        String zlType = zlList.getZglv().getFilename().substring(0, 1).toUpperCase();
+        if (zlType.equals("D")) {
+            zlType = "X";
+        }
 
         List<Q015Packet.Q015> q015List = new ArrayList<>();
         q015List.addAll(q015Service.getChecksForType(zlType));
@@ -40,8 +41,8 @@ public class Q015ValidationService {
         q015List.sort(Comparator.comparing(Q015Packet.Q015::getIdTest));
 
         persCache.clear();
-        for (AZap zap : zlList.getZapList()) {
-            APers pers = persList.getPersList().stream()
+        for (Zap zap : zlList.getZapList()) {
+            PersList.Pers pers = persList.getPersList().stream()
                     .filter(p -> p.getIdPac().equals(zap.getPacient().getIdPac()))
                     .findFirst()
                     .orElse(null);

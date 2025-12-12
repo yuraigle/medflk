@@ -1,6 +1,5 @@
 package ru.irkoms.medflk.jaxb;
 
-import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -9,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.irkoms.medflk.jaxb.meta.ASank;
 import ru.irkoms.medflk.jaxb.util.LocalDateAdapter;
 
 import java.math.BigDecimal;
@@ -21,7 +19,7 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 @XmlAccessorType(XmlAccessType.NONE)
-public class Sank extends ASank {
+public class Sank {
 
     @XmlElement(name = "S_CODE")
     private String sCode;
@@ -33,7 +31,7 @@ public class Sank extends ASank {
     private Integer sTip;
 
     @XmlElement(name = "SL_ID")
-    private List<@Size(max = 36) String> slIdList;
+    private List<String> slIdList;
 
     @XmlElement(name = "S_OSN")
     private Integer sOsn;
@@ -46,7 +44,7 @@ public class Sank extends ASank {
     private String numAct;
 
     @XmlElement(name = "CODE_EXP")
-    private List<@Size(max = 8) String> codeExpList;
+    private List<String> codeExpList;
 
     @XmlElement(name = "S_COM")
     private String sCom;

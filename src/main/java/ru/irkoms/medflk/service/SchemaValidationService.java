@@ -2,8 +2,7 @@ package ru.irkoms.medflk.service;
 
 import jakarta.validation.*;
 import org.springframework.stereotype.Service;
-import ru.irkoms.medflk.jaxb.FlkP;
-import ru.irkoms.medflk.jaxb.meta.*;
+import ru.irkoms.medflk.jaxb.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +40,17 @@ public class SchemaValidationService {
         pr.setLevel("E"); // ошибки схемы XML являются критическими
 
         String imPol = null;
-        AZlList aZlList = null;
-        AZap aZap = null;
-        APacient aPacient = null;
-        AZSl aZSl = null;
+        ZlList aZlList = null;
+        Zap aZap = null;
+        Pacient aPacient = null;
+        ZSl aZSl = null;
 
         Matcher m1 = Pattern.compile("^persList\\[([0-9]+)]\\..+$")
                 .matcher(viol.getPropertyPath().toString());
         if (m1.matches()) {
             int pacN = Integer.parseInt(m1.group(1));
-            APersList aPersList = (APersList) viol.getRootBean();
-            APers aPers = aPersList.getPersList().get(pacN);
+            PersList aPersList = (PersList) viol.getRootBean();
+            PersList.Pers aPers = aPersList.getPersList().get(pacN);
             pr.setIdPac(aPers.getIdPac());
         }
 
@@ -60,7 +59,7 @@ public class SchemaValidationService {
             Integer i0 = node.getIndex();
 
             if (n0.equals("zapList")) {
-                aZlList = (AZlList) viol.getRootBean();
+                aZlList = (ZlList) viol.getRootBean();
             }
 
             if (n0.matches("zSl|pacient") && aZlList != null) {

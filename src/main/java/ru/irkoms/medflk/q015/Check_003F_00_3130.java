@@ -2,10 +2,8 @@ package ru.irkoms.medflk.q015;
 
 import org.springframework.stereotype.Component;
 import ru.irkoms.medflk.jaxb.FlkP;
-import ru.irkoms.medflk.jaxb.meta.APers;
-import ru.irkoms.medflk.jaxb.meta.APersList;
-import ru.irkoms.medflk.jaxb.meta.ASl;
-import ru.irkoms.medflk.jaxb.meta.AZlList;
+import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.ZlList;
 
 import java.math.BigDecimal;
 import java.time.Period;
@@ -27,10 +25,10 @@ public class Check_003F_00_3130 extends AbstractCheck {
     // и возраст пациента на дату начала лечения больше или равно 18 лет
 
     @Override
-    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
+    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
 
         return iterateOverZap(zlList, persList, (a, zap) -> {
-            APers pers = getPersById(zap.getPacient().getIdPac());
+            PersList.Pers pers = getPersById(zap.getPacient().getIdPac());
 
             List<FlkP.Pr> errors = new ArrayList<>();
 

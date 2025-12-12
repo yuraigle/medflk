@@ -3,10 +3,6 @@ package ru.irkoms.medflk.jaxb;
 import jakarta.xml.bind.annotation.*;
 import lombok.*;
 import ru.irkoms.medflk.domain.Q015Packet;
-import ru.irkoms.medflk.jaxb.meta.APers;
-import ru.irkoms.medflk.jaxb.meta.ASl;
-import ru.irkoms.medflk.jaxb.meta.AUsl;
-import ru.irkoms.medflk.jaxb.meta.AZap;
 import ru.irkoms.medflk.q015.AbstractCheck;
 
 import java.util.ArrayList;
@@ -75,7 +71,7 @@ public class FlkP {
         @XmlTransient
         private String level;
 
-        public Pr(AZap zap, ASl sl, Object value) {
+        public Pr(Zap zap, Sl sl, Object value) {
             if (zap != null) {
                 this.nZap = zap.getNZap().toString();
 
@@ -95,7 +91,7 @@ public class FlkP {
             this.znPol = value == null ? "" : value.toString();
         }
 
-        public Pr(AZap zap, ASl sl, AUsl usl, Object value) {
+        public Pr(Zap zap, Sl sl, Usl usl, Object value) {
             this(zap, sl, value);
 
             if (usl != null) {
@@ -103,7 +99,7 @@ public class FlkP {
             }
         }
 
-        public Pr(APers pers, Object value) {
+        public Pr(PersList.Pers pers, Object value) {
             this.idPac = pers.getIdPac();
             this.znPol = value == null ? "" : value.toString();
         }
@@ -114,7 +110,7 @@ public class FlkP {
             // ZL_LIST/ZAP/Z_SL/SL/ONK_SL => (SL, ONK_SL)
             if (q015.getIdEl() != null && q015.getIdEl().contains("/")) {
                 List<String> parts = List.of(q015.getIdEl().split("/"));
-                this.imPol = parts.get(parts.size() - 1);
+                this.imPol = parts.getLast();
                 if (parts.size() > 1) {
                     this.basEl = parts.get(parts.size() - 2);
                 }

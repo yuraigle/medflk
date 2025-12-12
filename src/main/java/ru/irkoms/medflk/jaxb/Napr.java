@@ -1,14 +1,14 @@
-package ru.irkoms.medflk.jaxb.meta;
+package ru.irkoms.medflk.jaxb;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode
 @XmlAccessorType(XmlAccessType.NONE)
-public abstract class AZap {
-    private Integer nZap;
-    private Integer prNov;
-    private APacient pacient;
-    private AZSl zSl;
+public class Napr {
 }

@@ -1,15 +1,14 @@
-package ru.irkoms.medflk.jaxb.meta;
+package ru.irkoms.medflk.jaxb;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-import java.util.List;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode
 @XmlAccessorType(XmlAccessType.NONE)
-public abstract class APersList {
-    private AZglv zglv;
-
-    private List<? extends APers> persList;
+public class LekPr {
 }

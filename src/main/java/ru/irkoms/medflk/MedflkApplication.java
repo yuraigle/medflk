@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import ru.irkoms.medflk.domain.AbstractNsiService;
 import ru.irkoms.medflk.jaxb.FlkP;
-import ru.irkoms.medflk.jaxb.meta.APersList;
-import ru.irkoms.medflk.jaxb.meta.AZlList;
+import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.ZlList;
 import ru.irkoms.medflk.service.NsiDownloaderService;
 import ru.irkoms.medflk.service.Q015ValidationService;
 import ru.irkoms.medflk.service.RegistryReaderService;
@@ -58,8 +58,8 @@ public class MedflkApplication implements CommandLineRunner {
         initNsiPackets();
         log.info("Processing file: {} ({}Kb)", zip.getName(), zip.length() / 1024);
 
-        AZlList zlList = null;
-        APersList persList = null;
+        ZlList zlList = null;
+        PersList persList = null;
         try {
             zlList = registryReaderService.parseZlList(zip);
             persList = registryReaderService.parsePersList(zip);

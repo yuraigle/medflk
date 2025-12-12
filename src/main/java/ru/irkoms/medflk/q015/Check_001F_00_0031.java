@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.irkoms.medflk.domain.F032Service;
 import ru.irkoms.medflk.jaxb.FlkP;
-import ru.irkoms.medflk.jaxb.meta.APersList;
-import ru.irkoms.medflk.jaxb.meta.AZlList;
+import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.ZlList;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +22,7 @@ public class Check_001F_00_0031 extends AbstractCheck {
     }
 
     @Override
-    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
+    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         String codeMo = zlList.getSchet().getCodeMo();
         LocalDate d1 = zlList.getSchet().getDschet();
 

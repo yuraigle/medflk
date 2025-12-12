@@ -1,13 +1,14 @@
-package ru.irkoms.medflk.jaxb.meta;
+package ru.irkoms.medflk.jaxb;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode
 @XmlAccessorType(XmlAccessType.NONE)
-public abstract class ADs2N {
-    private String ds2;
-    private Integer ds2Pr;
-    private Integer prDs2N;
+public class OnkUsl {
 }

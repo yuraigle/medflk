@@ -1,13 +1,11 @@
 package ru.irkoms.medflk;
 
 import lombok.extern.log4j.Log4j2;
-import ru.irkoms.medflk.jaxb.meta.AZlList;
+import ru.irkoms.medflk.jaxb.ZlList;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.right;
 
 @Log4j2
 public class Utils {
@@ -24,8 +22,15 @@ public class Utils {
         return result;
     }
 
-    public static String getZlListMdType(AZlList zlList) {
-        return right(zlList.getClass().getSimpleName(), 1); // CHTX
+    public static String getZlListMdType(ZlList zlList) {
+        String filename = zlList.getZglv().getFilename(); // CHTX
+        if (filename == null || filename.isBlank()) {
+            return "H";
+        }
+        if (filename.toUpperCase().startsWith("D")) {
+            return "X";
+        }
+        return filename.toUpperCase().substring(0, 1);
     }
 
     public static boolean dsIsOnkoC00ToD10OrD45ToD48(String ds1) {

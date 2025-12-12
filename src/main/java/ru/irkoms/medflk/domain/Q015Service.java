@@ -6,8 +6,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
-import ru.irkoms.medflk.jaxb.meta.APersList;
-import ru.irkoms.medflk.jaxb.meta.AZlList;
+import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.ZlList;
 import ru.irkoms.medflk.q015.AbstractCheck;
 
 import java.lang.reflect.Method;
@@ -52,7 +52,7 @@ public class Q015Service extends AbstractNsiService {
         for (Object bean : allCheckers) {
             if (bean instanceof AbstractCheck) {
                 Method method = ReflectionUtils.findMethod(bean.getClass(),
-                        "check", AZlList.class, APersList.class);
+                        "check", ZlList.class, PersList.class);
 
                 for (Q015Packet.Q015 check : packet.getZapList()) {
                     String checkId = "Check_" + check.getIdTest().replaceAll("\\.", "_");

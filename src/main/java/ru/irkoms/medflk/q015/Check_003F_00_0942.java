@@ -2,8 +2,8 @@ package ru.irkoms.medflk.q015;
 
 import org.springframework.stereotype.Component;
 import ru.irkoms.medflk.jaxb.FlkP;
-import ru.irkoms.medflk.jaxb.meta.APersList;
-import ru.irkoms.medflk.jaxb.meta.AZlList;
+import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.ZlList;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import static ru.irkoms.medflk.Utils.dsIsOnkoC00ToD10OrD45ToD48;
 public class Check_003F_00_0942 extends AbstractCheck {
 
     @Override
-    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
+    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             if (sl.getOnkSl() == null || sl.getOnkSl().getOnkUslList() == null) return List.of();
 

@@ -5,9 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.irkoms.medflk.domain.F011Service;
 import ru.irkoms.medflk.jaxb.FlkP;
-import ru.irkoms.medflk.jaxb.meta.APers;
-import ru.irkoms.medflk.jaxb.meta.APersList;
-import ru.irkoms.medflk.jaxb.meta.AZlList;
+import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.ZlList;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,9 +25,9 @@ public class Check_001F_00_0720 extends AbstractCheck {
     }
 
     @Override
-    public List<FlkP.Pr> check(AZlList zlList, APersList persList) {
+    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
-            @NonNull APers pers = getPersById(zap.getPacient().getIdPac());
+            @NonNull PersList.Pers pers = getPersById(zap.getPacient().getIdPac());
             @NonNull LocalDate d1 = zap.getZSl().getDateZ1();
             Integer docType = pers.getDocType();
 

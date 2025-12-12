@@ -43,21 +43,16 @@ public class ZlList {
     @XmlAccessorType(XmlAccessType.NONE)
     public static class Zglv {
 
-        @NotNull
         @XmlElement(name = "VERSION")
         private String version;
 
-        @NotNull
         @XmlElement(name = "DATA")
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate data;
 
-        @NotNull
         @XmlElement(name = "FILENAME")
         private String filename;
 
-        @NotNull
-        @Min(1)
         @XmlElement(name = "SD_Z")
         private Integer sdZ;
     }
@@ -68,7 +63,6 @@ public class ZlList {
     @XmlAccessorType(XmlAccessType.NONE)
     public static class Schet {
 
-        @NotNull
         @XmlElement(name = "CODE")
         private Integer code;
 
@@ -96,11 +90,9 @@ public class ZlList {
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate dschet;
 
-        @Pattern(regexp = "^(|\\d{5})$")
         @XmlElement(name = "PLAT")
         private String plat;
 
-        @NotNull
         @Digits(integer = 15, fraction = 2)
         @XmlElement(name = "SUMMAV")
         private BigDecimal summav;

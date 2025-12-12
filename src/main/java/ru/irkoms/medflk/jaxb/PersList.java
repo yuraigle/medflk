@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.irkoms.medflk.jaxb.meta.*;
 import ru.irkoms.medflk.jaxb.util.LocalDateAdapter;
 
 import java.time.LocalDate;
@@ -23,7 +22,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @XmlRootElement(name = "PERS_LIST")
 @XmlAccessorType(XmlAccessType.NONE)
-public class PersList extends APersList {
+public class PersList {
 
     @Valid
     @NotNull
@@ -39,7 +38,7 @@ public class PersList extends APersList {
     @ToString
     @EqualsAndHashCode(callSuper = false)
     @XmlAccessorType(XmlAccessType.NONE)
-    public static class Zglv extends AZglv {
+    public static class Zglv {
 
         @NotNull
         @Size(min = 3, max = 5)
@@ -66,7 +65,7 @@ public class PersList extends APersList {
     @ToString
     @EqualsAndHashCode(callSuper = false)
     @XmlAccessorType(XmlAccessType.NONE)
-    public static class Pers extends APers {
+    public static class Pers {
 
         @NotBlank
         @Size(min = 1, max = 36)

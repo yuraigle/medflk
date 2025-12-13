@@ -25,10 +25,10 @@ public class Check_001F_00_0170 extends AbstractCheck {
     @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
-            @NonNull Integer vidPom = zap.getZSl().getVidpom();
-            @NonNull LocalDate d1 = zap.getZSl().getDateZ1();
+            @NonNull LocalDate d2 = zap.getZSl().getDateZ2();
+            Integer vidPom = zap.getZSl().getVidpom();
 
-            if (!v008Service.isValidVidPomOnDate(vidPom, d1)) {
+            if (vidPom != null && !v008Service.isValidVidPomOnDate(vidPom, d2)) {
                 return List.of(new FlkP.Pr(zap, null, vidPom));
             }
 

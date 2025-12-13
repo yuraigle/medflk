@@ -31,8 +31,7 @@ public class Q015Service extends AbstractNsiService {
         attachCheckerBeans();
     }
 
-    public List<Q015Packet.Q015> getChecksForType(String type) {
-        LocalDate d1 = LocalDate.now();
+    public List<Q015Packet.Q015> getChecksForType(String type, LocalDate d1) {
         return packet.getZapList().stream()
                 .filter(q015 -> q015.getTypeMd().getTypeD().contains(type))
                 .filter(q015 -> !q015.getDatebeg().isAfter(d1))

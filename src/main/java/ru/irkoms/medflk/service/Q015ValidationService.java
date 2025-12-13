@@ -11,9 +11,11 @@ import ru.irkoms.medflk.jaxb.Zap;
 import ru.irkoms.medflk.jaxb.ZlList;
 import ru.irkoms.medflk.q015.AbstractCheck;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static ru.irkoms.medflk.Utils.castList;
+import static ru.irkoms.medflk.Utils.getZlListMdType;
 
 @Log4j2
 @Service
@@ -30,14 +32,13 @@ public class Q015ValidationService {
     }
 
     public List<FlkP.Pr> validate(ZlList zlList, PersList persList) {
-        String zlType = zlList.getZglv().getFilename().substring(0, 1).toUpperCase();
-        if (zlType.equals("D")) {
-            zlType = "X";
-        }
+        String zlType = getZlListMdType(zlList);
 
+        // список проверок Q015 берём на дату счёта
         List<Q015Packet.Q015> q015List = new ArrayList<>();
-        q015List.addAll(q015Service.getChecksForType(zlType));
-        q015List.addAll(q015Service.getChecksForType("L"));
+        LocalDate q15Date = zlList.getSchet().getDschet();
+        q015List.addAll(q015Service.getChecksForType(zlType, q15Date));
+        q015List.addAll(q015Service.getChecksForType("L",  q15Date));
         q015List.sort(Comparator.comparing(Q015Packet.Q015::getIdTest));
 
         persCache.clear();
@@ -49,15 +50,19 @@ public class Q015ValidationService {
             persCache.put(zap.getPacient().getIdPac(), pers);
         }
 
+        q015List = q015List.stream().filter(q -> q.getIdTest().startsWith("001")).toList();
+
         List<FlkP.Pr> errors = new ArrayList<>();
         int cntActiveChecks = 0;
         for (Q015Packet.Q015 check : q015List) {
             if (check.getBean() != null && check.getBean() instanceof AbstractCheck) {
                 cntActiveChecks++;
                 errors.addAll(applyCheck(check, zlList, persList));
+            } else {
+                log.debug("Проверка {} {} не реализована", check.getIdTest(), check.getIdEl());
             }
         }
-        log.info("{} / {} checks applied", cntActiveChecks, q015List.size());
+        log.info("{} / {} проверок исполнено", cntActiveChecks, q015List.size());
 
         return errors;
     }
@@ -74,7 +79,7 @@ public class Q015ValidationService {
             }
         } catch (Exception e) {
             log.error("Error while applying check {}: {}", q015.getIdTest(), e.getMessage());
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         long executionTimeMs = (System.nanoTime() - startedAt) / 1_000_000;

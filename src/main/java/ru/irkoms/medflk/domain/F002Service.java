@@ -34,6 +34,17 @@ public class F002Service extends AbstractNsiService {
                 .anyMatch(o -> o.getSmocod().equals(code));
     }
 
+    public boolean isValidSmoOgrnOnDate(String smo, String ogrn, LocalDate d1) {
+        if (smo == null) { // нет кода СМО - проверяем только ОГРН
+            return packet.getZapList().stream()
+                    .anyMatch(o -> o.getOgrn().equals(ogrn));
+        }
+
+        // если указан код СМО и ОГРН, проверяем в связке
+        return packet.getZapList().stream()
+                .anyMatch(o -> o.getSmocod().equals(smo) && o.getOgrn().equals(ogrn));
+    }
+
     public boolean isValidRegionalSmoOnDate(String codeMo, LocalDate d1) {
         return regionalCodes.contains(codeMo);
     }

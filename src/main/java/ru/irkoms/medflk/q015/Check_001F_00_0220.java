@@ -3,7 +3,7 @@ package ru.irkoms.medflk.q015;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.irkoms.medflk.domain.V009Service;
+import ru.irkoms.medflk.domain.V012Service;
 import ru.irkoms.medflk.jaxb.FlkP;
 import ru.irkoms.medflk.jaxb.PersList;
 import ru.irkoms.medflk.jaxb.ZlList;
@@ -13,13 +13,13 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class Check_001F_00_0210 extends AbstractCheck {
+public class Check_001F_00_0220 extends AbstractCheck {
 
-    private final V009Service v009Service;
+    private final V012Service v012Service;
 
     @Override
     public String getErrorMessage() {
-        return "Результат обращения не найден в справочнике V009 для условий оказания";
+        return "Исход заболевания не найден в справочнике V012 для условий оказания";
     }
 
     @Override
@@ -27,10 +27,10 @@ public class Check_001F_00_0210 extends AbstractCheck {
         return iterateOverZap(zlList, persList, (a, zap) -> {
             @NonNull LocalDate d1 = zap.getZSl().getDateZ1();
             @NonNull Integer uslOk = zap.getZSl().getUslOk();
-            @NonNull Integer rslt = zap.getZSl().getRslt();
+            @NonNull Integer ishod = zap.getZSl().getIshod();
 
-            if (!v009Service.isValidResultOnUslOkAndDate(rslt, uslOk, d1)) {
-                return List.of(new FlkP.Pr(zap, null, rslt));
+            if (!v012Service.isValidIshodOnUslOkAndDate(ishod, uslOk, d1)) {
+                return List.of(new FlkP.Pr(zap, null, ishod));
             }
 
             return List.of();

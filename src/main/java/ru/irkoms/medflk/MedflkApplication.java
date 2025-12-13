@@ -56,7 +56,7 @@ public class MedflkApplication implements CommandLineRunner {
         }
 
         initNsiPackets();
-        log.info("Processing file: {} ({}Kb)", zip.getName(), zip.length() / 1024);
+        log.info("Обрабатывается файл {} ({}Kb)", zip.getName(), zip.length() / 1024);
 
         ZlList zlList = null;
         PersList persList = null;
@@ -68,7 +68,7 @@ public class MedflkApplication implements CommandLineRunner {
         }
 
         if (zlList == null || persList == null) {
-            log.error("Error while reading file {}", zip.getName());
+            log.error("Ошибка чтения файла {}", zip.getName());
             System.exit(1);
         }
 
@@ -76,7 +76,6 @@ public class MedflkApplication implements CommandLineRunner {
         schemaErrors.addAll(schemaValidationService.validate(persList));
 
         if (!schemaErrors.isEmpty()) {
-            log.error("Schema validation errors:");
             for (FlkP.Pr error : schemaErrors) {
                 log.error("{}", error);
             }
@@ -85,10 +84,7 @@ public class MedflkApplication implements CommandLineRunner {
 
         List<FlkP.Pr> q015Errors = q015ValidationService.validate(zlList, persList);
         if (!q015Errors.isEmpty()) {
-            log.error("Q015 validation errors:");
-            for (FlkP.Pr error : q015Errors) {
-                log.error("{}", error);
-            }
+            log.error("{} ошибок Q015", q015Errors.size());
             System.exit(1);
         }
 
@@ -97,8 +93,6 @@ public class MedflkApplication implements CommandLineRunner {
     }
 
     private void initNsiPackets() {
-        long start = System.currentTimeMillis();
-
         Arrays.stream(ctx.getBeanDefinitionNames())
                 .filter(name -> name.matches("^.*[a-zA-Z][0-9]{3}Service$"))
                 .forEach(name -> {
@@ -107,7 +101,5 @@ public class MedflkApplication implements CommandLineRunner {
                         ((AbstractNsiService) bean).initPacket();
                     }
                 });
-
-        log.info("Nsi packets initialized in {} ms", System.currentTimeMillis() - start);
     }
 }

@@ -28,10 +28,10 @@ public class NsiDownloaderService {
     public void updateAll() {
         File nsiDir = new File("nsi");
         if (!nsiDir.exists() && !nsiDir.mkdir()) {
-            throw new RuntimeException("Can't create directory: " + nsiDir.getAbsolutePath());
+            throw new RuntimeException("Не удалось создать каталог " + nsiDir.getAbsolutePath());
         }
 
-        List<String> packets = List.of("F002", "F008", "F011", "F032", "Q015", "V002",
+        List<String> packets = List.of("F002", "F008", "F010", "F011", "F032", "Q015", "V002",
                 "V006", "V008", "V009", "V010", "V012", "V014", "V015", "V016", "V017",
                 "V018", "V020", "V021", "V024", "V025", "V026", "V027", "V028"
         );
@@ -55,7 +55,6 @@ public class NsiDownloaderService {
                     .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
                     .thenApply(HttpResponse::body).join();
             copy(is, out, 1024);
-            log.info("Справочник {} загружен с сайта ФФОМС", filename);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -66,6 +65,7 @@ public class NsiDownloaderService {
             String version = getLatestFfomsVersion(id);
             String url = "https://nsi.ffoms.ru/refbook?type=XML&id=-1&version=" + version;
             downloadFile(url, filename);
+            log.info("Справочник {} загружен с сайта ФФОМС", filename);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -76,6 +76,7 @@ public class NsiDownloaderService {
             String version = getLatestRmzVersion(oid);
             String url = "https://nsi.rosminzdrav.ru/api/dataFiles/" + oid + "_" + version + "_xml.zip";
             downloadFile(url, filename);
+            log.info("Справочник {} загружен с сайта РосМинЗдрав", filename);
         } catch (Exception e) {
             log.error(e.getMessage());
         }

@@ -14,17 +14,17 @@ import java.util.List;
 @Getter
 @XmlRootElement(name = "packet")
 @XmlAccessorType(XmlAccessType.NONE)
-public class V002Packet {
+public class V021Packet {
 
     @XmlElement(name = "zap")
-    private List<V002> zapList;
+    private List<V021> zapList;
 
     @Getter
     @XmlAccessorType(XmlAccessType.NONE)
-    public static class V002 {
+    public static class V021 {
 
-        @XmlElement(name = "IDPR")
-        private Integer idpr;
+        @XmlElement(name = "IDSPEC")
+        private Integer idspec;
 
         @XmlJavaTypeAdapter(LocalDateRusAdapter.class)
         @XmlElement(name = "DATEBEG")

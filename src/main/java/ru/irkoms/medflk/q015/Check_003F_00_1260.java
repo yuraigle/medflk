@@ -1,9 +1,7 @@
 package ru.irkoms.medflk.q015;
 
 import org.springframework.stereotype.Component;
-import ru.irkoms.medflk.jaxb.FlkP;
-import ru.irkoms.medflk.jaxb.PersList;
-import ru.irkoms.medflk.jaxb.ZlList;
+import ru.irkoms.medflk.jaxb.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +18,9 @@ public class Check_003F_00_1260 extends AbstractCheck {
         return (zlList, zap, sl) -> {
             List<FlkP.Pr> errors = new ArrayList<>();
 
-            AOnkSl onkSl = sl.getOnkSl();
+            OnkSl onkSl = sl.getOnkSl();
             if (onkSl != null && onkSl.getBdiagList() != null) {
-                for (ABdiag bDiag : onkSl.getBdiagList()) {
+                for (Bdiag bDiag : onkSl.getBdiagList()) {
                     if (bDiag.getDiagRslt() != null && bDiag.getRecRslt() == null) {
                         errors.add(new FlkP.Pr(zap, sl, null));
                     }

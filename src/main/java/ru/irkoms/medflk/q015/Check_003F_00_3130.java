@@ -3,6 +3,7 @@ package ru.irkoms.medflk.q015;
 import org.springframework.stereotype.Component;
 import ru.irkoms.medflk.jaxb.FlkP;
 import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.Sl;
 import ru.irkoms.medflk.jaxb.ZlList;
 
 import java.math.BigDecimal;
@@ -34,7 +35,7 @@ public class Check_003F_00_3130 extends AbstractCheck {
 
             Integer uslOk = zap.getZSl().getUslOk();
 
-            for (ASl sl : zap.getZSl().getSlList()) {
+            for (Sl sl : zap.getZSl().getSlList()) {
                 String ds1 = sl.getDs1();
                 int reab = sl.getReab() == null ? 0 : sl.getReab();
                 if (!List.of("U07.1", "U07.2").contains(ds1)) continue;

@@ -95,8 +95,15 @@ public class Sl {
     @XmlElement(name = "C_ZAB")
     private Integer cZab;
 
+    @XmlElement(name = "DS_ONK")
+    private Integer dsOnk;
+
     @XmlElement(name = "DN")
     private Integer dn;
+
+    @XmlElement(name = "PR_D_N")
+    private Integer prDN;
+
 
     @XmlElement(name = "CODE_MES1")
     private List<String> codeMes1List;
@@ -124,6 +131,12 @@ public class Sl {
 
     @XmlElement(name = "IDDOKT")
     private String iddokt;
+
+    @XmlElement(name = "DS2_N")
+    private List<@Valid Ds2N> ds2NList;
+
+    @XmlElement(name = "NAZ")
+    private List<@Valid Naz> nazList;
 
     @Digits(integer = 5, fraction = 2)
     @XmlElement(name = "ED_COL")
@@ -154,6 +167,6 @@ public class Sl {
     private BigDecimal wei;
 
     @XmlElement(name = "LEK_PR")
-    private List<LekPr> lekPrList;
+    private List<LekPrOnk> lekPrList;
 
 }

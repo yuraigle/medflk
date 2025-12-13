@@ -15,21 +15,37 @@ import java.time.LocalDate;
 @Setter
 @EqualsAndHashCode
 @XmlAccessorType(XmlAccessType.NONE)
-public class Napr {
+public class Naz {
+
+    @XmlElement(name = "NAZ_N")
+    private Integer nazN;
+
+    @XmlElement(name = "NAZ_R")
+    private Integer nazR;
+
+    @XmlElement(name = "NAZ_SP")
+    private Integer nazSp;
+
+    @XmlElement(name = "NAZ_IDDOKT")
+    private String nazIddokt;
+
+    @XmlElement(name = "NAZ_V")
+    private Integer nazV;
+
+    @XmlElement(name = "NAZ_USL")
+    private String nazUsl;
 
     @XmlElement(name = "NAPR_DATE")
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     private LocalDate naprDate;
 
     @XmlElement(name = "NAPR_MO")
     private String naprMo;
 
-    @XmlElement(name = "NAPR_V")
-    private Integer naprV;
+    @XmlElement(name = "NAZ_PMP")
+    private Integer nazPmp;
 
-    @XmlElement(name = "MET_ISSL")
-    private Integer metIssl;
+    @XmlElement(name = "NAZ_PK")
+    private Integer nazPk;
 
-    @XmlElement(name = "NAPR_USL")
-    private String naprUsl;
 }

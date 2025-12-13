@@ -17,7 +17,7 @@ public class Check_003F_00_1710 extends AbstractCheck {
         String typeMd = getZlListMdType(zlList);
         if (!List.of("H", "T", "C").contains(typeMd)) return List.of();
 
-        for (Pers pers : persList.getPersList()) {
+        for (PersList.Pers pers : persList.getPersList()) {
             if (pers.getTel() != null) {
                 return List.of(new FlkP.Pr(pers, pers.getTel()));
             }

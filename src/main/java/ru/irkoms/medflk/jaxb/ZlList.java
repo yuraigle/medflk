@@ -115,5 +115,8 @@ public class ZlList {
         @Digits(integer = 15, fraction = 2)
         @XmlElement(name = "SANK_EKMP")
         private BigDecimal sankEkmp;
+
+        @XmlElement(name = "DISP")
+        private String disp;
     }
 }

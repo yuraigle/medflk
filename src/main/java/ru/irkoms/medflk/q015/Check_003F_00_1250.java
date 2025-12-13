@@ -1,6 +1,7 @@
 package ru.irkoms.medflk.q015;
 
 import org.springframework.stereotype.Component;
+import ru.irkoms.medflk.jaxb.Bdiag;
 import ru.irkoms.medflk.jaxb.FlkP;
 import ru.irkoms.medflk.jaxb.PersList;
 import ru.irkoms.medflk.jaxb.ZlList;
@@ -16,7 +17,7 @@ public class Check_003F_00_1250 extends AbstractCheck {
         return iterateOverOnkSl(zlList, persList, (a, zap, sl, onkSl) -> {
             if (onkSl.getBdiagList() == null) return List.of();
 
-            for (ABdiag bDiag : onkSl.getBdiagList()) {
+            for (Bdiag bDiag : onkSl.getBdiagList()) {
                 Integer diagRslt = bDiag.getDiagRslt();
                 Integer recRslt = bDiag.getRecRslt();
 

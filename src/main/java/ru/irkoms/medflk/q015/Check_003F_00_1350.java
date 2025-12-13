@@ -2,6 +2,7 @@ package ru.irkoms.medflk.q015;
 
 import org.springframework.stereotype.Component;
 import ru.irkoms.medflk.jaxb.FlkP;
+import ru.irkoms.medflk.jaxb.Naz;
 import ru.irkoms.medflk.jaxb.PersList;
 import ru.irkoms.medflk.jaxb.ZlList;
 
@@ -21,7 +22,7 @@ public class Check_003F_00_1350 extends AbstractCheck {
         return (zlList, zap, sl) -> {
             if (sl.getNazList() == null) return List.of();
 
-            for (ANaz naz : sl.getNazList()) {
+            for (Naz naz : sl.getNazList()) {
                 String naprMo = naz.getNaprMo();
                 Integer nazR = naz.getNazR();
                 Integer dsOnk = sl.getDsOnk();

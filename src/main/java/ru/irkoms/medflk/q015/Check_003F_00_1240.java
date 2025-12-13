@@ -1,6 +1,7 @@
 package ru.irkoms.medflk.q015;
 
 import org.springframework.stereotype.Component;
+import ru.irkoms.medflk.jaxb.Cons;
 import ru.irkoms.medflk.jaxb.FlkP;
 import ru.irkoms.medflk.jaxb.PersList;
 import ru.irkoms.medflk.jaxb.ZlList;
@@ -22,7 +23,7 @@ public class Check_003F_00_1240 extends AbstractCheck {
             List<FlkP.Pr> errors = new ArrayList<>();
 
             if (sl.getConsList() != null) {
-                for (ACons cons : sl.getConsList()) {
+                for (Cons cons : sl.getConsList()) {
                     Integer pr = cons.getPrCons();
                     if (pr != null && !List.of(1, 2, 3).contains(pr) && cons.getDtCons() != null) {
                         errors.add(new FlkP.Pr(zap, sl, cons.getDtCons()));

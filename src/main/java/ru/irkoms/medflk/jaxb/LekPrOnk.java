@@ -15,22 +15,15 @@ import java.time.LocalDate;
 @Setter
 @EqualsAndHashCode
 @XmlAccessorType(XmlAccessType.NONE)
-public class Bdiag {
+public class LekPrOnk {
 
-    @XmlElement(name = "DIAG_DATE")
+    @XmlElement(name = "DATE_INJ")
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    private LocalDate diagDate;
+    private LocalDate dataInj;
 
-    @XmlElement(name = "DIAG_TIP")
-    private Integer diagTip;
+    @XmlElement(name = "CODE_SH")
+    private String codeSh;
 
-    @XmlElement(name = "DIAG_CODE")
-    private Integer diagCode;
-
-    @XmlElement(name = "DIAG_RSLT")
-    private Integer diagRslt;
-
-    @XmlElement(name = "REC_RSLT")
-    private Integer recRslt;
-
+    @XmlElement(name = "REGNUM")
+    private String regnum;
 }

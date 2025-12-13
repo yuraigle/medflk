@@ -2,6 +2,7 @@ package ru.irkoms.medflk.q015;
 
 import org.springframework.stereotype.Component;
 import ru.irkoms.medflk.jaxb.FlkP;
+import ru.irkoms.medflk.jaxb.OnkSl;
 import ru.irkoms.medflk.jaxb.PersList;
 import ru.irkoms.medflk.jaxb.ZlList;
 
@@ -17,7 +18,7 @@ public class Check_003F_00_1040 extends AbstractCheck {
 
     private IFunctionOverSl check1() {
         return (zlList, zap, sl) -> {
-            AOnkSl onkSl = sl.getOnkSl();
+            OnkSl onkSl = sl.getOnkSl();
             if (onkSl == null) return List.of();
 
             boolean hasOnkUsl34 = false;

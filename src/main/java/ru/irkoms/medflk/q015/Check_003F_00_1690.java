@@ -2,12 +2,10 @@ package ru.irkoms.medflk.q015;
 
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import ru.irkoms.medflk.jaxb.FlkP;
 import ru.irkoms.medflk.jaxb.PersList;
 import ru.irkoms.medflk.jaxb.ZlList;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static ru.irkoms.medflk.service.Q015ValidationService.getPersById;

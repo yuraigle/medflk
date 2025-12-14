@@ -9,8 +9,6 @@ import ru.irkoms.medflk.jaxb.ZlList;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
 @Component
 public class Check_003F_00_1330 extends AbstractCheck {
 

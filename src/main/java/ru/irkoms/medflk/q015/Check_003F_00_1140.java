@@ -17,7 +17,7 @@ public class Check_003F_00_1140 extends AbstractCheck {
             if (sl.getKsgKpg() == null) return List.of();
 
             boolean hasSlKoef = sl.getKsgKpg().getSlKoefList() != null
-                                && !sl.getKsgKpg().getSlKoefList().isEmpty();
+                    && !sl.getKsgKpg().getSlKoefList().isEmpty();
 
             BigDecimal itSl = sl.getKsgKpg().getItSl();
             if (hasSlKoef && itSl == null) {

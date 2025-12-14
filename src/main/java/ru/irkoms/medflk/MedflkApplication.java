@@ -10,10 +10,7 @@ import ru.irkoms.medflk.domain.AbstractNsiService;
 import ru.irkoms.medflk.jaxb.FlkP;
 import ru.irkoms.medflk.jaxb.PersList;
 import ru.irkoms.medflk.jaxb.ZlList;
-import ru.irkoms.medflk.service.NsiDownloaderService;
-import ru.irkoms.medflk.service.Q015ValidationService;
-import ru.irkoms.medflk.service.RegistryReaderService;
-import ru.irkoms.medflk.service.SchemaValidationService;
+import ru.irkoms.medflk.service.*;
 
 import java.io.File;
 import java.util.Arrays;
@@ -29,6 +26,7 @@ public class MedflkApplication implements CommandLineRunner {
     private final RegistryReaderService registryReaderService;
     private final SchemaValidationService schemaValidationService;
     private final Q015ValidationService q015ValidationService;
+    private final DepersonalizeService depersonalizeService;
 
     public static void main(String[] args) {
         SpringApplication.run(MedflkApplication.class, args);
@@ -46,6 +44,12 @@ public class MedflkApplication implements CommandLineRunner {
 
         if (args[0].equals("update-nsi")) {
             nsiDownloaderService.updateAll();
+            System.exit(0);
+        }
+
+        if (args[0].equals("make-demo")) {
+            String dir = "/home/orlov/MED/example/";
+            depersonalizeService.depersonalizeDir(dir);
             System.exit(0);
         }
 

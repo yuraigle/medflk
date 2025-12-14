@@ -5,7 +5,8 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import ru.irkoms.medflk.jaxb.*;
+import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.ZlList;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class RegistryReaderService {
             log.error("Ошибка чтения ZIP: {}", e.getMessage());
             throw e;
         } catch (JAXBException | ClassCastException e) {
+            e.printStackTrace();
             log.error("Ошибка чтения XML: {}", e.getMessage());
             throw e;
         }

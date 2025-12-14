@@ -25,3 +25,4 @@ target/
 *.java~
 nsi/
 logs/
+samples/

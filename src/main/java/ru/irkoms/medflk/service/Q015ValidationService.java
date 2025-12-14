@@ -38,7 +38,7 @@ public class Q015ValidationService {
         List<Q015Packet.Q015> q015List = new ArrayList<>();
         LocalDate q15Date = zlList.getSchet().getDschet();
         q015List.addAll(q015Service.getChecksForType(zlType, q15Date));
-        q015List.addAll(q015Service.getChecksForType("L",  q15Date));
+        q015List.addAll(q015Service.getChecksForType("L", q15Date));
         q015List.sort(Comparator.comparing(Q015Packet.Q015::getIdTest));
 
         persCache.clear();

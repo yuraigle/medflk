@@ -1,6 +1,6 @@
 package ru.irkoms.medflk.jaxb;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;

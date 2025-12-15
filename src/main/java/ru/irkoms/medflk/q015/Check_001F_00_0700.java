@@ -1,0 +1,36 @@
+package ru.irkoms.medflk.q015;
+
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import ru.irkoms.medflk.jaxb.FlkP;
+import ru.irkoms.medflk.jaxb.PersList;
+import ru.irkoms.medflk.jaxb.ZlList;
+
+import java.util.List;
+
+import static ru.irkoms.medflk.service.Q015ValidationService.getPersById;
+
+@Component
+@RequiredArgsConstructor
+public class Check_001F_00_0700 extends AbstractCheck {
+
+    @Override
+    public String getErrorMessage() {
+        return "Пол пациента не найден в справочнике V005";
+    }
+
+    @Override
+    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+        return iterateOverZap(zlList, persList, (a, zap) -> {
+            @NonNull PersList.Pers pers = getPersById(zap.getPacient().getIdPac());
+            Integer w = pers.getW();
+
+            if (w != null && !List.of(1, 2).contains(w)) {
+                return List.of(new FlkP.Pr(pers, w));
+            }
+
+            return List.of();
+        });
+    }
+}

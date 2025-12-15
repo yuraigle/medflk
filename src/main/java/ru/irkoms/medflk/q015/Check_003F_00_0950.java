@@ -12,6 +12,11 @@ import java.util.Objects;
 public class Check_003F_00_0950 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Услуги присутствуют при признаке отказа =1";
+    }
+
+    @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             Integer pOtk = zap.getZSl().getPOtk();

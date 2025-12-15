@@ -12,6 +12,11 @@ import java.util.Objects;
 public class Check_003F_00_2110 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "";
+    }
+
+    @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         // так гораздо быстрее на больших реестрах
         if (zlList.getZglv().getSdZ() > 10_000) {

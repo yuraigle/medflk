@@ -10,12 +10,13 @@ import java.util.List;
 public class Check_003F_00_1260 extends AbstractCheck {
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
-        return iterateOverSl(zlList, persList, check1());
+    public String getErrorMessage() {
+        return "";
     }
 
-    private IFunctionOverSl check1() {
-        return (zlList, zap, sl) -> {
+    @Override
+    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+        return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             List<FlkP.Pr> errors = new ArrayList<>();
 
             OnkSl onkSl = sl.getOnkSl();
@@ -28,6 +29,6 @@ public class Check_003F_00_1260 extends AbstractCheck {
             }
 
             return errors;
-        };
+        });
     }
 }

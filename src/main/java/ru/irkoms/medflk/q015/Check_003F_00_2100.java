@@ -11,6 +11,11 @@ import java.util.List;
 public class Check_003F_00_2100 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "";
+    }
+
+    @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
 
         if (zlList.getSchet().getDisp() == null) {

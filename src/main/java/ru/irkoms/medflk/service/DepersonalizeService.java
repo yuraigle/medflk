@@ -3,6 +3,7 @@ package ru.irkoms.medflk.service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -40,11 +41,17 @@ public class DepersonalizeService {
     }
 
     public void depersonalize(String filename) {
-        String outDir = "samples";
+        String dir = "samples";
+        Path outPath = (new File(dir)).toPath();
+        if (!outPath.toFile().exists() && !outPath.toFile().mkdirs()) {
+            throw new RuntimeException();
+        }
 
         String num = String.valueOf(Math.round(Math.random() * 100));
-        String newNameM = filename.toUpperCase().replaceAll("^.*/", "")
-                .replaceAll("_(\\d{4}).*", "_$1") + num;
+
+        String newNameM = Path.of(filename).toFile().getName()
+                                  .toUpperCase().replaceAll("^.*/", "")
+                                  .replaceAll("_(\\d{4}).*", "_$1") + num;
 
         String newNameL; // HM -> LM, DVM -> LVM, TM -> LCM, CM -> LCM
         if (newNameM.startsWith("C") || newNameM.startsWith("T")) {
@@ -53,9 +60,10 @@ public class DepersonalizeService {
             newNameL = newNameM.replaceFirst(".", "L");
         }
 
+        String outZipName = Path.of(outPath.toString(), newNameM + ".ZIP").toString();
         try (
                 ZipFile zf = new ZipFile(filename);
-                FileOutputStream fos = new FileOutputStream(outDir + "/" + newNameM + ".ZIP");
+                FileOutputStream fos = new FileOutputStream(outZipName);
                 ZipOutputStream zos = new ZipOutputStream(fos)
         ) {
             Enumeration<? extends ZipEntry> entries = zf.entries();
@@ -84,8 +92,10 @@ public class DepersonalizeService {
                     zos.write(newContents.getBytes(Charset.forName("CP1251")));
                 }
             }
+
+            log.info("Created file {}", outZipName);
         } catch (Exception e) {
-            log.error("Ошибка чтения ZIP: {}", e.getMessage());
+            log.error(e);
         }
     }
 

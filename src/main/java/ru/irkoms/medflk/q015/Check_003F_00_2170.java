@@ -15,6 +15,11 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class Check_003F_00_2170 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "";
+    }
+
+    @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
             Pacient pac = zap.getPacient();

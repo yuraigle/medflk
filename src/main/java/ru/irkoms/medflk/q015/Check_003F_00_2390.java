@@ -12,6 +12,11 @@ import java.util.Objects;
 public class Check_003F_00_2390 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "";
+    }
+
+    @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverSl(zlList, persList, (zlList1, zap, sl) -> {
             String slId = sl.getSlId();

@@ -31,9 +31,12 @@ public class NsiDownloaderService {
             throw new RuntimeException("Не удалось создать каталог " + nsiDir.getAbsolutePath());
         }
 
-        List<String> packets = List.of("F002", "F008", "F010", "F011", "F032", "Q015", "V002",
+        List<String> packets = List.of("F002", "F006", "F008", "F010", "F011", "F014",
+                "F032", "F042", "O002", "Q015",
+                "V002", "V005",
                 "V006", "V008", "V009", "V010", "V012", "V014", "V015", "V016", "V017",
-                "V018", "V020", "V021", "V024", "V025", "V026", "V027", "V028"
+                "V018", "V020", "V021", "V023", "V024", "V025", "V026", "V027", "V028",
+                "V029"
         );
 
         for (String packet : packets) {

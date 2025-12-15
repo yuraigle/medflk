@@ -13,12 +13,13 @@ import static ru.irkoms.medflk.Utils.dsIsOnkoC00ToD10OrD45ToD48;
 public class Check_003F_00_0882 extends AbstractCheck {
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
-        return iterateOverSl(zlList, persList, check1());
+    public String getErrorMessage() {
+        return "Нет сведений об онкологии для случая из файла C";
     }
 
-    private IFunctionOverSl check1() {
-        return (zlList, zap, sl) -> {
+    @Override
+    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+        return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             String ds1 = sl.getDs1();
             Integer uslOk = zap.getZSl().getUslOk();
             int reab = sl.getReab() == null ? 0 : sl.getReab();
@@ -31,6 +32,6 @@ public class Check_003F_00_0882 extends AbstractCheck {
             }
 
             return List.of();
-        };
+        });
     }
 }

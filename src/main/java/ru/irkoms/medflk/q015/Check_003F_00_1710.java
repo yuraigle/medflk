@@ -13,6 +13,11 @@ import static ru.irkoms.medflk.Utils.getZlListMdType;
 public class Check_003F_00_1710 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "";
+    }
+
+    @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         String typeMd = getZlListMdType(zlList);
         if (!List.of("H", "T", "C").contains(typeMd)) return List.of();

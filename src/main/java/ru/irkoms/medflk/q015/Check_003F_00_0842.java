@@ -13,6 +13,11 @@ import static ru.irkoms.medflk.Utils.dsIsOnkoC00ToD10OrD45ToD48;
 public class Check_003F_00_0842 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Сведения о консилиуме не указаны при онко-диагнозе";
+    }
+
+    @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             boolean hasCons = sl.getConsList() != null && !sl.getConsList().isEmpty();

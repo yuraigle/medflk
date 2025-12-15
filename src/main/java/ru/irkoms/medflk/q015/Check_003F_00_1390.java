@@ -15,6 +15,11 @@ import java.util.Objects;
 public class Check_003F_00_1390 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "";
+    }
+
+    @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             if (sl.getNazList() == null) return List.of();

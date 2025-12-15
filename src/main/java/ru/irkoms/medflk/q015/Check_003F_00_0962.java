@@ -12,6 +12,11 @@ import static ru.irkoms.medflk.Utils.dsIsOnkoC00ToD10OrD45ToD48;
 @Component
 public class Check_003F_00_0962 extends AbstractCheck {
 
+    @Override
+    public String getErrorMessage() {
+        return "Услуги отсутствуют при онко-диагнозе и типе лечения 1,3,4,6";
+    }
+
     // (C00.0<=DS1<D10 или D45<=DS1<D48) и USL_TIP={1, 3, 4, 6}
     @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {

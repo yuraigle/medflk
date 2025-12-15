@@ -12,6 +12,11 @@ import java.util.List;
 public class Check_006F_00_0310 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "";
+    }
+
+    @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
             LocalDate nprDate = zap.getZSl().getNprDate();

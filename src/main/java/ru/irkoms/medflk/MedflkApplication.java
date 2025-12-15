@@ -13,8 +13,11 @@ import ru.irkoms.medflk.jaxb.ZlList;
 import ru.irkoms.medflk.service.*;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -38,7 +41,6 @@ public class MedflkApplication implements CommandLineRunner {
             log.info("Usage:");
             log.info("java -jar medflk.jar filename.zip to check file");
             log.info("java -jar medflk.jar update-nsi to update nsi");
-
             System.exit(0);
         }
 
@@ -48,22 +50,36 @@ public class MedflkApplication implements CommandLineRunner {
         }
 
         if (args[0].equals("make-demo")) {
-            String dir = "/home/orlov/MED/example/";
+            String dir = args[1];
             depersonalizeService.depersonalizeDir(dir);
             System.exit(0);
         }
 
-        File zip = new File(args[0]);
+        initNsiPackets();
+
+        try (Stream<Path> files = Files.walk(Path.of(args[0]))) {
+            files
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.toFile().getName().startsWith("H"))
+                    .forEach(p -> checkFile(p.toFile()));
+        } catch (Exception e) {
+            log.error(e);
+        }
+
+        System.exit(0);
+    }
+
+    private void checkFile(File zip) {
         if (!zip.exists()) {
-            log.error("File not found: {}", zip.getName());
+            log.error("Файл {} не найден", zip.getName());
             return;
         }
 
-        initNsiPackets();
         log.info("Обрабатывается файл {} ({}Kb)", zip.getName(), zip.length() / 1024);
 
         ZlList zlList = null;
         PersList persList = null;
+
         try {
             zlList = registryReaderService.parseZlList(zip);
             persList = registryReaderService.parsePersList(zip);
@@ -73,7 +89,7 @@ public class MedflkApplication implements CommandLineRunner {
 
         if (zlList == null || persList == null) {
             log.error("Ошибка чтения файла {}", zip.getName());
-            System.exit(1);
+            return;
         }
 
         List<FlkP.Pr> schemaErrors = schemaValidationService.validate(zlList);
@@ -83,17 +99,16 @@ public class MedflkApplication implements CommandLineRunner {
             for (FlkP.Pr error : schemaErrors) {
                 log.error("{}", error);
             }
-            System.exit(1);
+            return;
         }
 
         List<FlkP.Pr> q015Errors = q015ValidationService.validate(zlList, persList);
         if (!q015Errors.isEmpty()) {
             log.error("{} ошибок Q015", q015Errors.size());
-            System.exit(1);
+            return;
         }
 
         log.info("OK");
-        System.exit(0);
     }
 
     private void initNsiPackets() {

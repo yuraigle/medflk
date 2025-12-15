@@ -13,6 +13,11 @@ import static ru.irkoms.medflk.Utils.dsIsOnkoC00ToD10OrD45ToD48;
 public class Check_003F_00_0932 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Тариф онко-случая не заполнен";
+    }
+
+    @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverSl(zlList, persList, (zlList1, zap, sl) -> {
             String ds1 = sl.getDs1();

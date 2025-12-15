@@ -14,12 +14,13 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class Check_003F_00_1360 extends AbstractCheck {
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
-        return iterateOverSl(zlList, persList, check1());
+    public String getErrorMessage() {
+        return "";
     }
 
-    private IFunctionOverSl check1() {
-        return (zlList, zap, sl) -> {
+    @Override
+    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+        return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             if (sl.getNazList() == null) return List.of();
 
             for (Naz naz : sl.getNazList()) {
@@ -35,6 +36,6 @@ public class Check_003F_00_1360 extends AbstractCheck {
             }
 
             return List.of();
-        };
+        });
     }
 }

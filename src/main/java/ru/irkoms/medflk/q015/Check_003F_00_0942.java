@@ -13,6 +13,11 @@ import static ru.irkoms.medflk.Utils.dsIsOnkoC00ToD10OrD45ToD48;
 public class Check_003F_00_0942 extends AbstractCheck {
 
     @Override
+    public String getErrorMessage() {
+        return "Услуги отсутствуют при онко-диагнозе и типе лечения 1,3,4";
+    }
+
+    @Override
     public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
         return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             if (sl.getOnkSl() == null || sl.getOnkSl().getOnkUslList() == null) return List.of();

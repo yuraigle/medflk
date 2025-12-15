@@ -7,9 +7,7 @@ import java.util.List;
 
 public abstract class AbstractCheck {
 
-    public String getErrorMessage() {
-        return "";
-    }
+    public abstract String getErrorMessage();
 
     public abstract List<FlkP.Pr> check(ZlList zlList, PersList persList);
 

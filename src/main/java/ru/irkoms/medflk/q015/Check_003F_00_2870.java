@@ -13,17 +13,18 @@ import java.util.List;
 public class Check_003F_00_2870 extends AbstractCheck {
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
-        return iterateOverUsl(zlList, persList, check1());
+    public String getErrorMessage() {
+        return "";
     }
 
-    IFunctionOverUsl check1() {
-        return (zlList, zap, sl, usl) -> {
+    @Override
+    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+        return iterateOverUsl(zlList, persList, (a, zap, sl, usl) -> {
             if (usl.getProfil() == null) {
                 return List.of(new FlkP.Pr(zap, sl, usl, null));
             }
 
             return List.of();
-        };
+        });
     }
 }

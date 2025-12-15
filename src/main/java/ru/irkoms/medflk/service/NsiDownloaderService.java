@@ -77,7 +77,8 @@ public class NsiDownloaderService {
     private void downloadRmzNsi(String oid, String filename) {
         try {
             String version = getLatestRmzVersion(oid);
-            String url = "https://nsi.rosminzdrav.ru/api/dataFiles/" + oid + "_" + version + "_xml.zip";
+            String url = "https://nsi.rosminzdrav.ru/api/dataFiles/%s_%s_xml.zip"
+                    .formatted(oid, version);
             downloadFile(url, filename);
             log.info("Справочник {} загружен с сайта РосМинЗдрав", filename);
         } catch (Exception e) {

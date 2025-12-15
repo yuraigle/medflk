@@ -79,7 +79,6 @@ public class Q015ValidationService {
             }
         } catch (Exception e) {
             log.error("Error while applying check {}: {}", q015.getIdTest(), e.getMessage());
-//            e.printStackTrace();
         }
 
         long executionTimeMs = (System.nanoTime() - startedAt) / 1_000_000;

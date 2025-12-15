@@ -60,7 +60,7 @@ public class MedflkApplication implements CommandLineRunner {
         try (Stream<Path> files = Files.walk(Path.of(args[0]))) {
             files
                     .filter(Files::isRegularFile)
-                    .filter(p -> p.toFile().getName().startsWith("H"))
+                    .filter(p -> p.toFile().getName().toUpperCase().startsWith("H"))
                     .forEach(p -> checkFile(p.toFile()));
         } catch (Exception e) {
             log.error(e);

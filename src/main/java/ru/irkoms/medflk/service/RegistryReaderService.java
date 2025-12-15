@@ -23,7 +23,7 @@ public class RegistryReaderService {
         try {
             return parseList(zip, ZlList.class);
         } catch (Exception e) {
-            throw new Exception("XML/ZIP не читается");
+            throw new Exception("Ошибка чтения XML/ZIP");
         }
     }
 
@@ -32,7 +32,7 @@ public class RegistryReaderService {
             return parseList(zip, PersList.class);
         } catch (Exception e) {
             log.warn(e.getMessage());
-            throw new Exception("XML/ZIP не читается");
+            throw new Exception("Ошибка чтения XML/ZIP");
         }
     }
 
@@ -53,16 +53,12 @@ public class RegistryReaderService {
                     }
                 }
             }
-        } catch (IOException e) {
-            log.error("Ошибка чтения ZIP: {}", e.getMessage());
-            throw e;
-        } catch (JAXBException | ClassCastException e) {
-            e.printStackTrace();
-            log.error("Ошибка чтения XML: {}", e.getMessage());
+        } catch (IOException | JAXBException | ClassCastException e) {
+            log.error("Ошибка чтения XML/ZIP: {}", e.getMessage());
             throw e;
         }
 
-        throw new Exception(cls.getSimpleName() + " not found!");
+        throw new Exception();
     }
 
 }

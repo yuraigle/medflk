@@ -6,10 +6,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import ru.orlov.medflk.domain.AbstractNsiService;
-import ru.orlov.medflk.jaxb.FlkP;
-import ru.orlov.medflk.jaxb.PersList;
-import ru.orlov.medflk.jaxb.ZlList;
+import ru.orlov.medflk.domain.ValidationResult;
+import ru.orlov.medflk.domain.nsi.AbstractNsiService;
 import ru.orlov.medflk.service.*;
 
 import java.io.File;
@@ -26,10 +24,8 @@ public class MedflkApplication implements CommandLineRunner {
 
     private final ApplicationContext ctx;
     private final NsiDownloaderService nsiDownloaderService;
-    private final RegistryReaderService registryReaderService;
-    private final SchemaValidationService schemaValidationService;
-    private final Q015ValidationService q015ValidationService;
     private final DepersonalizeService depersonalizeService;
+    private final FileValidatorService validator;
 
     public static void main(String[] args) {
         SpringApplication.run(MedflkApplication.class, args);
@@ -62,11 +58,14 @@ public class MedflkApplication implements CommandLineRunner {
             List<File> files = paths
                     .filter(Files::isRegularFile)
                     .map(Path::toFile)
-                    .filter(f -> f.getName().toUpperCase().startsWith("H"))
+                    .filter(f -> f.getName().toUpperCase().startsWith("TM380210"))
                     .toList();
 
             log.info("{} файлов папке {} ожидают обработку", files.size(), procPath);
-            files.forEach(this::checkFile);
+            files.forEach(f -> {
+                ValidationResult procLog = validator.validate(f);
+                procLog.debug();
+            });
         } catch (Exception e) {
             log.error(e);
         }
@@ -85,48 +84,6 @@ public class MedflkApplication implements CommandLineRunner {
         }
 
         return procPath;
-    }
-
-    private void checkFile(File zip) {
-        if (!zip.exists()) {
-            log.error("Файл {} не найден", zip.getName());
-            return;
-        }
-
-        log.info("Обрабатывается файл {} ({}Kb)", zip.getName(), zip.length() / 1024);
-
-        ZlList zlList = null;
-        PersList persList = null;
-
-        try {
-            zlList = registryReaderService.parseZlList(zip);
-            persList = registryReaderService.parsePersList(zip);
-        } catch (Exception e) {
-            log.error(e);
-        }
-
-        if (zlList == null || persList == null) {
-            log.error("Ошибка чтения файла {}", zip.getName());
-            return;
-        }
-
-        List<FlkP.Pr> schemaErrors = schemaValidationService.validate(zlList);
-        schemaErrors.addAll(schemaValidationService.validate(persList));
-
-        if (!schemaErrors.isEmpty()) {
-            for (FlkP.Pr error : schemaErrors) {
-                log.error("{}", error);
-            }
-            return;
-        }
-
-        List<FlkP.Pr> q015Errors = q015ValidationService.validate(zlList, persList);
-        if (!q015Errors.isEmpty()) {
-            log.error("{} ошибок Q015", q015Errors.size());
-            return;
-        }
-
-        log.info("OK");
     }
 
     private void initNsiPackets() {

@@ -23,21 +23,20 @@ public class SchemaValidationService {
         }
     }
 
-    public List<FlkP.Pr> validate(Object list) {
+    public List<FlkErr> validate(Object list) {
         Set<ConstraintViolation<Object>> err = validator.validate(list);
 
-        List<FlkP.Pr> errors = new ArrayList<>();
+        List<FlkErr> errors = new ArrayList<>();
         for (ConstraintViolation<Object> viol : err) {
-            FlkP.Pr pr = convertHibernateViolation(viol);
+            FlkErr pr = convertHibernateViolation(viol);
             errors.add(pr);
         }
 
         return errors;
     }
 
-    private FlkP.Pr convertHibernateViolation(ConstraintViolation<Object> viol) {
-        FlkP.Pr pr = new FlkP.Pr();
-        pr.setLevel("E"); // ошибки схемы XML являются критическими
+    private FlkErr convertHibernateViolation(ConstraintViolation<Object> viol) {
+        FlkErr err = new FlkErr(null, null, null, null);
 
         String imPol = null;
         ZlList aZlList = null;
@@ -51,7 +50,7 @@ public class SchemaValidationService {
             int pacN = Integer.parseInt(m1.group(1));
             PersList aPersList = (PersList) viol.getRootBean();
             PersList.Pers aPers = aPersList.getPersList().get(pacN);
-            pr.setIdPac(aPers.getIdPac());
+            err.setIdPac(aPers.getIdPac());
         }
 
         for (Path.Node node : viol.getPropertyPath()) {
@@ -72,24 +71,24 @@ public class SchemaValidationService {
         }
 
         if (aPacient != null) {
-            pr.setIdPac(aPacient.getIdPac());
+            err.setIdPac(aPacient.getIdPac());
         }
 
         if (aZap != null && aZap.getNZap() != null) {
-            pr.setNZap(aZap.getNZap().toString());
+            err.setNZap(aZap.getNZap().toString());
         }
 
         if (aZSl != null && aZSl.getIdcase() != null) {
-            pr.setIdcase(aZSl.getIdcase().toString());
+            err.setIdcase(aZSl.getIdcase().toString());
         }
 
-        pr.setImPol(imPol);
-        pr.setComment(imPol + " : " + viol.getMessage());
+        err.setImPol(imPol);
+        err.setComment(imPol + " : " + viol.getMessage());
 
         if (viol.getInvalidValue() != null) {
-            pr.setZnPol(viol.getInvalidValue().toString());
+            err.setZnPol(viol.getInvalidValue().toString());
         }
 
-        return pr;
+        return err;
     }
 }

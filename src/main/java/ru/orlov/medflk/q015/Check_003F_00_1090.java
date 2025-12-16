@@ -1,7 +1,7 @@
 package ru.orlov.medflk.q015;
 
 import org.springframework.stereotype.Component;
-import ru.orlov.medflk.jaxb.FlkP;
+import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
@@ -16,7 +16,7 @@ public class Check_003F_00_1090 extends AbstractCheck {
     }
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+    public List<FlkErr> check(ZlList zlList, PersList persList) {
         return iterateOverOnkSl(zlList, persList, (a, zap, sl, onkSl) -> {
             Integer uslOk = zap.getZSl().getUslOk();
             Integer ds1T = onkSl.getDs1T();
@@ -24,7 +24,7 @@ public class Check_003F_00_1090 extends AbstractCheck {
 
             boolean hasOnkUsl = onkSl.getOnkUslList() != null && !onkSl.getOnkUslList().isEmpty();
             if (List.of(1, 2).contains(uslOk) && List.of(0, 1, 2).contains(ds1T) && !hasOnkUsl) {
-                return List.of(new FlkP.Pr(zap, sl, null));
+                return List.of(new FlkErr(zap, sl, null, null));
             }
 
             return List.of();

@@ -1,7 +1,7 @@
 package ru.orlov.medflk.q015;
 
 import org.springframework.stereotype.Component;
-import ru.orlov.medflk.jaxb.FlkP;
+import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
@@ -16,7 +16,7 @@ public class Check_002F_00_0460 extends AbstractCheck {
     }
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+    public List<FlkErr> check(ZlList zlList, PersList persList) {
         Integer yr = zlList.getSchet().getYear();
         if (yr == null) return List.of();
         String year = yr.toString();
@@ -25,7 +25,7 @@ public class Check_002F_00_0460 extends AbstractCheck {
             if (sl.getKsgKpg() == null) return List.of();
 
             if (!year.equals(sl.getKsgKpg().getVerKsg())) {
-                return List.of(new FlkP.Pr(zap, sl, sl.getKsgKpg().getVerKsg()));
+                return List.of(new FlkErr(zap, sl, null, sl.getKsgKpg().getVerKsg()));
             }
 
             return List.of();

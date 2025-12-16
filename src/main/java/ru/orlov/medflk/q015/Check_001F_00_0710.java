@@ -3,7 +3,7 @@ package ru.orlov.medflk.q015;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.orlov.medflk.jaxb.FlkP;
+import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
@@ -21,13 +21,13 @@ public class Check_001F_00_0710 extends AbstractCheck {
     }
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+    public List<FlkErr> check(ZlList zlList, PersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
             @NonNull PersList.Pers pers = getPersById(zap.getPacient().getIdPac());
             Integer wP = pers.getWP();
 
             if (wP != null && !List.of(1, 2).contains(wP)) {
-                return List.of(new FlkP.Pr(pers, wP));
+                return List.of(new FlkErr(pers, wP));
             }
 
             return List.of();

@@ -1,7 +1,7 @@
 package ru.orlov.medflk.q015;
 
 import org.springframework.stereotype.Component;
-import ru.orlov.medflk.jaxb.FlkP;
+import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
@@ -17,18 +17,18 @@ public class Check_003F_00_2850 extends AbstractCheck {
     }
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+    public List<FlkErr> check(ZlList zlList, PersList persList) {
         return iterateOverUsl(zlList, persList, (a, zap, sl, usl) -> {
             String idServ = usl.getIdserv();
             if (idServ == null) {
-                return List.of(new FlkP.Pr(zap, sl, usl, null)); // пустой
+                return List.of(new FlkErr(zap, sl, usl, null)); // пустой
             } else {
                 boolean isUnique = sl.getUslList().stream()
                         .filter(u -> Objects.equals(u.getIdserv(), idServ))
                         .count() == 1;
 
                 if (!isUnique) {
-                    return List.of(new FlkP.Pr(zap, sl, usl, idServ)); // не уникальный
+                    return List.of(new FlkErr(zap, sl, usl, idServ)); // не уникальный
                 }
             }
 

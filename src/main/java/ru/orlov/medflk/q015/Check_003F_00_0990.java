@@ -2,7 +2,7 @@ package ru.orlov.medflk.q015;
 
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
-import ru.orlov.medflk.jaxb.FlkP;
+import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
@@ -22,7 +22,7 @@ public class Check_003F_00_0990 extends AbstractCheck {
     }
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+    public List<FlkErr> check(ZlList zlList, PersList persList) {
         return iterateOverOnkSl(zlList, persList, (a, zap, sl, onkSl) -> {
             @NonNull PersList.Pers pers = getPersById(zap.getPacient().getIdPac());
             @NonNull LocalDate dr = pers.getDr();
@@ -34,7 +34,7 @@ public class Check_003F_00_0990 extends AbstractCheck {
 
             // DS1_T=0 и возраст пациента на DATE_Z_1 больше или равен 18 лет
             if (Objects.equals(0, ds1T) && age >= 18 && onkT == null) {
-                return List.of(new FlkP.Pr(zap, sl, null));
+                return List.of(new FlkErr(zap, sl, null, null));
             }
 
             return List.of();

@@ -1,7 +1,7 @@
 package ru.orlov.medflk.q015;
 
 import org.springframework.stereotype.Component;
-import ru.orlov.medflk.jaxb.FlkP;
+import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
@@ -17,7 +17,7 @@ public class Check_003F_00_0500 extends AbstractCheck {
     }
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+    public List<FlkErr> check(ZlList zlList, PersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
             Integer vbP = zap.getZSl().getVbP();
             Integer idsp = zap.getZSl().getIdsp();
@@ -25,7 +25,7 @@ public class Check_003F_00_0500 extends AbstractCheck {
                     .anyMatch(sl -> Objects.equals(4, sl.getPPer()));
 
             if (Objects.equals(33, idsp) && hasPper4 && !Objects.equals(1, vbP)) {
-                return List.of(new FlkP.Pr(zap, null, vbP));
+                return List.of(new FlkErr(zap, null, null, vbP));
             }
 
             return List.of();

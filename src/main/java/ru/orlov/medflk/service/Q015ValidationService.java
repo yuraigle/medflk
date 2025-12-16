@@ -3,15 +3,17 @@ package ru.orlov.medflk.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import ru.orlov.medflk.domain.Q015Packet;
-import ru.orlov.medflk.domain.Q015Service;
-import ru.orlov.medflk.jaxb.FlkP;
+import ru.orlov.medflk.domain.ValidationResult;
+import ru.orlov.medflk.domain.nsi.Q015Packet;
+import ru.orlov.medflk.domain.nsi.Q015Service;
+import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.Zap;
 import ru.orlov.medflk.jaxb.ZlList;
 import ru.orlov.medflk.q015.AbstractCheck;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static ru.orlov.medflk.Utils.castList;
@@ -22,16 +24,15 @@ import static ru.orlov.medflk.Utils.getZlListMdType;
 @RequiredArgsConstructor
 public class Q015ValidationService {
 
-    private final Q015Service q015Service;
-
     // все персоны из L-файла уходят в кэш для ускорения поиска по ним
     private static final Map<String, PersList.Pers> persCache = new HashMap<>();
+    private final Q015Service q015Service;
 
     public static PersList.Pers getPersById(String idPac) {
         return persCache.getOrDefault(idPac, null);
     }
 
-    public List<FlkP.Pr> validate(ZlList zlList, PersList persList) {
+    public void validate(ZlList zlList, PersList persList, ValidationResult proc) {
         String zlType = getZlListMdType(zlList);
 
         // список проверок Q015 берём на дату счёта
@@ -50,35 +51,47 @@ public class Q015ValidationService {
             persCache.put(zap.getPacient().getIdPac(), pers);
         }
 
-        q015List = q015List.stream().filter(q -> q.getIdTest().startsWith("001")).toList();
+        q015List = q015List.stream()
+                .filter(q -> q.getIdTest().startsWith("001"))
+                .toList();
 
-        List<FlkP.Pr> errors = new ArrayList<>();
         int cntActiveChecks = 0;
         for (Q015Packet.Q015 check : q015List) {
+            ValidationResult.Line line = new ValidationResult.Line(check.getIdTest(), null);
             if (check.getBean() != null && check.getBean() instanceof AbstractCheck) {
                 cntActiveChecks++;
-                errors.addAll(applyCheck(check, zlList, persList));
+                try {
+                    List<FlkErr> e1 = applyCheck(check, zlList, persList);
+                    if (e1 != null && !e1.isEmpty()) {
+                        String comment = e1.getFirst().getComment();
+                        line.setComment(comment + " (" + e1.size() + " ошибок)");
+                        proc.getErrors().addAll(e1);
+                        proc.setDeclined(true);
+                    } else {
+                        line.setComment("OK");
+                    }
+                } catch (Exception e) {
+                    line.setComment("Ошибка обработчика при проведении проверки: " + e.getMessage());
+                    proc.setDeclined(true);
+                }
             } else {
-                log.debug("Проверка {} {} не реализована", check.getIdTest(), check.getIdEl());
+                line.setComment(String.format("Проверка %s не реализована", check.getIdEl()));
             }
+            proc.getLines().add(line);
         }
-        log.info("{} / {} проверок исполнено", cntActiveChecks, q015List.size());
 
-        return errors;
+        proc.setEndedAt(LocalDateTime.now());
+        proc.addLine(String.format("%s / %s проверок выполнено", cntActiveChecks, q015List.size()));
     }
 
-    private List<FlkP.Pr> applyCheck(Q015Packet.Q015 q015, Object a, Object b) {
+    private List<FlkErr> applyCheck(Q015Packet.Q015 q015, Object a, Object b) throws Exception {
         long startedAt = System.nanoTime();
-        List<FlkP.Pr> errors = new ArrayList<>();
+        List<FlkErr> errors = new ArrayList<>();
 
-        try {
-            Object result = q015.getMethod().invoke(q015.getBean(), a, b);
-            if (result != null) {
-                errors = castList(FlkP.Pr.class, (List<?>) result);
-                errors.forEach(e -> e.fillFromQ015(q015));
-            }
-        } catch (Exception e) {
-            log.error("Error while applying check {}: {}", q015.getIdTest(), e.getMessage());
+        Object result = q015.getMethod().invoke(q015.getBean(), a, b);
+        if (result != null) {
+            errors = castList(FlkErr.class, (List<?>) result);
+            errors.forEach(e -> e.fillFromQ015(q015));
         }
 
         long executionTimeMs = (System.nanoTime() - startedAt) / 1_000_000;

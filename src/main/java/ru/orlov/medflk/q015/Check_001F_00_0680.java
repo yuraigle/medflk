@@ -2,8 +2,8 @@ package ru.orlov.medflk.q015;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.orlov.medflk.domain.F014Service;
-import ru.orlov.medflk.jaxb.FlkP;
+import ru.orlov.medflk.domain.nsi.F014Service;
+import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.Sank;
 import ru.orlov.medflk.jaxb.ZlList;
@@ -24,7 +24,7 @@ public class Check_001F_00_0680 extends AbstractCheck {
     }
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+    public List<FlkErr> check(ZlList zlList, PersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
 
             // Вообще, в счёте от МО не должно быть санкций
@@ -32,12 +32,12 @@ public class Check_001F_00_0680 extends AbstractCheck {
                 return List.of();
             }
 
-            List<FlkP.Pr> errors = new ArrayList<>();
+            List<FlkErr> errors = new ArrayList<>();
             for (Sank sank : zap.getZSl().getSankList()) {
                 LocalDate d1 = sank.getDateAct();
                 Integer sOsn = sank.getSOsn();
                 if (d1 != null && sOsn != null && !f014Service.isValidSOsnOnDate(sOsn, d1)) {
-                    errors.add(new FlkP.Pr(zap, null, sOsn));
+                    errors.add(new FlkErr(zap, null, null, sOsn));
                 }
             }
 

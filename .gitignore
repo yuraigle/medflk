@@ -23,6 +23,6 @@ target/
 .gigaide/
 
 *.java~
-nsi/
+nsi/*.ZIP
 logs/
 samples/

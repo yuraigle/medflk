@@ -1,7 +1,7 @@
 package ru.orlov.medflk.q015;
 
 import org.springframework.stereotype.Component;
-import ru.orlov.medflk.jaxb.FlkP;
+import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.Sl;
 import ru.orlov.medflk.jaxb.ZlList;
@@ -26,12 +26,12 @@ public class Check_003F_00_3130 extends AbstractCheck {
     // и возраст пациента на дату начала лечения больше или равно 18 лет
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+    public List<FlkErr> check(ZlList zlList, PersList persList) {
 
         return iterateOverZap(zlList, persList, (a, zap) -> {
             PersList.Pers pers = getPersById(zap.getPacient().getIdPac());
 
-            List<FlkP.Pr> errors = new ArrayList<>();
+            List<FlkErr> errors = new ArrayList<>();
 
             Integer uslOk = zap.getZSl().getUslOk();
 
@@ -63,7 +63,7 @@ public class Check_003F_00_3130 extends AbstractCheck {
 
                 BigDecimal wei = sl.getWei(); // если все звезды сошлись, WEI обязателен
                 if (wei == null) {
-                    errors.add(new FlkP.Pr(zap, sl, null));
+                    errors.add(new FlkErr(zap, sl, null, null));
                 }
             }
 

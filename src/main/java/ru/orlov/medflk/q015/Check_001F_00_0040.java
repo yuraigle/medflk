@@ -2,8 +2,8 @@ package ru.orlov.medflk.q015;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.orlov.medflk.domain.F002Service;
-import ru.orlov.medflk.jaxb.FlkP;
+import ru.orlov.medflk.domain.nsi.F002Service;
+import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
@@ -22,14 +22,14 @@ public class Check_001F_00_0040 extends AbstractCheck {
     }
 
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+    public List<FlkErr> check(ZlList zlList, PersList persList) {
         LocalDate d1 = zlList.getSchet().getDschet();
         String codePlat = zlList.getSchet().getPlat();
 
         if (codePlat == null || d1 == null) return List.of(); // npe-safe
 
         if (!f002Service.isValidRegionalSmoOnDate(codePlat, d1)) {
-            return List.of(new FlkP.Pr(null, null, codePlat));
+            return List.of(new FlkErr(null, null, null, codePlat));
         }
 
         return List.of();

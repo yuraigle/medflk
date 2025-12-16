@@ -1,7 +1,7 @@
 package ru.orlov.medflk.q015;
 
 import org.springframework.stereotype.Component;
-import ru.orlov.medflk.jaxb.FlkP;
+import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
@@ -20,7 +20,7 @@ public class Check_003F_00_1522 extends AbstractCheck {
 
     // (C00.0<=DS1<D10 или D45<=DS1<D48) и USL_TIP={1,3,4,6}
     @Override
-    public List<FlkP.Pr> check(ZlList zlList, PersList persList) {
+    public List<FlkErr> check(ZlList zlList, PersList persList) {
         return iterateOverUsl(zlList, persList, (a, zap, sl, usl) -> {
             String vidVme = usl.getVidVme();
 
@@ -31,7 +31,7 @@ public class Check_003F_00_1522 extends AbstractCheck {
             }
 
             if (dsIsOnkoC00ToD10OrD45ToD48(sl.getDs1()) && hasUslTip1346 && isBlank(vidVme)) {
-                return List.of(new FlkP.Pr(zap, sl, usl, vidVme));
+                return List.of(new FlkErr(zap, sl, usl, vidVme));
             }
 
             return List.of();

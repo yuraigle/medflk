@@ -21,6 +21,7 @@ public class Check_001F_00_0400 extends AbstractCheck {
     public List<FlkErr> check(ZlList zlList, PersList persList) {
         return iterateOverSl(zlList, persList, (a, zap, sl) -> {
             List<FlkErr> errors = new ArrayList<>();
+
             if (sl.getConsList() != null) {
                 for (Cons cons : sl.getConsList()) {
                     Integer prCons = cons.getPrCons();
@@ -29,6 +30,7 @@ public class Check_001F_00_0400 extends AbstractCheck {
                     }
                 }
             }
+
             return errors;
         });
     }

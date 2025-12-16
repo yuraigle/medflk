@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,27 +33,28 @@ public class NsiDownloaderService {
         }
 
         List<String> packets = List.of("F002", "F006", "F008", "F010", "F011", "F014",
-                "F032", "F042", "O002", "Q015",
-                "V002", "V005",
+                "F032", "F042", "N001", "N002", "N003", "N004", "N005", "N007", "N008",
+                "N010", "N011", "N013", "N014", "N015", "N016", "N017", "N018", "N019",
+                "N020", "N021", "O002", "Q015", "V002", "V005",
                 "V006", "V008", "V009", "V010", "V012", "V014", "V015", "V016", "V017",
-                "V018", "V020", "V021", "V023", "V024", "V025", "V026", "V027", "V028",
-                "V029"
+                "V018", "V019", "V020", "V021", "V023", "V024", "V025", "V026", "V027",
+                "V028", "V029"
         );
 
         for (String packet : packets) {
-            downloadFfomsNsi(packet, "nsi/" + packet + ".ZIP");
+            downloadFfomsNsi(packet, Path.of(nsiDir.toString(), packet + ".ZIP").toFile());
         }
 
-        downloadRmzNsi("1.2.643.5.1.13.13.11.1070", "nsi/V001.ZIP");
-        downloadRmzNsi("1.2.643.5.1.13.13.11.1005", "nsi/M001.ZIP");
+        downloadRmzNsi("1.2.643.5.1.13.13.11.1070", Path.of(nsiDir.toString(), "V001.ZIP").toFile());
+        downloadRmzNsi("1.2.643.5.1.13.13.11.1005", Path.of(nsiDir.toString(), "M001.ZIP").toFile());
     }
 
-    private void downloadFile(String uri, String filename) {
+    private void downloadFile(String uri, File saveAs) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri)).GET().build();
 
         try (
-                FileOutputStream out = new FileOutputStream(filename)
+                FileOutputStream out = new FileOutputStream(saveAs)
         ) {
             InputStream is = httpClient
                     .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
@@ -63,24 +65,24 @@ public class NsiDownloaderService {
         }
     }
 
-    private void downloadFfomsNsi(String id, String filename) {
+    private void downloadFfomsNsi(String id, File saveAs) {
         try {
             String version = getLatestFfomsVersion(id);
             String url = "https://nsi.ffoms.ru/refbook?type=XML&id=-1&version=" + version;
-            downloadFile(url, filename);
-            log.info("Справочник {} загружен с сайта ФФОМС", filename);
+            downloadFile(url, saveAs);
+            log.info("Справочник {} загружен с сайта ФФОМС", saveAs.getName());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
 
-    private void downloadRmzNsi(String oid, String filename) {
+    private void downloadRmzNsi(String oid, File saveAs) {
         try {
             String version = getLatestRmzVersion(oid);
             String url = "https://nsi.rosminzdrav.ru/api/dataFiles/%s_%s_xml.zip"
                     .formatted(oid, version);
-            downloadFile(url, filename);
-            log.info("Справочник {} загружен с сайта РосМинЗдрав", filename);
+            downloadFile(url, saveAs);
+            log.info("Справочник {} загружен с сайта РосМинЗдрав", saveAs.getName());
         } catch (Exception e) {
             log.error(e.getMessage());
         }

@@ -34,7 +34,7 @@
         <appender-ref ref="FILE-ROLLING"/>
     </root>
 
-    <logger name="ru.irkoms" level="debug" additivity="false">
+    <logger name="ru.orlov" level="debug" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE-ROLLING"/>
     </logger>

@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>ru.irkoms</groupId>
+    <groupId>ru.orlov</groupId>
     <artifactId>medflk</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>medflk</name>

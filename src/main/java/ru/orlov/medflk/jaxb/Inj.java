@@ -1,5 +1,6 @@
 package ru.orlov.medflk.jaxb;
 
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -9,28 +10,35 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.orlov.medflk.jaxb.util.LocalDateAdapter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @XmlAccessorType(XmlAccessType.NONE)
-public class Napr {
+public class Inj {
 
-    @XmlElement(name = "NAPR_DATE")
+    @XmlElement(name = "S_INJ")
+    private BigDecimal sInj;
+
+    @XmlElement(name = "DATE_INJ")
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    private LocalDate naprDate;
+    private LocalDate dateInj;
 
-    @XmlElement(name = "NAPR_MO")
-    private String naprMo;
+    @XmlElement(name = "KV_INJ")
+    private BigDecimal kvInj;
 
-    @XmlElement(name = "NAPR_V")
-    private Integer naprV;
+    @XmlElement(name = "KIZ_INJ")
+    private BigDecimal kizInj;
 
-    @XmlElement(name = "MET_ISSL")
-    private Integer metIssl;
+    @XmlElement(name = "SV_INJ")
+    private BigDecimal svInj;
 
-    @XmlElement(name = "NAPR_USL")
-    private String naprUsl;
+    @XmlElement(name = "SIZ_INJ")
+    private BigDecimal sizInj;
+
+    @XmlElement(name = "RED_INJ")
+    private Integer redInj;
 
 }

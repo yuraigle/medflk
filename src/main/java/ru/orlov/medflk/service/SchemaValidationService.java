@@ -49,7 +49,7 @@ public class SchemaValidationService {
         if (m1.matches()) {
             int pacN = Integer.parseInt(m1.group(1));
             PersList aPersList = (PersList) viol.getRootBean();
-            PersList.Pers aPers = aPersList.getPersList().get(pacN);
+            Pers aPers = aPersList.getPersList().get(pacN);
             err.setIdPac(aPers.getIdPac());
         }
 

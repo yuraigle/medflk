@@ -58,10 +58,11 @@ public class MedflkApplication implements CommandLineRunner {
             List<File> files = paths
                     .filter(Files::isRegularFile)
                     .map(Path::toFile)
-                    .filter(f -> f.getName().toUpperCase().startsWith("TM380210"))
+                    .filter(f -> f.getName().toUpperCase().startsWith("TM"))
                     .toList();
 
             log.info("{} файлов папке {} ожидают обработку", files.size(), procPath);
+
             files.forEach(f -> {
                 ValidationResult procLog = validator.validate(f);
                 procLog.debug();

@@ -1,10 +1,7 @@
 package ru.orlov.medflk.q015;
 
 import org.springframework.stereotype.Component;
-import ru.orlov.medflk.jaxb.FlkErr;
-import ru.orlov.medflk.jaxb.PersList;
-import ru.orlov.medflk.jaxb.Sl;
-import ru.orlov.medflk.jaxb.ZlList;
+import ru.orlov.medflk.jaxb.*;
 
 import java.math.BigDecimal;
 import java.time.Period;
@@ -29,7 +26,7 @@ public class Check_003F_00_3130 extends AbstractCheck {
     public List<FlkErr> check(ZlList zlList, PersList persList) {
 
         return iterateOverZap(zlList, persList, (a, zap) -> {
-            PersList.Pers pers = getPersById(zap.getPacient().getIdPac());
+            Pers pers = getPersById(zap.getPacient().getIdPac());
 
             List<FlkErr> errors = new ArrayList<>();
 

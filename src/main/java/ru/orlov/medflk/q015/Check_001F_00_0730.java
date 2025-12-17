@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.orlov.medflk.domain.nsi.O002Service;
 import ru.orlov.medflk.jaxb.FlkErr;
+import ru.orlov.medflk.jaxb.Pers;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
@@ -26,7 +27,7 @@ public class Check_001F_00_0730 extends AbstractCheck {
     @Override
     public List<FlkErr> check(ZlList zlList, PersList persList) {
         return iterateOverZap(zlList, persList, (a, zap) -> {
-            @NonNull PersList.Pers pers = getPersById(zap.getPacient().getIdPac());
+            @NonNull Pers pers = getPersById(zap.getPacient().getIdPac());
             String okatoG = pers.getOkatoG();
 
             if (okatoG != null && !o002Service.isValidOkato(okatoG)) {

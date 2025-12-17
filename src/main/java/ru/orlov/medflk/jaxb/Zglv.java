@@ -15,22 +15,22 @@ import java.time.LocalDate;
 @Setter
 @EqualsAndHashCode
 @XmlAccessorType(XmlAccessType.NONE)
-public class Napr {
+public class Zglv {
 
-    @XmlElement(name = "NAPR_DATE")
+    @XmlElement(name = "VERSION")
+    private String version;
+
+    @XmlElement(name = "DATA")
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    private LocalDate naprDate;
+    private LocalDate data;
 
-    @XmlElement(name = "NAPR_MO")
-    private String naprMo;
+    @XmlElement(name = "FILENAME")
+    private String filename;
 
-    @XmlElement(name = "NAPR_V")
-    private Integer naprV;
+    @XmlElement(name = "FILENAME1")
+    private String filename1;
 
-    @XmlElement(name = "MET_ISSL")
-    private Integer metIssl;
-
-    @XmlElement(name = "NAPR_USL")
-    private String naprUsl;
+    @XmlElement(name = "SD_Z")
+    private Integer sdZ;
 
 }

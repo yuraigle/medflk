@@ -1,5 +1,6 @@
 package ru.orlov.medflk.jaxb;
 
+import jakarta.validation.Valid;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -10,6 +11,7 @@ import lombok.Setter;
 import ru.orlov.medflk.jaxb.util.LocalDateAdapter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,13 +19,20 @@ import java.time.LocalDate;
 @XmlAccessorType(XmlAccessType.NONE)
 public class LekPrOnk {
 
-    @XmlElement(name = "DATE_INJ")
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    private LocalDate dataInj;
+    @XmlElement(name = "REGNUM")
+    private String regnum;
+
+    @XmlElement(name = "REGNUM_DOP")
+    private String regnumDop;
 
     @XmlElement(name = "CODE_SH")
     private String codeSh;
 
-    @XmlElement(name = "REGNUM")
-    private String regnum;
+    @XmlElement(name = "INJ")
+    private List<@Valid Inj> injList;
+
+    @XmlElement(name = "DATE_INJ")
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    private List<LocalDate> dataInj;
+
 }

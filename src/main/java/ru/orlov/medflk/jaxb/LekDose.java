@@ -7,19 +7,24 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @EqualsAndHashCode
 @XmlAccessorType(XmlAccessType.NONE)
-public class Ds2N {
+public class LekDose {
 
-    @XmlElement(name = "DS2")
-    private String ds2;
+    @XmlElement(name = "ED_IZM")
+    private String edIzm;
 
-    @XmlElement(name = "DS2_PR")
-    private Integer ds2Pr;
+    @XmlElement(name = "DOSE_INJ")
+    private BigDecimal doseInj;
 
-    @XmlElement(name = "PR_DS2_N")
-    private Integer prDs2N;
+    @XmlElement(name = "METHOD_INJ")
+    private String methodInj;
+
+    @XmlElement(name = "COL_INJ")
+    private Integer colInj;
 
 }

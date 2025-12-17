@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.orlov.medflk.domain.ValidationResult;
 import ru.orlov.medflk.domain.nsi.Q015Packet;
 import ru.orlov.medflk.domain.nsi.Q015Service;
-import ru.orlov.medflk.jaxb.FlkErr;
-import ru.orlov.medflk.jaxb.PersList;
-import ru.orlov.medflk.jaxb.Zap;
-import ru.orlov.medflk.jaxb.ZlList;
+import ru.orlov.medflk.jaxb.*;
 import ru.orlov.medflk.q015.AbstractCheck;
 
 import java.time.LocalDate;
@@ -25,10 +22,10 @@ import static ru.orlov.medflk.Utils.getZlListMdType;
 public class Q015ValidationService {
 
     // все персоны из L-файла уходят в кэш для ускорения поиска по ним
-    private static final Map<String, PersList.Pers> persCache = new HashMap<>();
+    private static final Map<String, Pers> persCache = new HashMap<>();
     private final Q015Service q015Service;
 
-    public static PersList.Pers getPersById(String idPac) {
+    public static Pers getPersById(String idPac) {
         return persCache.getOrDefault(idPac, null);
     }
 
@@ -44,7 +41,7 @@ public class Q015ValidationService {
 
         persCache.clear();
         for (Zap zap : zlList.getZapList()) {
-            PersList.Pers pers = persList.getPersList().stream()
+            Pers pers = persList.getPersList().stream()
                     .filter(p -> p.getIdPac().equals(zap.getPacient().getIdPac()))
                     .findFirst()
                     .orElse(null);

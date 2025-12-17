@@ -69,7 +69,7 @@ public class FlkErr {
         this.znPol = value == null ? "" : value.toString();
     }
 
-    public FlkErr(PersList.Pers pers, Object value) {
+    public FlkErr(Pers pers, Object value) {
         this.idPac = pers.getIdPac();
         this.znPol = value == null ? "" : value.toString();
     }

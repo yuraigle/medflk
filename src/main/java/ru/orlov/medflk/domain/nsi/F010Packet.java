@@ -6,12 +6,14 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Getter;
+import lombok.Setter;
 import ru.orlov.medflk.jaxb.util.LocalDateRusAdapter;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
+@Setter
 @XmlRootElement(name = "packet")
 @XmlAccessorType(XmlAccessType.NONE)
 public class F010Packet {
@@ -20,6 +22,7 @@ public class F010Packet {
     private List<F010> zapList;
 
     @Getter
+    @Setter
     @XmlAccessorType(XmlAccessType.NONE)
     public static class F010 {
 

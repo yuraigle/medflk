@@ -170,6 +170,6 @@ public class Sl {
     private BigDecimal wei;
 
     @XmlElement(name = "LEK_PR")
-    private List<LekPrOnk> lekPrList;
+    private List<LekPr> lekPrList;
 
 }

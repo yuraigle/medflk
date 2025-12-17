@@ -31,7 +31,7 @@ public class Check_003F_00_0480 extends AbstractCheck {
                     && !zap.getZSl().getOsSluchList().isEmpty();
 
             if ("0".equals(novor) && !isBlank(ot) && hasOsSlush) {
-                Integer osSluch = zap.getZSl().getOsSluchList().get(0);
+                Integer osSluch = zap.getZSl().getOsSluchList().getFirst();
                 return List.of(new FlkErr(zap, null, null, osSluch));
             }
 

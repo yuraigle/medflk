@@ -52,10 +52,6 @@ public class ValidationResult {
                 continue;
             }
 
-            if (line.getComment() != null && line.getComment().contains("не реализована")) {
-//                continue;
-            }
-
             if (line.getIdTest() != null) {
                 System.out.printf("%s : ", line.getIdTest());
             }

@@ -9,13 +9,11 @@ import java.util.Map;
 @Service
 public class O002Service extends AbstractNsiService {
 
-    private O002Packet packet;
-
     private final Map<String, HashSet<String>> okatoMap = new HashMap<>(); // 5 => 6
 
     @Override
     public void initPacket() {
-        packet = readNsi(O002Packet.class, "nsi/O002.ZIP");
+        O002Packet packet = readNsi(O002Packet.class, "nsi/O002.ZIP");
 
         for (O002Packet.O002 z : packet.getZapList()) {
             String k = z.getTer() + z.getKod1();

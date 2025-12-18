@@ -89,6 +89,9 @@ public class Sl {
     @XmlElement(name = "DS1")
     private String ds1;
 
+    @XmlElement(name = "DS1_PR")
+    private Integer ds1Pr;
+
     @XmlElement(name = "DS2")
     private List<String> ds2List;
 
@@ -106,7 +109,6 @@ public class Sl {
 
     @XmlElement(name = "PR_D_N")
     private Integer prDN;
-
 
     @XmlElement(name = "CODE_MES1")
     private List<String> codeMes1List;
@@ -154,7 +156,7 @@ public class Sl {
     private BigDecimal sumM;
 
     @XmlElement(name = "USL")
-    private List<Usl> uslList;
+    private List<@Valid Usl> uslList;
 
     @XmlElement(name = "NAPR")
     private List<@Valid Napr> naprList;
@@ -170,6 +172,6 @@ public class Sl {
     private BigDecimal wei;
 
     @XmlElement(name = "LEK_PR")
-    private List<LekPr> lekPrList;
+    private List<@Valid LekPr> lekPrList;
 
 }

@@ -23,9 +23,6 @@ public class Naz {
     @XmlElement(name = "NAZ_R")
     private Integer nazR;
 
-    @XmlElement(name = "NAZ_SP")
-    private Integer nazSp;
-
     @XmlElement(name = "NAZ_IDDOKT")
     private String nazIddokt;
 

@@ -30,14 +30,14 @@ public class Pacient {
     @XmlElement(name = "ST_OKATO")
     private String stOkato;
 
+    @XmlElement(name = "ENP")
+    private String enp;
+
     @XmlElement(name = "SMO")
     private String smo;
 
     @XmlElement(name = "SMO_OGRN")
     private String smoOgrn;
-
-    @XmlElement(name = "ENP")
-    private String enp;
 
     @XmlElement(name = "SMO_OK")
     private String smoOk;
@@ -53,6 +53,9 @@ public class Pacient {
 
     @XmlElement(name = "NOVOR")
     private String novor;
+
+    @XmlElement(name = "SOC")
+    private String soc;
 
     @XmlElement(name = "VNOV_D")
     private Integer vnovD;

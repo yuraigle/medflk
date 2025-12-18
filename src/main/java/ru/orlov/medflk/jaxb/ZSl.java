@@ -87,7 +87,7 @@ public class ZSl {
 
     @NotEmpty
     @XmlElement(name = "SL")
-    private List<Sl> slList;
+    private List<@Valid Sl> slList;
 
     @XmlElement(name = "IDSP")
     private Integer idsp;

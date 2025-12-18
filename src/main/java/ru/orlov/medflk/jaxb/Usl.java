@@ -52,6 +52,9 @@ public class Usl {
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate dateOut;
 
+    @XmlElement(name = "P_OTK")
+    private Integer pOtk;
+
     @XmlElement(name = "DS")
     private String ds;
 

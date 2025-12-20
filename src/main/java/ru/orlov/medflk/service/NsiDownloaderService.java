@@ -47,6 +47,7 @@ public class NsiDownloaderService {
 
         downloadRmzNsi("1.2.643.5.1.13.13.11.1070", Path.of(nsiDir.toString(), "V001.ZIP").toFile());
         downloadRmzNsi("1.2.643.5.1.13.13.11.1005", Path.of(nsiDir.toString(), "M001.ZIP").toFile());
+        downloadRmzNsi("1.2.643.5.1.13.13.99.2.734", Path.of(nsiDir.toString(), "M002.ZIP").toFile());
     }
 
     private void downloadFile(String uri, File saveAs) {

@@ -34,9 +34,7 @@ public class MedflkApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (args.length == 0) {
-            log.info("Usage:");
-            log.info("java -jar medflk.jar filename.zip to check file");
-            log.info("java -jar medflk.jar update-nsi to update nsi");
+            showCliUsage();
             System.exit(0);
         }
 
@@ -72,6 +70,13 @@ public class MedflkApplication implements CommandLineRunner {
         }
 
         System.exit(0);
+    }
+
+    private void showCliUsage() {
+        System.out.println();
+        System.out.println("Usage:");
+        System.out.println("java -jar medflk.jar filename.zip to check file");
+        System.out.println("java -jar medflk.jar update-nsi to update nsi");
     }
 
     private Path checkProcessingPath(String procDir) {

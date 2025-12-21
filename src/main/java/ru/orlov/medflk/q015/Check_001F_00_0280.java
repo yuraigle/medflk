@@ -19,7 +19,7 @@ public class Check_001F_00_0280 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код профиля койки PROFIL_K не найден в справочнике V020";
+        return "Код профиля койки PROFIL_K должен быть найден в справочнике V020";
     }
 
     @Override

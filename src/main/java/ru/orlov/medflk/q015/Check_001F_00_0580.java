@@ -19,7 +19,7 @@ public class Check_001F_00_0580 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Номер КСГ N_KSG не найден в справочнике V023";
+        return "Номер КСГ N_KSG должен быть найден в справочнике V023";
     }
 
     @Override

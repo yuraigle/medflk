@@ -21,7 +21,7 @@ public class Check_001F_00_0430 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Значение Tumor не находится в справочнике N003 для диагноза";
+        return "Значение Tumor должно быть найдено в справочнике N003 для диагноза";
     }
 
     @Override

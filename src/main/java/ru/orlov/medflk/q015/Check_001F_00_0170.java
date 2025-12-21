@@ -19,7 +19,7 @@ public class Check_001F_00_0170 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код вида МП не найден в справочнике V008";
+        return "Код вида МП должен быть найден в справочнике V008";
     }
 
     @Override

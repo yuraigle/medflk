@@ -19,7 +19,7 @@ public class Check_001F_00_0060 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Тип ДПФС не найден в справочнике F008";
+        return "Тип ДПФС должен быть найден в справочнике F008";
     }
 
     @Override

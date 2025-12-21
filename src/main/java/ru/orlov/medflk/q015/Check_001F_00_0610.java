@@ -20,7 +20,7 @@ public class Check_001F_00_0610 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Классификационный критерий не найден в справочнике V024";
+        return "Классификационный критерий должен быть найден в справочнике V024";
     }
 
     @Override

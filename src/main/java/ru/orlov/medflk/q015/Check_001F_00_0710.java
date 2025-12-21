@@ -18,7 +18,7 @@ public class Check_001F_00_0710 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Пол представителя не найден в справочнике V005";
+        return "Пол представителя должен быть найден в справочнике V005";
     }
 
     @Override

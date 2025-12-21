@@ -19,7 +19,7 @@ public class Check_001F_00_0220 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Исход заболевания не найден в справочнике V012 для условий оказания";
+        return "Исход заболевания должен быть найден в справочнике V012 для условий оказания";
     }
 
     @Override

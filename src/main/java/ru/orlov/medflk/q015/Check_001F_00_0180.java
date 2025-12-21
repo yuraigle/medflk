@@ -19,7 +19,7 @@ public class Check_001F_00_0180 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код формы оказания МП не найден в справочнике V014";
+        return "Код формы оказания МП должен быть найден в справочнике V014";
     }
 
     @Override

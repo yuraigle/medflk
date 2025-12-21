@@ -20,7 +20,7 @@ public class Check_001F_00_0680 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код причины отказа не найден в справочнике F014";
+        return "Код причины отказа должен быть найден в справочнике F014";
     }
 
     @Override

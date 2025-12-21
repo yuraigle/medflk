@@ -19,7 +19,7 @@ public class Check_001F_00_0300 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Характер заболевания C_ZAB не найден в справочнике V027";
+        return "Характер заболевания C_ZAB должен быть найден в справочнике V027";
     }
 
     @Override

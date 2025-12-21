@@ -19,7 +19,7 @@ public class Check_001F_00_0661 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Специальность медработника в услуге не найдена в справочнике V021";
+        return "Специальность медработника в услуге должна быть найдена в справочнике V021";
     }
 
     @Override

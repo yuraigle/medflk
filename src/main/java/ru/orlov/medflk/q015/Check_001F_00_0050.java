@@ -18,7 +18,7 @@ public class Check_001F_00_0050 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Тип диспансеризации DISP не найден в справочнике V016";
+        return "Тип диспансеризации DISP должен быть найден в справочнике V016";
     }
 
     @Override

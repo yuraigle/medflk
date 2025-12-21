@@ -19,7 +19,7 @@ public class Check_001F_00_0250 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Вид ВМП VID_HMP не найден в справочнике V018";
+        return "Вид ВМП VID_HMP должен быть найден в справочнике V018";
     }
 
     @Override

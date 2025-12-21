@@ -21,7 +21,7 @@ public class Check_001F_00_0440 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Значение Nodus не находится в справочнике N004 для диагноза";
+        return "Значение Nodus должно быть найдено в справочнике N004 для диагноза";
     }
 
     @Override

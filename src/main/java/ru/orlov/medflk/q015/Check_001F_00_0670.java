@@ -20,7 +20,7 @@ public class Check_001F_00_0670 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код вида контроля в санкции не найден в справочнике F006";
+        return "Код вида контроля в санкции должен быть найден в справочнике F006";
     }
 
     @Override

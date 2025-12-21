@@ -21,7 +21,7 @@ public class Check_001F_00_0740 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код места пребывания не найден в справочнике O002";
+        return "Код места пребывания должен быть найден в справочнике O002";
     }
 
     @Override

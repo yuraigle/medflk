@@ -19,7 +19,7 @@ public class Check_001F_00_0590 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Номер КПГ N_KPG не найден в справочнике V026";
+        return "Номер КПГ N_KPG должен быть найден в справочнике V026";
     }
 
     @Override

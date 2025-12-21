@@ -14,7 +14,7 @@ public class Check_003F_00_0120 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "СМО должна быть заполнена при указании плательщика";
+        return "Код СМО должен быть заполнен при указании плательщика";
     }
 
     @Override

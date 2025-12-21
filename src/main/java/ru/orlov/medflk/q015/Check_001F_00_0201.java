@@ -19,7 +19,7 @@ public class Check_001F_00_0201 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код ЛПУ не найден в справочнике F032 для региона";
+        return "Код ЛПУ должен быть найден в справочнике F032 для региона";
     }
 
     @Override

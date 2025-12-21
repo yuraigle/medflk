@@ -22,7 +22,7 @@ public class Check_001F_00_0720 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Тип документа не найден в справочнике F011";
+        return "Тип документа должен быть найден в справочнике F011";
     }
 
     @Override

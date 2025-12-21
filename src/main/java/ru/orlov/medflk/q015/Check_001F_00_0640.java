@@ -19,7 +19,7 @@ public class Check_001F_00_0640 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Вид медицинского вмешательства VID_VME не найден в справочнике V019";
+        return "Вид медицинского вмешательства VID_VME должен быть найден в справочнике V019";
     }
 
     @Override

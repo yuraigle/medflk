@@ -21,7 +21,7 @@ public class Check_001F_00_0450 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Значение Metastasis не находится в справочнике N005 для диагноза";
+        return "Значение Metastasis должно быть найдено в справочнике N005 для диагноза";
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Check_001F_00_0260 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Метод ВМП METOD_HMP не найден в справочнике V019";
+        return "Метод ВМП METOD_HMP должен быть найден в справочнике V019";
     }
 
     @Override

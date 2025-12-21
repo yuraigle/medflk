@@ -21,7 +21,7 @@ public class Check_001F_00_0350 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Метод диагностического исследования NAZ_V не найден в справочнике V029";
+        return "Метод диагностического исследования NAZ_V должен быть найден в справочнике V029";
     }
 
     @Override

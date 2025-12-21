@@ -18,7 +18,7 @@ public class Check_001F_00_0700 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Пол пациента не найден в справочнике V005";
+        return "Пол пациента должен быть найден в справочнике V005";
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Check_001F_00_0100 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код ОКАТО территории страхования SMO_OK не найден в справочнике F010";
+        return "Код ОКАТО территории страхования SMO_OK должен быть найден в справочнике F010";
     }
 
     @Override

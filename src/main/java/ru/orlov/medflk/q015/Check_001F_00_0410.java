@@ -19,7 +19,7 @@ public class Check_001F_00_0410 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Повод обращения DS1_T не из справочника N018";
+        return "Повод обращения DS1_T должен быть найден в справочнике N018";
     }
 
     @Override

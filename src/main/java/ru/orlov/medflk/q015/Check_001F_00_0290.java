@@ -19,7 +19,7 @@ public class Check_001F_00_0290 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Цель посещения не найдена в справочнике V025";
+        return "Цель посещения должна быть найдена в справочнике V025";
     }
 
     @Override

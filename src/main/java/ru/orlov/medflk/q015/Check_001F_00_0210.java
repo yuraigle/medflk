@@ -19,7 +19,7 @@ public class Check_001F_00_0210 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Результат обращения не найден в справочнике V009 для условий оказания";
+        return "Результат обращения должен быть найден в справочнике V009 для условий оказания";
     }
 
     @Override

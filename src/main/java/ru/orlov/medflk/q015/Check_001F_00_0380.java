@@ -21,7 +21,7 @@ public class Check_001F_00_0380 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Вид направления NAPR_V не найден в справочнике V028";
+        return "Вид направления NAPR_V должен быть найден в справочнике V028";
     }
 
     @Override

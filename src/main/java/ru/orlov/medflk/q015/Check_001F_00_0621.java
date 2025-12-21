@@ -19,7 +19,7 @@ public class Check_001F_00_0621 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код МО в услуге не найден в справочнике F032";
+        return "Код МО в услуге должен быть найден в справочнике F032";
     }
 
     @Override

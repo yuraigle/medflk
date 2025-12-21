@@ -19,7 +19,7 @@ public class Check_001F_00_0230 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Идентификатор способа оплаты IDSP не найден в справочнике V010";
+        return "Идентификатор способа оплаты IDSP должен быть найден в справочнике V010";
     }
 
     @Override

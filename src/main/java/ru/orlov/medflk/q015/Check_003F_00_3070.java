@@ -15,7 +15,7 @@ public class Check_003F_00_3070 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Персона не найдена в L-файле";
+        return "Персона должна быть найдена в L-файле";
     }
 
     @Override

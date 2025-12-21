@@ -19,7 +19,7 @@ public class Check_001F_00_0070 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Регион страхования ST_OKATO не найден в справочнике F010";
+        return "Регион страхования ST_OKATO должен быть найден в справочнике F010";
     }
 
     @Override

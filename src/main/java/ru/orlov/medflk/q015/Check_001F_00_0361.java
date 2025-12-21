@@ -21,7 +21,7 @@ public class Check_001F_00_0361 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код МО в назначении NAPR_MO не найден в справочнике F032";
+        return "Код МО в назначении NAPR_MO должен быть найден в справочнике F032";
     }
 
     @Override

@@ -21,7 +21,7 @@ public class Check_001F_00_0340 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Профиль койки в назначении NAZ_PK не найден в справочнике V020";
+        return "Профиль койки в назначении NAZ_PK должен быть найден в справочнике V020";
     }
 
     @Override

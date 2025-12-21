@@ -19,7 +19,7 @@ public class Check_001F_00_0270 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код профиля МП не найден в справочнике V002";
+        return "Код профиля МП должен быть найден в справочнике V002";
     }
 
     @Override

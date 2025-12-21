@@ -21,7 +21,7 @@ public class Check_001F_00_0390 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Метод диагностического исследования MET_ISSL не найден в справочнике V029";
+        return "Метод диагностического исследования MET_ISSL должен быть найден в справочнике V029";
     }
 
     @Override

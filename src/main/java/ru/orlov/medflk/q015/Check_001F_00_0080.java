@@ -19,7 +19,7 @@ public class Check_001F_00_0080 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Реестровый номер СМО не найден в справочнике F002";
+        return "Реестровый номер СМО должен быть найден в справочнике F002";
     }
 
     @Override

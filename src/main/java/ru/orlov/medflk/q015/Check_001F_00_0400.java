@@ -14,7 +14,7 @@ public class Check_001F_00_0400 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Цель проведения консилиума PR_CONS не из справочника N019";
+        return "Цель проведения консилиума PR_CONS должна быть найдена в справочнике N019";
     }
 
     @Override

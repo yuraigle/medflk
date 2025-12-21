@@ -21,7 +21,7 @@ public class Check_001F_00_0420 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Стадия заболевания не находится в справочнике N002 для диагноза";
+        return "Стадия заболевания должна быть найдена в справочнике N002 для диагноза";
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Check_001F_00_0240 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Результат диспансеризации RSLT_D не найден в справочнике V017";
+        return "Результат диспансеризации RSLT_D должен быть найден в справочнике V017";
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ru.orlov.medflk.service;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,28 +28,55 @@ public class NsiDownloaderService {
 
     private final HttpClient httpClient;
 
+    @Getter
+    private final List<String> ffomsPackages = List.of(
+            "F002", "F006", "F008", "F010", "F011", "F014",
+            "F032", "F042", "N001", "N002", "N003", "N004", "N005", "N007", "N008",
+            "N010", "N011", "N013", "N014", "N015", "N016", "N017", "N018", "N019",
+            "N020", "N021", "O002", "Q015", "V002", "V005",
+            "V006", "V008", "V009", "V010", "V012", "V014", "V015", "V016", "V017",
+            "V018", "V019", "V020", "V021", "V023", "V024", "V025", "V026", "V027",
+            "V028", "V029"
+    );
+
+    @Getter
+    private final Map<String, String> rmzPackages = Map.of(
+            "V001", "1.2.643.5.1.13.13.11.1070",
+            "M001", "1.2.643.5.1.13.13.11.1005",
+            "M002", "1.2.643.5.1.13.13.99.2.734"
+    );
+
     public void updateAll() {
         File nsiDir = new File("nsi");
         if (!nsiDir.exists() && !nsiDir.mkdir()) {
             throw new RuntimeException("Не удалось создать каталог " + nsiDir.getAbsolutePath());
         }
 
-        List<String> packets = List.of("F002", "F006", "F008", "F010", "F011", "F014",
-                "F032", "F042", "N001", "N002", "N003", "N004", "N005", "N007", "N008",
-                "N010", "N011", "N013", "N014", "N015", "N016", "N017", "N018", "N019",
-                "N020", "N021", "O002", "Q015", "V002", "V005",
-                "V006", "V008", "V009", "V010", "V012", "V014", "V015", "V016", "V017",
-                "V018", "V019", "V020", "V021", "V023", "V024", "V025", "V026", "V027",
-                "V028", "V029"
-        );
-
-        for (String packet : packets) {
+        for (String packet : ffomsPackages) {
             downloadFfomsNsi(packet, Path.of(nsiDir.toString(), packet + ".ZIP").toFile());
         }
 
-        downloadRmzNsi("1.2.643.5.1.13.13.11.1070", Path.of(nsiDir.toString(), "V001.ZIP").toFile());
-        downloadRmzNsi("1.2.643.5.1.13.13.11.1005", Path.of(nsiDir.toString(), "M001.ZIP").toFile());
-        downloadRmzNsi("1.2.643.5.1.13.13.99.2.734", Path.of(nsiDir.toString(), "M002.ZIP").toFile());
+        for(String packet : rmzPackages.keySet()) {
+            downloadRmzNsi(rmzPackages.get(packet), Path.of(nsiDir.toString(), packet).toFile());
+        }
+    }
+
+    public void updateFfoms(String packet) {
+        File nsiDir = new File("nsi");
+        if (!nsiDir.exists() && !nsiDir.mkdir()) {
+            throw new RuntimeException("Не удалось создать каталог " + nsiDir.getAbsolutePath());
+        }
+
+        downloadFfomsNsi(packet, Path.of(nsiDir.toString(), packet + ".ZIP").toFile());
+    }
+
+    public void updateRmz(String packet) {
+        File nsiDir = new File("nsi");
+        if (!nsiDir.exists() && !nsiDir.mkdir()) {
+            throw new RuntimeException("Не удалось создать каталог " + nsiDir.getAbsolutePath());
+        }
+
+        downloadRmzNsi(rmzPackages.get(packet), Path.of(nsiDir.toString(), packet + ".ZIP").toFile());
     }
 
     private void downloadFile(String uri, File saveAs) {

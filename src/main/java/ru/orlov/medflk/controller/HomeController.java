@@ -1,7 +1,10 @@
 package ru.orlov.medflk.controller;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import lombok.extern.log4j.Log4j2;
@@ -10,47 +13,51 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import ru.orlov.medflk.config.StageManager;
 import ru.orlov.medflk.domain.ValidationResult;
-import ru.orlov.medflk.domain.nsi.AbstractNsiService;
 import ru.orlov.medflk.service.FileValidatorService;
 import ru.orlov.medflk.service.NsiDownloaderService;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 @Log4j2
 @Controller
 public class HomeController implements Initializable {
 
-    private final StageManager stageManager;
     private final ApplicationContext ctx;
+    private final StageManager stageManager;
     private final FileValidatorService validator;
     private final NsiDownloaderService nsiDownloaderService;
 
     @FXML
     private TextArea vLog;
 
+    @FXML
+    private Label statusLine;
+
+    @FXML
+    private Button btnSelectFile;
+
+    @FXML
+    private Button btnUpdateNsi;
+
     @Lazy
     public HomeController(
             StageManager stageManager,
+            ApplicationContext ctx,
             FileValidatorService validator,
-            NsiDownloaderService nsiDownloaderService,
-            ApplicationContext ctx
+            NsiDownloaderService nsiDownloaderService
     ) {
-        this.stageManager = stageManager;
         this.ctx = ctx;
+        this.stageManager = stageManager;
         this.validator = validator;
         this.nsiDownloaderService = nsiDownloaderService;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            initNsiPackets();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        TaskInitNsi task = new TaskInitNsi(ctx);
+        runInBackground(task);
     }
 
     @FXML
@@ -65,26 +72,33 @@ public class HomeController implements Initializable {
             vLog.setText("");
             log.info("Selected file: {}", file.getAbsolutePath());
             ValidationResult procLog = validator.validate(file);
-            procLog.debug();
             vLog.setText(procLog.toString());
         }
     }
 
     @FXML
     void updateNsi() {
-        nsiDownloaderService.updateAll();
-        initNsiPackets();
+        TaskDownloadNsi task = new TaskDownloadNsi(nsiDownloaderService);
+        runInBackground(task);
     }
 
-    private void initNsiPackets() {
-        Arrays.stream(ctx.getBeanDefinitionNames())
-                .filter(name -> name.matches("^.*[a-zA-Z][0-9]{3}Service$"))
-                .forEach(name -> {
-                    Object bean = ctx.getBean(name);
-                    if (bean instanceof AbstractNsiService) {
-                        ((AbstractNsiService) bean).initPacket();
-                    }
-                });
-        log.info("Nsi packets initialized");
+    private void runInBackground(Task<Void> task) {
+        btnUpdateNsi.setDisable(true);
+        btnSelectFile.setDisable(true);
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+
+        task.setOnScheduled(ev ->
+                statusLine.textProperty().bind(task.messageProperty()));
+        task.setOnFailed(ev ->
+                statusLine.textProperty().unbind());
+        task.setOnSucceeded(ev -> {
+            statusLine.textProperty().unbind();
+            btnUpdateNsi.setDisable(false);
+            btnSelectFile.setDisable(false);
+        });
     }
+
 }

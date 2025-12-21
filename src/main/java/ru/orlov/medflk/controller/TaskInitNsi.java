@@ -18,9 +18,7 @@ public class TaskInitNsi extends Task<Void> {
     private final ApplicationContext ctx;
 
     @Override
-    protected Void call() throws Exception {
-        updateMessage("Инициализация справочников");
-
+    protected Void call() {
         List<String> nsiServices = Arrays.stream(ctx.getBeanDefinitionNames())
                 .filter(name -> name.matches("^.*[a-zA-Z][0-9]{3}Service$"))
                 .toList();
@@ -31,7 +29,7 @@ public class TaskInitNsi extends Task<Void> {
             if (bean instanceof AbstractNsiService) {
                 ((AbstractNsiService) bean).initPacket();
             }
-            updateMessage("Инициализация справочников " +
+            updateMessage("Инициализируем справочники " +
                     cntReady.incrementAndGet() + "/" + nsiServices.size());
         });
 

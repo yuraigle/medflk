@@ -11,7 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
-import ru.orlov.medflk.config.StageManager;
+import ru.orlov.medflk.MedflkFxApplication;
 import ru.orlov.medflk.domain.ValidationResult;
 import ru.orlov.medflk.service.FileValidatorService;
 import ru.orlov.medflk.service.NsiDownloaderService;
@@ -25,7 +25,6 @@ import java.util.ResourceBundle;
 public class HomeController implements Initializable {
 
     private final ApplicationContext ctx;
-    private final StageManager stageManager;
     private final FileValidatorService validator;
     private final NsiDownloaderService nsiDownloaderService;
 
@@ -43,13 +42,11 @@ public class HomeController implements Initializable {
 
     @Lazy
     public HomeController(
-            StageManager stageManager,
             ApplicationContext ctx,
             FileValidatorService validator,
             NsiDownloaderService nsiDownloaderService
     ) {
         this.ctx = ctx;
-        this.stageManager = stageManager;
         this.validator = validator;
         this.nsiDownloaderService = nsiDownloaderService;
     }
@@ -61,13 +58,19 @@ public class HomeController implements Initializable {
     }
 
     @FXML
+    void downloadNsi() {
+        TaskDownloadNsi task = new TaskDownloadNsi(nsiDownloaderService);
+        runInBackground(task);
+    }
+
+    @FXML
     void selectFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters()
                 .add(new FileChooser.ExtensionFilter("Архив zip", "*.zip"));
         fileChooser.setTitle("Выберите файл для проверки");
 
-        File file = fileChooser.showOpenDialog(stageManager.getPrimaryStage());
+        File file = fileChooser.showOpenDialog(MedflkFxApplication.primaryStage);
         if (file != null) {
             vLog.setText("");
             log.info("Selected file: {}", file.getAbsolutePath());
@@ -76,11 +79,6 @@ public class HomeController implements Initializable {
         }
     }
 
-    @FXML
-    void updateNsi() {
-        TaskDownloadNsi task = new TaskDownloadNsi(nsiDownloaderService);
-        runInBackground(task);
-    }
 
     private void runInBackground(Task<Void> task) {
         btnUpdateNsi.setDisable(true);

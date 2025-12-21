@@ -6,26 +6,26 @@
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
       prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.orlov.medflk.controller.HomeController">
-    <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         <Tab text="Проверка файла">
-            <VBox minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="6.0">
+            <VBox minHeight="0.0" minWidth="0.0" spacing="6.0">
                 <Button fx:id="btnSelectFile" mnemonicParsing="false" onAction="#selectFile" text="Выберите файл"/>
-                <TextArea fx:id="vLog" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
+                <TextArea fx:id="vLog" VBox.vgrow="ALWAYS"/>
                 <padding>
                     <Insets bottom="6.0" left="6.0" right="6.0" top="10.0"/>
                 </padding>
             </VBox>
         </Tab>
         <Tab text="Мониторинг каталога">
-            <VBox minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="6.0">
+            <VBox minHeight="0.0" minWidth="0.0" spacing="6.0">
                 <padding>
                     <Insets bottom="6.0" left="6.0" right="6.0" top="6.0"/>
                 </padding>
             </VBox>
         </Tab>
         <Tab text="Настройки">
-            <VBox minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" spacing="6.0">
-                <Button fx:id="btnUpdateNsi" mnemonicParsing="false" onAction="#updateNsi" text="Скачать пакет НСИ"/>
+            <VBox minHeight="0.0" minWidth="0.0" spacing="6.0">
+                <Button fx:id="btnUpdateNsi" mnemonicParsing="false" onAction="#downloadNsi" text="Скачать пакет НСИ"/>
                 <padding>
                     <Insets bottom="6.0" left="6.0" right="6.0" top="10.0"/>
                 </padding>

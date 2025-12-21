@@ -35,34 +35,45 @@ public class ValidationResult {
     public void addError(String comment) {
         lines.add(new Line(null, comment));
         declined = true;
+        endedAt = LocalDateTime.now();
     }
 
     public void addFlkError(FlkErr err) {
         errors.add(err);
         declined = true;
+        endedAt = LocalDateTime.now();
     }
 
-    public void debug() {
-        System.out.printf("%n%s Проверка файла %s (%sKb)%n",
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%s Проверка файла %s (%sKb)%n%n",
                 startedAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")),
-                filename, filesize / 1024);
+                filename, filesize / 1024));
 
         for (Line line : lines) {
             if ("OK".equals(line.getComment())) {
-                continue;
+//                continue;
             }
 
             if (line.getIdTest() != null) {
-                System.out.printf("%s : ", line.getIdTest());
+                sb.append(String.format("%s : ", line.getIdTest()));
             }
-            System.out.printf("%s%n", line.getComment());
+            sb.append(String.format("%s%n", line.getComment()));
         }
 
-        System.out.printf("%s Проверка окончена за %sс. %s%n",
+        sb.append(String.format("%n%s Проверка окончена за %sс. %s%n",
                 endedAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")),
                 ChronoUnit.SECONDS.between(startedAt, endedAt),
                 declined ? "Файл отклонён" : "OK"
-        );
+        ));
+
+        return sb.toString();
+    }
+
+    public void debug() {
+        System.out.println();
+        System.out.println(this);
+        System.out.println();
     }
 
     @Data

@@ -59,13 +59,15 @@ public class Q015ValidationService {
                 cntActiveChecks++;
                 try {
                     List<FlkErr> e1 = applyCheck(check, zlList, persList);
+                    String message = ((AbstractCheck) check.getBean()).getErrorMessage();
+
                     if (e1 != null && !e1.isEmpty()) {
-                        String comment = e1.getFirst().getComment();
-                        line.setComment(comment + " (" + e1.size() + " ошибок)");
+                        line.setComment(message + " : " + e1.size() + " ошибок");
                         proc.getErrors().addAll(e1);
                         proc.setDeclined(true);
                     } else {
-                        line.setComment("OK");
+
+                        line.setComment(message + " : OK");
                     }
                 } catch (Exception e) {
                     line.setComment("Ошибка обработчика при проведении проверки: " + e.getMessage());

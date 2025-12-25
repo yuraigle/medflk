@@ -3,15 +3,15 @@ package ru.orlov.medflk.controller;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import ru.orlov.medflk.MedflkFxApplication;
+import ru.orlov.medflk.domain.NsiRow;
 import ru.orlov.medflk.domain.ValidationResult;
 import ru.orlov.medflk.domain.nsi.AbstractNsiService;
 import ru.orlov.medflk.service.FileValidatorService;
@@ -19,6 +19,7 @@ import ru.orlov.medflk.service.NsiDownloaderService;
 
 import java.io.File;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -45,8 +46,20 @@ public class HomeController implements Initializable {
     @FXML
     private Button btnUpdateNsi;
 
+    @FXML
+    private TableView<NsiRow> nsiTable;
+
+    @FXML
+    private TableColumn<String, String> nsiTableCode;
+
+    @FXML
+    private TableColumn<LocalDate, String> nsiTableDate;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        nsiTableCode.setCellValueFactory(new PropertyValueFactory<>("code"));
+        nsiTableDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
@@ -59,8 +72,11 @@ public class HomeController implements Initializable {
                 nsiServices.forEach(name -> {
                     updateMessage("Инициализируем справочники " + cntReady.incrementAndGet() + "/" + ttl);
                     Object bean = ctx.getBean(name);
-                    if (bean instanceof AbstractNsiService) {
-                        ((AbstractNsiService) bean).initPacket();
+                    if (bean instanceof AbstractNsiService nsi) {
+                        nsi.initPacket();
+
+                        String pack = nsi.getClass().getSimpleName().substring(0, 4);
+                        nsiTable.getItems().add(new NsiRow(pack, LocalDate.now()));
                     }
                 });
                 return null;

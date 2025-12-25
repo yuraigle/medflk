@@ -1,42 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-      prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ru.orlov.medflk.controller.HomeController">
+
+<VBox prefHeight="500.0" prefWidth="700.0"
+      xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.orlov.medflk.controller.HomeController"
+>
     <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         <Tab text="Проверка файла">
             <VBox minHeight="0.0" minWidth="0.0" spacing="6.0">
-                <Button fx:id="btnSelectFile" mnemonicParsing="false" onAction="#selectFile" text="Выберите файл"/>
-                <TextArea fx:id="vLog" VBox.vgrow="ALWAYS"/>
+                <Button fx:id="btnSelectFile" mnemonicParsing="false" onAction="#selectFile" text="Выберите файл" />
+                <TextArea fx:id="vLog" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></TextArea>
                 <padding>
-                    <Insets bottom="6.0" left="6.0" right="6.0" top="10.0"/>
+                    <Insets bottom="6.0" left="6.0" right="6.0" top="10.0" />
                 </padding>
             </VBox>
         </Tab>
         <Tab text="Мониторинг каталога">
             <VBox minHeight="0.0" minWidth="0.0" spacing="6.0">
                 <padding>
-                    <Insets bottom="6.0" left="6.0" right="6.0" top="6.0"/>
+                    <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
                 </padding>
+                <HBox prefHeight="25.0">
+                    <VBox.margin>
+                        <Insets top="10.0" />
+                    </VBox.margin>
+                    <Label prefHeight="25.0" prefWidth="220.0" text="Проверять все файлы в каталоге:">
+                        <padding>
+                            <Insets right="20.0" />
+                        </padding>
+                    </Label>
+                    <TextField HBox.hgrow="ALWAYS" />
+                </HBox>
+                <HBox prefHeight="25.0">
+                    <VBox.margin>
+                        <Insets top="5.0" />
+                    </VBox.margin>
+                    <Label prefHeight="25.0" prefWidth="220.0" text="Корректные файлы переносить:">
+                        <padding>
+                            <Insets right="20.0" />
+                        </padding>
+                    </Label>
+                    <TextField HBox.hgrow="ALWAYS" />
+                </HBox>
+                <HBox prefHeight="25.0">
+                    <VBox.margin>
+                        <Insets top="5.0" />
+                    </VBox.margin>
+                    <Label prefHeight="25.0" prefWidth="220.0" text="Ошибочные файлы переносить:">
+                        <padding>
+                            <Insets right="20.0" />
+                        </padding>
+                    </Label>
+                    <TextField HBox.hgrow="ALWAYS" />
+                </HBox>
+                <HBox prefHeight="25.0" spacing="6.0">
+                    <VBox.margin>
+                        <Insets top="5.0" />
+                    </VBox.margin>
+                    <Button mnemonicParsing="false" text="Запустить" />
+                    <Button mnemonicParsing="false" text="Остановить" />
+                </HBox>
+                <TextArea VBox.vgrow="ALWAYS">
+                   <VBox.margin>
+                      <Insets top="5.0" />
+                   </VBox.margin>
+                </TextArea>
             </VBox>
         </Tab>
         <Tab text="Настройки">
             <VBox minHeight="0.0" minWidth="0.0" spacing="6.0">
-                <Button fx:id="btnUpdateNsi" mnemonicParsing="false" onAction="#downloadNsi" text="Скачать пакет НСИ"/>
+                <Button fx:id="btnUpdateNsi" mnemonicParsing="false" onAction="#downloadNsi" text="Скачать пакет НСИ" />
+            <TableView VBox.vgrow="ALWAYS" fx:id="nsiTable">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Код" fx:id="nsiTableCode" />
+                <TableColumn prefWidth="75.0" text="Дата" fx:id="nsiTableDate" />
+              </columns>
+            </TableView>
                 <padding>
-                    <Insets bottom="6.0" left="6.0" right="6.0" top="10.0"/>
+                    <Insets bottom="6.0" left="6.0" right="6.0" top="10.0" />
                 </padding>
             </VBox>
         </Tab>
     </TabPane>
-    <Separator/>
+    <Separator />
     <Pane prefHeight="18.0">
-        <Label fx:id="statusLine"/>
+        <Label fx:id="statusLine" />
         <VBox.margin>
-            <Insets bottom="4.0" left="6.0" right="6.0" top="4.0"/>
+            <Insets bottom="4.0" left="6.0" right="6.0" top="4.0" />
         </VBox.margin>
     </Pane>
 </VBox>

@@ -18,6 +18,9 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 public class F011Packet {
 
+    @XmlElement(name = "zglv")
+    private NsiDefaultZglv zglv;
+
     @XmlElement(name = "zap")
     private List<F011> zapList;
 

@@ -10,6 +10,21 @@ public class V028Service extends AbstractNsiService {
     private V028Packet packet;
 
     @Override
+    public String getVersion() {
+        return packet == null ? null : packet.getZglv().getVersion();
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return packet == null ? null : packet.getZglv().getDate();
+    }
+
+    @Override
+    public String getDescription() {
+        return "Классификатор видов направления ";
+    }
+
+    @Override
     public void initPacket() {
         packet = readNsi(V028Packet.class, "nsi/V028.ZIP");
     }

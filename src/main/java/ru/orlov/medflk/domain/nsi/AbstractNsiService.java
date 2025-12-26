@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.zip.ZipFile;
 
 /**
@@ -30,5 +31,17 @@ public abstract class AbstractNsiService {
     }
 
     public abstract void initPacket();
+
+    public String getVersion() {
+        return "";
+    }
+
+    public LocalDate getDate() {
+        return LocalDate.now();
+    }
+
+    public String getDescription() {
+        return "";
+    }
 
 }

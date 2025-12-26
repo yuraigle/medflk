@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Getter;
+import lombok.Setter;
 import ru.orlov.medflk.jaxb.util.LocalDateRusAdapter;
 
 import java.time.LocalDate;
@@ -15,6 +16,9 @@ import java.util.List;
 @XmlRootElement(name = "packet")
 @XmlAccessorType(XmlAccessType.NONE)
 public class F042Packet {
+
+    @XmlElement(name = "zglv")
+    private NsiDefaultZglv zglv;
 
     @XmlElement(name = "zap")
     private List<F042> zapList;

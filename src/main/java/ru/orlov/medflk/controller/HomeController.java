@@ -55,10 +55,18 @@ public class HomeController implements Initializable {
     @FXML
     private TableColumn<LocalDate, String> nsiTableDate;
 
+    @FXML
+    private TableColumn<String, String> nsiTableVersion;
+
+    @FXML
+    private TableColumn<String, String> nsiTableDescription;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         nsiTableCode.setCellValueFactory(new PropertyValueFactory<>("code"));
         nsiTableDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        nsiTableVersion.setCellValueFactory(new PropertyValueFactory<>("version"));
+        nsiTableDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
 
         Task<Void> task = new Task<>() {
             @Override
@@ -75,8 +83,12 @@ public class HomeController implements Initializable {
                     if (bean instanceof AbstractNsiService nsi) {
                         nsi.initPacket();
 
-                        String pack = nsi.getClass().getSimpleName().substring(0, 4);
-                        nsiTable.getItems().add(new NsiRow(pack, LocalDate.now()));
+                        NsiRow row = new NsiRow();
+                        row.setCode(nsi.getClass().getSimpleName().substring(0, 4));
+                        row.setDate(nsi.getDate());
+                        row.setVersion(nsi.getVersion());
+                        row.setDescription(nsi.getDescription());
+                        nsiTable.getItems().add(row);
                     }
                 });
                 return null;

@@ -2,6 +2,7 @@ package ru.orlov.medflk.domain.nsi;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,11 +10,28 @@ import java.util.Map;
 @Service
 public class O002Service extends AbstractNsiService {
 
+    private O002Packet packet = null;
+
     private final Map<String, HashSet<String>> okatoMap = new HashMap<>(); // 5 => 6
 
     @Override
+    public String getVersion() {
+        return packet == null ? null : packet.getZglv().getVersion();
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return packet == null ? null : packet.getZglv().getDate();
+    }
+
+    @Override
+    public String getDescription() {
+        return "Общероссийский классификатор административно-территориального деления (OKATO)";
+    }
+
+    @Override
     public void initPacket() {
-        O002Packet packet = readNsi(O002Packet.class, "nsi/O002.ZIP");
+        packet = readNsi(O002Packet.class, "nsi/O002.ZIP");
 
         for (O002Packet.O002 z : packet.getZapList()) {
             String k = z.getTer() + z.getKod1();

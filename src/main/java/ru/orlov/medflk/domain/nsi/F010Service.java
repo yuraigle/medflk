@@ -10,6 +10,21 @@ public class F010Service extends AbstractNsiService {
     private F010Packet packet;
 
     @Override
+    public String getVersion() {
+        return packet == null ? null : packet.getZglv().getVersion();
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return packet == null ? null : packet.getZglv().getDate();
+    }
+
+    @Override
+    public String getDescription() {
+        return "Классификатор субъектов Российской Федерации";
+    }
+
+    @Override
     public void initPacket() {
         packet = readNsi(F010Packet.class, "nsi/F010.ZIP");
     }

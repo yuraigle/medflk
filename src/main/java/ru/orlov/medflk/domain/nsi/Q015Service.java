@@ -23,7 +23,23 @@ import java.util.List;
 public class Q015Service extends AbstractNsiService {
 
     private final ApplicationContext ctx;
+
     private Q015Packet packet;
+
+    @Override
+    public String getVersion() {
+        return packet == null ? null : packet.getZglv().getVersion();
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return packet == null ? null : packet.getZglv().getDate();
+    }
+
+    @Override
+    public String getDescription() {
+        return "Перечень технологических правил реализации ФЛК";
+    }
 
     @Override
     public void initPacket() {

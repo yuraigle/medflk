@@ -10,6 +10,21 @@ public class V017Service extends AbstractNsiService {
     private V017Packet packet;
 
     @Override
+    public String getVersion() {
+        return packet == null ? null : packet.getZglv().getVersion();
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return packet == null ? null : packet.getZglv().getDate();
+    }
+
+    @Override
+    public String getDescription() {
+        return "Классификатор результатов диспансеризации";
+    }
+
+    @Override
     public void initPacket() {
         packet = readNsi(V017Packet.class, "nsi/V017.ZIP");
     }

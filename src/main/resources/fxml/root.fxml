@@ -74,13 +74,15 @@
                 </TextArea>
             </VBox>
         </Tab>
-        <Tab text="Настройки">
+        <Tab text="Справочники">
             <VBox minHeight="0.0" minWidth="0.0" spacing="6.0">
                 <Button fx:id="btnUpdateNsi" mnemonicParsing="false" onAction="#downloadNsi" text="Скачать пакет НСИ" />
             <TableView VBox.vgrow="ALWAYS" fx:id="nsiTable">
               <columns>
                 <TableColumn prefWidth="75.0" text="Код" fx:id="nsiTableCode" />
+                <TableColumn prefWidth="75.0" text="Версия" fx:id="nsiTableVersion" />
                 <TableColumn prefWidth="75.0" text="Дата" fx:id="nsiTableDate" />
+                <TableColumn prefWidth="400.0" text="Название" fx:id="nsiTableDescription" />
               </columns>
             </TableView>
                 <padding>

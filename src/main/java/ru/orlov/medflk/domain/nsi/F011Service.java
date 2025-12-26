@@ -10,6 +10,21 @@ public class F011Service extends AbstractNsiService {
     private F011Packet packet;
 
     @Override
+    public String getVersion() {
+        return packet == null ? null : packet.getZglv().getVersion();
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return packet == null ? null : packet.getZglv().getDate();
+    }
+
+    @Override
+    public String getDescription() {
+        return "Классификатор типов документов, удостоверяющих личность";
+    }
+
+    @Override
     public void initPacket() {
         packet = readNsi(F011Packet.class, "nsi/F011.ZIP");
     }

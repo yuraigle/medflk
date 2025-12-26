@@ -14,6 +14,21 @@ public class F032Service extends AbstractNsiService {
 
     private F032Packet packet;
 
+    @Override
+    public String getVersion() {
+        return packet == null ? null : packet.getZglv().getVersion();
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return packet == null ? null : packet.getZglv().getDate();
+    }
+
+    @Override
+    public String getDescription() {
+        return "Реестр медицинских организаций, осуществляющих деятельность в сфере обязательного медицинского страхования";
+    }
+
     @Value("${regional.okato}")
     private String regionalOkato;
 

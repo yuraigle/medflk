@@ -12,7 +12,22 @@ public class F002Service extends AbstractNsiService {
 
     private final Set<String> regionalCodes = new HashSet<>();
 
-    private F002Packet packet;
+    private F002Packet packet = null;
+
+    @Override
+    public String getVersion() {
+        return packet == null ? null : packet.getVersion();
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return packet == null ? null : packet.getDate();
+    }
+
+    @Override
+    public String getDescription() {
+        return "Реестр страховых медицинских организаций, осуществляющих деятельность в сфере ОМС";
+    }
 
     @Value("${regional.okato}")
     private String regionalOkato;

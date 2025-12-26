@@ -10,6 +10,21 @@ public class N004Service extends AbstractNsiService {
     private N004Packet packet;
 
     @Override
+    public String getVersion() {
+        return packet == null ? null : packet.getZglv().getVersion();
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return packet == null ? null : packet.getZglv().getDate();
+    }
+
+    @Override
+    public String getDescription() {
+        return "Классификатор Nodus";
+    }
+
+    @Override
     public void initPacket() {
         packet = readNsi(N004Packet.class, "nsi/N004.ZIP");
     }

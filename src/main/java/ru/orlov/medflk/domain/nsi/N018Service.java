@@ -10,6 +10,21 @@ public class N018Service extends AbstractNsiService {
     private N018Packet packet;
 
     @Override
+    public String getVersion() {
+        return packet == null ? null : packet.getZglv().getVersion();
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return packet == null ? null : packet.getZglv().getDate();
+    }
+
+    @Override
+    public String getDescription() {
+        return "Классификатор поводов обращения";
+    }
+
+    @Override
     public void initPacket() {
         packet = readNsi(N018Packet.class, "nsi/N018.ZIP");
     }

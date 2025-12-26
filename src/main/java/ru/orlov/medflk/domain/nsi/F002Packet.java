@@ -4,9 +4,12 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Getter;
 import lombok.Setter;
+import ru.orlov.medflk.jaxb.util.LocalDateAdapter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -14,6 +17,13 @@ import java.util.List;
 @XmlRootElement(name = "PACKET")
 @XmlAccessorType(XmlAccessType.NONE)
 public class F002Packet {
+
+    @XmlElement(name = "VERSION")
+    private String version;
+
+    @XmlElement(name = "DATE")
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    private LocalDate date;
 
     @XmlElement(name = "insCompany")
     private List<F002> zapList;

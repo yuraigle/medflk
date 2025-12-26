@@ -10,6 +10,21 @@ public class F008Service extends AbstractNsiService {
     private F008Packet packet;
 
     @Override
+    public String getVersion() {
+        return packet == null ? null : packet.getZglv().getVersion();
+    }
+
+    @Override
+    public LocalDate getDate() {
+        return packet == null ? null : packet.getZglv().getDate();
+    }
+
+    @Override
+    public String getDescription() {
+        return "Классификатор типов документов, подтверждающих факт страхования по ОМС";
+    }
+
+    @Override
     public void initPacket() {
         packet = readNsi(F008Packet.class, "nsi/F008.ZIP");
     }

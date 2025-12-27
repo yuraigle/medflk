@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import ru.orlov.medflk.domain.NsiRow;
-import ru.orlov.medflk.service.NsiDownloaderTask;
-import ru.orlov.medflk.service.NsiInitializerTask;
+import ru.orlov.medflk.service.NsiInitializerService;
 import ru.orlov.medflk.service.StatusService;
+import ru.orlov.medflk.task.NsiDownloaderTask;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -24,9 +24,9 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class NsiTabController implements Initializable {
 
-    private final NsiInitializerTask nsiInitializerTask;
-    private final NsiDownloaderTask  nsiDownloaderTask;
+    private final NsiDownloaderTask nsiDownloaderTask;
     private final StatusService statusService;
+    private final NsiInitializerService nsiInitializerService;
 
     @FXML
     private Button btnUpdateNsi;
@@ -48,7 +48,7 @@ public class NsiTabController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        nsiTable.setItems(nsiInitializerTask.getObservableClassifiers());
+        nsiTable.setItems(nsiInitializerService.getObservableClassifiers());
         nsiTableCode.setCellValueFactory(new PropertyValueFactory<>("code"));
         nsiTableDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         nsiTableVersion.setCellValueFactory(new PropertyValueFactory<>("version"));

@@ -1,40 +1,27 @@
-package ru.orlov.medflk.service;
+package ru.orlov.medflk.task;
 
 import javafx.animation.PauseTransition;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.orlov.medflk.domain.NsiRow;
 import ru.orlov.medflk.domain.nsi.AbstractNsiService;
+import ru.orlov.medflk.service.NsiInitializerService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class NsiInitializerTask {
 
-    private final ApplicationContext ctx;
-
-    @Getter
-    private final ObservableList<NsiRow> observableClassifiers =
-            FXCollections.observableList(new ArrayList<>());
+    private final NsiInitializerService nsiInitializerService;
 
     private static Boolean isRunning = false;
-
-    public List<String> getAllNsiServices() {
-        return Arrays.stream(ctx.getBeanDefinitionNames())
-                .filter(name -> name.matches("^.*[a-zA-Z][0-9]{3}Service$"))
-                .toList();
-    }
 
     public Task<Void> getTaskWithStatus(StringProperty status) {
         if (isRunning) {
@@ -44,20 +31,18 @@ public class NsiInitializerTask {
         return new Task<>() {
             @Override
             protected Void call() {
-                observableClassifiers.clear();
+                List<String> nsiServices = nsiInitializerService.getAllNsiServices();
 
-                List<String> nsiServices = getAllNsiServices();
+                nsiInitializerService.getObservableClassifiers().clear();
 
                 int ttl = nsiServices.size();
                 AtomicInteger cntReady = new AtomicInteger(0);
 
                 nsiServices.forEach(name -> {
                     updateMessage("Инициализируем справочники " + cntReady.incrementAndGet() + "/" + ttl);
-                    Object bean = ctx.getBean(name);
-                    if (bean instanceof AbstractNsiService nsi) {
-                        nsi.initPacket();
-                        observableClassifiers.add(new NsiRow(nsi));
-                    }
+                    String code = name.substring(0, 4).toUpperCase();
+                    AbstractNsiService nsi = nsiInitializerService.initializeNsiService(code);
+                    nsiInitializerService.getObservableClassifiers().add(new NsiRow(nsi));
                 });
                 return null;
             }
@@ -79,7 +64,7 @@ public class NsiInitializerTask {
             protected void failed() {
                 isRunning = false;
                 status.unbind();
-                showStatusMessage(status, "Ошибка при загрузке справочников: " + getException().getMessage());
+                showStatusMessage(status, "Ошибка инициализации справочника: " + getException().getMessage());
             }
 
             @Override

@@ -1,4 +1,4 @@
-package ru.orlov.medflk.service;
+package ru.orlov.medflk.task;
 
 import javafx.animation.PauseTransition;
 import javafx.beans.property.StringProperty;
@@ -9,6 +9,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.orlov.medflk.domain.NsiRow;
 import ru.orlov.medflk.domain.nsi.AbstractNsiService;
+import ru.orlov.medflk.service.NsiDownloaderService;
+import ru.orlov.medflk.service.NsiInitializerService;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,8 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class NsiDownloaderTask {
 
     private final ApplicationContext ctx;
-
-    private final NsiInitializerTask nsiInitializerTask;
+    private final NsiInitializerService nsiInitializerService;
     private final NsiDownloaderService nsiDownloaderService;
 
     private static Boolean isRunning = false;
@@ -32,9 +33,9 @@ public class NsiDownloaderTask {
         return new Task<>() {
             @Override
             protected Void call() {
-                List<String> nsiServices = nsiInitializerTask.getAllNsiServices();
+                List<String> nsiServices = nsiInitializerService.getAllNsiServices();
 
-                nsiInitializerTask.getObservableClassifiers().clear();
+                nsiInitializerService.getObservableClassifiers().clear();
 
                 AtomicInteger cntReady = new AtomicInteger(0);
                 int ttl = nsiServices.size();
@@ -50,7 +51,7 @@ public class NsiDownloaderTask {
                             nsiDownloaderService.updateFfoms(code);
                         }
                         nsi.initPacket();
-                        nsiInitializerTask.getObservableClassifiers().add(new NsiRow(nsi));
+                        nsiInitializerService.getObservableClassifiers().add(new NsiRow(nsi));
                     }
                 });
 

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import ru.orlov.medflk.MedflkFxApplication;
 import ru.orlov.medflk.domain.ValidationResult;
 import ru.orlov.medflk.service.FileValidatorService;
-import ru.orlov.medflk.service.NsiInitializerTask;
+import ru.orlov.medflk.task.NsiInitializerTask;
 import ru.orlov.medflk.service.StatusService;
 
 import java.io.File;

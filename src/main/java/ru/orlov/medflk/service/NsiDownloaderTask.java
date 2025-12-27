@@ -5,7 +5,10 @@ import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import ru.orlov.medflk.domain.NsiRow;
+import ru.orlov.medflk.domain.nsi.AbstractNsiService;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,6 +17,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor
 public class NsiDownloaderTask {
 
+    private final ApplicationContext ctx;
+
+    private final NsiInitializerTask nsiInitializerTask;
     private final NsiDownloaderService nsiDownloaderService;
 
     private static Boolean isRunning = false;
@@ -26,20 +32,28 @@ public class NsiDownloaderTask {
         return new Task<>() {
             @Override
             protected Void call() {
-                List<String> packages1 = nsiDownloaderService.getFfomsPackages();
-                List<String> packages2 = nsiDownloaderService.getRmzPackages().keySet().stream().toList();
-                int ttl = packages1.size() + packages2.size();
+                List<String> nsiServices = nsiInitializerTask.getAllNsiServices();
+
+                nsiInitializerTask.getObservableClassifiers().clear();
+
                 AtomicInteger cntReady = new AtomicInteger(0);
+                int ttl = nsiServices.size();
+                nsiServices.forEach(name -> {
+                    Object bean = ctx.getBean(name);
+                    if (bean instanceof AbstractNsiService nsi) {
+                        String code = nsi.getClass().getSimpleName().substring(0, 4).toUpperCase();
+                        updateMessage("Скачиваем справочники " + cntReady.incrementAndGet() + "/" + ttl);
 
-                packages1.forEach(p -> {
-                    updateMessage("Скачиваем справочники " + cntReady.incrementAndGet() + "/" + ttl);
-                    nsiDownloaderService.updateFfoms(p);
+                        if (nsiDownloaderService.getRmzPackages().containsKey(code)) {
+                            nsiDownloaderService.updateRmz(code);
+                        } else {
+                            nsiDownloaderService.updateFfoms(code);
+                        }
+                        nsi.initPacket();
+                        nsiInitializerTask.getObservableClassifiers().add(new NsiRow(nsi));
+                    }
                 });
 
-                packages2.forEach(p -> {
-                    updateMessage("Скачиваем справочники " + cntReady.incrementAndGet() + "/" + ttl);
-                    nsiDownloaderService.updateRmz(p);
-                });
                 return null;
             }
 

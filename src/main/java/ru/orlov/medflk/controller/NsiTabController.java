@@ -59,24 +59,11 @@ public class NsiTabController implements Initializable {
     @FXML
     void downloadNsi() {
         Task<Void> task = nsiDownloaderTask.getTaskWithStatus(statusService.getStatusProperty());
-        Task<Void> task2 = nsiInitializerTask.getTaskWithStatus(statusService.getStatusProperty());
 
-        task.setOnScheduled(ev -> {
-            btnUpdateNsi.setDisable(true);
-        });
-        task.setOnFailed(ev -> {
-            btnUpdateNsi.setDisable(false);
-        });
-        task.setOnCancelled(ev -> {
-            btnUpdateNsi.setDisable(false);
-        });
-        task.setOnSucceeded(ev -> {
-            btnUpdateNsi.setDisable(false);
-
-            Thread thread2 = new Thread(task2);
-            thread2.setDaemon(true);
-            thread2.start();
-        });
+        task.setOnScheduled(ev -> btnUpdateNsi.setDisable(true));
+        task.setOnFailed(ev -> btnUpdateNsi.setDisable(false));
+        task.setOnCancelled(ev -> btnUpdateNsi.setDisable(false));
+        task.setOnSucceeded(ev -> btnUpdateNsi.setDisable(false));
 
         Thread thread = new Thread(task);
         thread.setDaemon(true);

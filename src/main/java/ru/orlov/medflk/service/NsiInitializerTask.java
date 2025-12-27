@@ -30,6 +30,12 @@ public class NsiInitializerTask {
 
     private static Boolean isRunning = false;
 
+    public List<String> getAllNsiServices() {
+        return Arrays.stream(ctx.getBeanDefinitionNames())
+                .filter(name -> name.matches("^.*[a-zA-Z][0-9]{3}Service$"))
+                .toList();
+    }
+
     public Task<Void> getTaskWithStatus(StringProperty status) {
         if (isRunning) {
             return null;
@@ -40,9 +46,7 @@ public class NsiInitializerTask {
             protected Void call() {
                 observableClassifiers.clear();
 
-                List<String> nsiServices = Arrays.stream(ctx.getBeanDefinitionNames())
-                        .filter(name -> name.matches("^.*[a-zA-Z][0-9]{3}Service$"))
-                        .toList();
+                List<String> nsiServices = getAllNsiServices();
 
                 int ttl = nsiServices.size();
                 AtomicInteger cntReady = new AtomicInteger(0);
@@ -52,14 +56,7 @@ public class NsiInitializerTask {
                     Object bean = ctx.getBean(name);
                     if (bean instanceof AbstractNsiService nsi) {
                         nsi.initPacket();
-
-                        NsiRow row = new NsiRow();
-                        row.setCode(nsi.getClass().getSimpleName().substring(0, 4));
-                        row.setDate(nsi.getDate());
-                        row.setVersion(nsi.getVersion());
-                        row.setDescription(nsi.getDescription());
-
-                        observableClassifiers.add(row);
+                        observableClassifiers.add(new NsiRow(nsi));
                     }
                 });
                 return null;

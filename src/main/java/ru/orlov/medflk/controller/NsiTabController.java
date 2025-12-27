@@ -1,0 +1,85 @@
+package ru.orlov.medflk.controller;
+
+import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Controller;
+import ru.orlov.medflk.domain.NsiRow;
+import ru.orlov.medflk.service.NsiDownloaderTask;
+import ru.orlov.medflk.service.NsiInitializerTask;
+import ru.orlov.medflk.service.StatusService;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+
+@Log4j2
+@Controller
+@RequiredArgsConstructor
+public class NsiTabController implements Initializable {
+
+    private final NsiInitializerTask nsiInitializerTask;
+    private final NsiDownloaderTask  nsiDownloaderTask;
+    private final StatusService statusService;
+
+    @FXML
+    private Button btnUpdateNsi;
+
+    @FXML
+    private TableView<NsiRow> nsiTable;
+
+    @FXML
+    private TableColumn<String, String> nsiTableCode;
+
+    @FXML
+    private TableColumn<LocalDate, String> nsiTableDate;
+
+    @FXML
+    private TableColumn<String, String> nsiTableVersion;
+
+    @FXML
+    private TableColumn<String, String> nsiTableDescription;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        nsiTable.setItems(nsiInitializerTask.getObservableClassifiers());
+        nsiTableCode.setCellValueFactory(new PropertyValueFactory<>("code"));
+        nsiTableDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        nsiTableVersion.setCellValueFactory(new PropertyValueFactory<>("version"));
+        nsiTableDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+    }
+
+
+    @FXML
+    void downloadNsi() {
+        Task<Void> task = nsiDownloaderTask.getTaskWithStatus(statusService.getStatusProperty());
+        Task<Void> task2 = nsiInitializerTask.getTaskWithStatus(statusService.getStatusProperty());
+
+        task.setOnScheduled(ev -> {
+            btnUpdateNsi.setDisable(true);
+        });
+        task.setOnFailed(ev -> {
+            btnUpdateNsi.setDisable(false);
+        });
+        task.setOnCancelled(ev -> {
+            btnUpdateNsi.setDisable(false);
+        });
+        task.setOnSucceeded(ev -> {
+            btnUpdateNsi.setDisable(false);
+
+            Thread thread2 = new Thread(task2);
+            thread2.setDaemon(true);
+            thread2.start();
+        });
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+    }
+}

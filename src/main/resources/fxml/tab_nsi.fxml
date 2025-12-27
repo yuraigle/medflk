@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ru.orlov.medflk.controller.NsiTabController"
+      minHeight="0.0" minWidth="0.0" spacing="6.0"
+>
+    <HBox>
+        <Button fx:id="btnUpdateNsi" mnemonicParsing="false" onAction="#downloadNsi" text="Скачать пакет НСИ" />
+    </HBox>
+    <TableView VBox.vgrow="ALWAYS" fx:id="nsiTable">
+        <columns>
+            <TableColumn prefWidth="75.0" text="Код" fx:id="nsiTableCode" />
+            <TableColumn prefWidth="75.0" text="Версия" fx:id="nsiTableVersion" />
+            <TableColumn prefWidth="75.0" text="Дата" fx:id="nsiTableDate" />
+            <TableColumn prefWidth="400.0" text="Название" fx:id="nsiTableDescription" />
+        </columns>
+    </TableView>
+    <padding>
+        <Insets bottom="6.0" left="6.0" right="6.0" top="10.0" />
+    </padding>
+</VBox>

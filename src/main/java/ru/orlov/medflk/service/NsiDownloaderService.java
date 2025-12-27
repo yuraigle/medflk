@@ -154,4 +154,6 @@ public class NsiDownloaderService {
 
         throw new Exception("Версия " + oid + " не найдена на сайте РосМинЗдрав");
     }
+
+
 }

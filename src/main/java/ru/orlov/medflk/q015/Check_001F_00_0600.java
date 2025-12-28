@@ -21,7 +21,7 @@ public class Check_001F_00_0600 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Коэффициент затратоемкости KOEF_Z должен соответствовать найденному в справочнике V023";
+        return "Коэффициент затратоёмкости KOEF_Z должен соответствовать найденному в справочнике V023";
     }
 
     @Override
@@ -39,7 +39,7 @@ public class Check_001F_00_0600 extends AbstractCheck {
             if (ksgPg == null || ksgPg == 0) {
                 if (koefZ != null && nKsg != null) {
                     V023Packet.V023 ksg = v023Service.getKsgOnDate(nKsg, d2);
-                    if (ksg != null && !koefZ.equals(ksg.getKoefZ())) {
+                    if (ksg != null && koefZ.compareTo(ksg.getKoefZ()) != 0) {
                         return List.of(new FlkErr(zap, sl, null, koefZ));
                     }
                 }

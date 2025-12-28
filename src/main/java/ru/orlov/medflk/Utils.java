@@ -15,6 +15,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -54,6 +55,16 @@ public class Utils {
         return ds1Usl1 || ds1Usl2;
     }
 
+    public static boolean dsIsOnkoDetTill21(String ds1) {
+        String[] ds1List = """
+                        C40, C49, C62, C64, C70, C71, C72, C81, C95, C22.2, C38.1, C47.3, C47.4,
+                        C47.5, C47.6, C47.8, C47.9, C48.0, C74.1, C74.9, C76.0, C76.1, C76.2, C76.3,
+                        C76.7, C76.8, C83.3, C83.5, C83.7, C84.6, C84.7, C85.2, C91.0, C91.8, C92.0,
+                        C92.3, C92.4, C92.5, C92.6, C92.7, C92.8, C92.9, C93.0, C94.0, C94.2
+                """.trim().split("[, \n]+");
+
+        return ds1 != null && Arrays.stream(ds1List).anyMatch(ds1::startsWith);
+    }
 
     public static String prettyPrintXml(String xmlString) {
         int indent = 4;

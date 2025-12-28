@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import ru.orlov.medflk.MedflkFxApplication;
 import ru.orlov.medflk.domain.ValidationResult;
+import ru.orlov.medflk.service.FileValidatorService;
 import ru.orlov.medflk.service.StatusService;
 import ru.orlov.medflk.task.FileValidatorTask;
 import ru.orlov.medflk.task.NsiInitializerTask;
@@ -29,6 +30,8 @@ public class HomeController implements Initializable {
     private final NsiInitializerTask nsiInitializerTask;
     private final FileValidatorTask fileValidatorTask;
 
+    private final FileValidatorService validator;
+
     @FXML
     private Label statusLine;
 
@@ -43,6 +46,14 @@ public class HomeController implements Initializable {
         statusService.setStatusProperty(statusLine.textProperty());
 
         Task<Void> task = nsiInitializerTask.getTaskWithStatus(statusService.getStatusProperty());
+
+        // debug
+        task.setOnSucceeded(ev -> {
+            File file = new File("D:\\MED\\SAMPLE\\CM380243S38014_251014480621B.ZIP");
+            ValidationResult procLog = validator.validate(file);
+            procLog.debug();
+        });
+
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();

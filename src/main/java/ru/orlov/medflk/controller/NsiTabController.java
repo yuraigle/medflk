@@ -1,5 +1,6 @@
 package ru.orlov.medflk.controller;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,7 +27,6 @@ public class NsiTabController implements Initializable {
 
     private final NsiDownloaderTask nsiDownloaderTask;
     private final StatusService statusService;
-    private final NsiInitializerService nsiInitializerService;
 
     @FXML
     private Button btnUpdateNsi;
@@ -48,13 +48,12 @@ public class NsiTabController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        nsiTable.setItems(nsiInitializerService.getObservableClassifiers());
         nsiTableCode.setCellValueFactory(new PropertyValueFactory<>("code"));
         nsiTableDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         nsiTableVersion.setCellValueFactory(new PropertyValueFactory<>("version"));
         nsiTableDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        Platform.runLater(() -> nsiTable.setItems(NsiInitializerService.classifiers));
     }
-
 
     @FXML
     void downloadNsi() {

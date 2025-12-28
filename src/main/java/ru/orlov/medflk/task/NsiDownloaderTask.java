@@ -1,9 +1,7 @@
 package ru.orlov.medflk.task;
 
-import javafx.animation.PauseTransition;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
-import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -14,6 +12,8 @@ import ru.orlov.medflk.service.NsiInitializerService;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static ru.orlov.medflk.service.StatusService.showStatusMessage;
 
 @Component
 @RequiredArgsConstructor
@@ -35,7 +35,7 @@ public class NsiDownloaderTask {
             protected Void call() {
                 List<String> nsiServices = nsiInitializerService.getAllNsiServices();
 
-                nsiInitializerService.getObservableClassifiers().clear();
+                NsiInitializerService.classifiers.clear();
 
                 AtomicInteger cntReady = new AtomicInteger(0);
                 int ttl = nsiServices.size();
@@ -51,7 +51,7 @@ public class NsiDownloaderTask {
                             nsiDownloaderService.updateFfoms(code);
                         }
                         nsi.initPacket();
-                        nsiInitializerService.getObservableClassifiers().add(new NsiRow(nsi));
+                        NsiInitializerService.classifiers.add(new NsiRow(nsi));
                     }
                 });
 
@@ -86,17 +86,5 @@ public class NsiDownloaderTask {
                 showStatusMessage(status, "Задача отменена");
             }
         };
-    }
-
-    private void showStatusMessage(StringProperty status, String message) {
-        status.set(message);
-
-        PauseTransition pause = new PauseTransition(Duration.seconds(3));
-        pause.setOnFinished(ev -> {
-            if (!status.isBound()) {
-                status.set("");
-            }
-        });
-        pause.play();
     }
 }

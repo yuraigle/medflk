@@ -19,9 +19,8 @@ public class NsiInitializerService {
 
     private final ApplicationContext ctx;
 
-    @Getter
-    private final ObservableList<NsiRow> observableClassifiers =
-            FXCollections.observableList(new ArrayList<>());
+    public static final ObservableList<NsiRow> classifiers
+            = FXCollections.observableList(new ArrayList<>());
 
     public List<String> getAllNsiServices() {
         return Arrays.stream(ctx.getBeanDefinitionNames())

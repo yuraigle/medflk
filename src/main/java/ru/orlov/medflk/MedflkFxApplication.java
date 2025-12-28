@@ -1,11 +1,14 @@
 package ru.orlov.medflk;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;

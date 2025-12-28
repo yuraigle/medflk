@@ -12,9 +12,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import ru.orlov.medflk.MedflkFxApplication;
 import ru.orlov.medflk.domain.ValidationResult;
-import ru.orlov.medflk.service.FileValidatorService;
-import ru.orlov.medflk.task.NsiInitializerTask;
 import ru.orlov.medflk.service.StatusService;
+import ru.orlov.medflk.task.FileValidatorTask;
+import ru.orlov.medflk.task.NsiInitializerTask;
 
 import java.io.File;
 import java.net.URL;
@@ -25,9 +25,9 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class HomeController implements Initializable {
 
-    private final NsiInitializerTask nsiInitializerTask;
-    private final FileValidatorService validatorService;
     private final StatusService statusService;
+    private final NsiInitializerTask nsiInitializerTask;
+    private final FileValidatorTask fileValidatorTask;
 
     @FXML
     private Label statusLine;
@@ -57,36 +57,23 @@ public class HomeController implements Initializable {
 
         File file = fileChooser.showOpenDialog(MedflkFxApplication.primaryStage);
         if (file != null) {
-            Task<ValidationResult> task = new Task<>() {
-                @Override
-                protected ValidationResult call() {
-                    updateMessage("Проверяем файл " + file.getName());
-                    ValidationResult result = validatorService.validate(file);
-                    vLog.setText(result.toString());
-                    return null;
-                }
+            Task<ValidationResult> task = fileValidatorTask.getTaskWithStatus(file, statusService.getStatusProperty());
+            task.setOnScheduled(ev -> {
+                vLog.setText("");
+                btnSelectFile.setDisable(true);
+            });
 
-                @Override
-                protected void scheduled() {
-                    statusService.getStatusProperty().bind(messageProperty());
-                    vLog.setText("");
-                    btnSelectFile.setDisable(true);
+            task.setOnSucceeded(ev -> {
+                try {
+                    vLog.setText(task.get().toString());
+                } catch (Exception e) {
+                    log.error(e);
                 }
+                btnSelectFile.setDisable(false);
+            });
 
-                @Override
-                protected void succeeded() {
-                    statusService.getStatusProperty().unbind();
-                    statusService.getStatusProperty().set("");
-                    btnSelectFile.setDisable(false);
-                }
-
-                @Override
-                protected void failed() {
-                    statusService.getStatusProperty().unbind();
-                    statusService.getStatusProperty().set("Ошибка при проверке файла");
-                    btnSelectFile.setDisable(false);
-                }
-            };
+            task.setOnFailed(ev -> btnSelectFile.setDisable(true));
+            task.setOnCancelled(ev -> btnSelectFile.setDisable(true));
 
             Thread thread = new Thread(task);
             thread.setDaemon(true);

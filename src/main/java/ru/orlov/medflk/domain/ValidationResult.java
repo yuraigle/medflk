@@ -51,10 +51,6 @@ public class ValidationResult {
                 filename, filesize / 1024));
 
         for (Line line : lines) {
-            if ("OK".equals(line.getComment())) {
-//                continue;
-            }
-
             if (line.getIdTest() != null) {
                 sb.append(String.format("%s : ", line.getIdTest()));
             }

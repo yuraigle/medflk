@@ -2,7 +2,6 @@ package ru.orlov.medflk.service;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;

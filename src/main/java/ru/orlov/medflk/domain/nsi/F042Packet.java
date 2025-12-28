@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Getter
+@Setter
 @XmlRootElement(name = "packet")
 @XmlAccessorType(XmlAccessType.NONE)
 public class F042Packet {
@@ -24,6 +25,7 @@ public class F042Packet {
     private List<F042> zapList;
 
     @Getter
+    @Setter
     @XmlAccessorType(XmlAccessType.NONE)
     public static class F042 {
 

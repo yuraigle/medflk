@@ -44,7 +44,7 @@ public class M002Service extends AbstractNsiService {
 
     private M002Packet readNsi(String filename) {
         try (
-                ZipFile zf = new ZipFile(filename);
+                ZipFile zf = new ZipFile(filename)
         ) {
             ZipEntry entry = zf.entries().nextElement();
             date = entry.getLastModifiedTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

@@ -49,7 +49,7 @@ public class HomeController implements Initializable {
 
         // debug
         task.setOnSucceeded(ev -> {
-            File file = new File("D:\\MED\\SAMPLE\\CM380243S38014_251014480621B.ZIP");
+            File file = new File("D:\\MED\\SAMPLE\\DVM380141S38014_251021714111B.ZIP");
             ValidationResult procLog = validator.validate(file);
             procLog.debug();
         });

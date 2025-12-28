@@ -1,6 +1,5 @@
 package ru.orlov.medflk.controller;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -52,7 +51,7 @@ public class NsiTabController implements Initializable {
         nsiTableDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         nsiTableVersion.setCellValueFactory(new PropertyValueFactory<>("version"));
         nsiTableDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        Platform.runLater(() -> nsiTable.setItems(NsiInitializerService.classifiers));
+        nsiTable.setItems(NsiInitializerService.classifiers);
     }
 
     @FXML

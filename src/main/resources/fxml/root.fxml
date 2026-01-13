@@ -11,16 +11,7 @@
 >
     <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         <Tab text="Проверка файла">
-            <VBox minHeight="0.0" minWidth="0.0" spacing="6.0">
-                <Button fx:id="btnSelectFile" mnemonicParsing="false" onAction="#selectFile" text="Выберите файл" />
-                <TextArea fx:id="vLog" VBox.vgrow="ALWAYS">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin></TextArea>
-                <padding>
-                    <Insets bottom="6.0" left="6.0" right="6.0" top="10.0" />
-                </padding>
-            </VBox>
+            <fx:include source="tab_check.fxml" />
         </Tab>
         <Tab text="Мониторинг каталога">
             <fx:include source="tab_monitor.fxml" />

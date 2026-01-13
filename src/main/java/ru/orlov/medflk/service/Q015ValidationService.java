@@ -3,6 +3,8 @@ package ru.orlov.medflk.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import ru.orlov.medflk.controller.CheckTabController;
+import ru.orlov.medflk.domain.CheckFact;
 import ru.orlov.medflk.domain.ValidationResult;
 import ru.orlov.medflk.domain.nsi.Q015Packet;
 import ru.orlov.medflk.domain.nsi.Q015Service;
@@ -52,27 +54,56 @@ public class Q015ValidationService {
                 .filter(q -> q.getIdTest().startsWith("001"))
                 .toList();
 
+        CheckTabController.checkFactList.clear();
+        for (Q015Packet.Q015 check : q015List) {
+            CheckFact fact = new CheckFact();
+            fact.setTest(check.getIdTest());
+            fact.setElement(check.getIdEl());
+            fact.setResult("");
+
+            if (check.getBean() != null && check.getBean() instanceof AbstractCheck) {
+                String message = ((AbstractCheck) check.getBean()).getErrorMessage();
+                fact.setDescription(message);
+            } else {
+                fact.setDescription("Проверка не реализована");
+            }
+
+            CheckTabController.checkFactList.add(fact);
+        }
+
         int cntActiveChecks = 0;
         for (Q015Packet.Q015 check : q015List) {
             ValidationResult.Line line = new ValidationResult.Line(check.getIdTest(), null);
             if (check.getBean() != null && check.getBean() instanceof AbstractCheck) {
                 cntActiveChecks++;
+
+                String result = "";
                 try {
                     List<FlkErr> e1 = applyCheck(check, zlList, persList);
                     String message = ((AbstractCheck) check.getBean()).getErrorMessage();
 
                     if (e1 != null && !e1.isEmpty()) {
+                        result = e1.size() + " ошибок";
                         line.setComment(message + " : " + e1.size() + " ошибок");
                         proc.getErrors().addAll(e1);
                         proc.setDeclined(true);
                     } else {
-
+                        result = "OK";
                         line.setComment(message + " : OK");
                     }
                 } catch (Exception e) {
+                    result = "Ошибка обработки";
                     line.setComment("Ошибка обработчика при проведении проверки: " + e.getMessage());
                     proc.setDeclined(true);
                 }
+
+                CheckFact checkFact = CheckTabController.checkFactList.stream()
+                        .filter(c -> check.getIdTest().equals(c.getTest()))
+                        .findFirst().orElse(null);
+                if (checkFact != null) {
+                    checkFact.setResult(result);
+                }
+
             } else {
                 line.setComment(String.format("Проверка %s не реализована", check.getIdEl()));
             }

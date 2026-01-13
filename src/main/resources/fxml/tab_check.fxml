@@ -4,13 +4,22 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="ru.orlov.medflk.controller.CheckTabController"
       minHeight="0.0" minWidth="0.0" spacing="6.0"
 >
     <Button fx:id="btnSelectFile" mnemonicParsing="false" onAction="#selectFile" text="Выберите файл"/>
-    <TextArea fx:id="vLog" VBox.vgrow="ALWAYS">
+    <TableView VBox.vgrow="ALWAYS" fx:id="factsTable">
+        <columns>
+            <TableColumn prefWidth="85.0" text="Код" fx:id="factsTableTest" />
+            <TableColumn prefWidth="450.0" text="Проверка" fx:id="factsTableDescription" />
+            <TableColumn prefWidth="85.0" text="Результат" fx:id="factsTableResult" />
+        </columns>
+    </TableView>
+    <TextArea fx:id="vLog" VBox.vgrow="NEVER">
         <VBox.margin>
             <Insets/>
         </VBox.margin>

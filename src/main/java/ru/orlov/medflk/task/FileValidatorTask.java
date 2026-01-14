@@ -4,7 +4,8 @@ import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.orlov.medflk.domain.ValidationResult;
+import ru.orlov.medflk.controller.CheckTabController;
+import ru.orlov.medflk.jaxb.FlkP;
 import ru.orlov.medflk.service.FileValidatorService;
 
 import java.io.File;
@@ -17,16 +18,18 @@ public class FileValidatorTask {
 
     private final FileValidatorService validator;
 
-    public Task<ValidationResult> getTaskWithStatus(File file, StringProperty status) {
+    public Task<FlkP> getTaskWithStatus(File file, StringProperty status) {
         return new Task<>() {
 
             @Override
-            protected ValidationResult call() {
+            protected FlkP call() {
+                CheckTabController.checkFactList.clear();
+
                 updateMessage("Проверяем файл " + file.getName());
-                ValidationResult procLog = validator.validate(file);
+                FlkP flkP = validator.validate(file);
                 updateMessage("");
 
-                return procLog;
+                return flkP;
             }
 
             @Override

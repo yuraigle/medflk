@@ -8,7 +8,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import ru.orlov.medflk.MedflkFxApplication;
 import ru.orlov.medflk.domain.CheckFact;
-import ru.orlov.medflk.domain.ValidationResult;
+import ru.orlov.medflk.jaxb.FlkP;
 import ru.orlov.medflk.service.StatusService;
 import ru.orlov.medflk.task.FileValidatorTask;
 
@@ -49,9 +48,6 @@ public class CheckTabController implements Initializable {
     private TableColumn<String, String> factsTableResult;
 
     @FXML
-    private TextArea vLog;
-
-    @FXML
     private Button btnSelectFile;
 
     @Override
@@ -71,25 +67,13 @@ public class CheckTabController implements Initializable {
 
         File file = fileChooser.showOpenDialog(MedflkFxApplication.primaryStage);
         if (file != null) {
-            Task<ValidationResult> task = fileValidatorTask
+            Task<FlkP> task = fileValidatorTask
                     .getTaskWithStatus(file, statusService.getStatusProperty());
 
-            task.setOnScheduled(ev -> {
-                vLog.setText("");
-                btnSelectFile.setDisable(true);
-            });
-
-            task.setOnSucceeded(ev -> {
-                try {
-                    vLog.setText(task.get().toString());
-                } catch (Exception e) {
-                    log.error(e);
-                }
-                btnSelectFile.setDisable(false);
-            });
-
-            task.setOnFailed(ev -> btnSelectFile.setDisable(true));
-            task.setOnCancelled(ev -> btnSelectFile.setDisable(true));
+            task.setOnScheduled(ev -> btnSelectFile.setDisable(true));
+            task.setOnSucceeded(ev -> btnSelectFile.setDisable(false));
+            task.setOnFailed(ev -> btnSelectFile.setDisable(false));
+            task.setOnCancelled(ev -> btnSelectFile.setDisable(false));
 
             Thread thread = new Thread(task);
             thread.setDaemon(true);

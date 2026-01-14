@@ -5,14 +5,12 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.orlov.medflk.controller.CheckTabController;
 import ru.orlov.medflk.domain.CheckFact;
-import ru.orlov.medflk.domain.ValidationResult;
 import ru.orlov.medflk.domain.nsi.Q015Packet;
 import ru.orlov.medflk.domain.nsi.Q015Service;
 import ru.orlov.medflk.jaxb.*;
 import ru.orlov.medflk.q015.AbstractCheck;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static ru.orlov.medflk.Utils.castList;
@@ -31,7 +29,7 @@ public class Q015ValidationService {
         return persCache.getOrDefault(idPac, null);
     }
 
-    public void validate(ZlList zlList, PersList persList, ValidationResult proc) {
+    public void validate(ZlList zlList, PersList persList, FlkP flkP) {
         String zlType = getZlListMdType(zlList);
 
         // список проверок Q015 берём на дату счёта
@@ -41,77 +39,40 @@ public class Q015ValidationService {
         q015List.addAll(q015Service.getChecksForType("L", q15Date));
         q015List.sort(Comparator.comparing(Q015Packet.Q015::getIdTest));
 
-        persCache.clear();
-        for (Zap zap : zlList.getZapList()) {
-            Pers pers = persList.getPersList().stream()
-                    .filter(p -> p.getIdPac().equals(zap.getPacient().getIdPac()))
-                    .findFirst()
-                    .orElse(null);
-            persCache.put(zap.getPacient().getIdPac(), pers);
-        }
-
+        // debug
         q015List = q015List.stream()
                 .filter(q -> q.getIdTest().startsWith("001"))
                 .toList();
 
-        CheckTabController.checkFactList.clear();
+        persCache.clear();
+        persList.getPersList().forEach(pers -> {
+            persCache.put(pers.getIdPac(), pers);
+        });
+
         for (Q015Packet.Q015 check : q015List) {
-            CheckFact fact = new CheckFact();
-            fact.setTest(check.getIdTest());
-            fact.setElement(check.getIdEl());
-            fact.setResult("");
+            CheckFact fact = CheckFact.builder().test(check.getIdTest())
+                    .element(check.getIdEl()).result("").build();
 
             if (check.getBean() != null && check.getBean() instanceof AbstractCheck) {
-                String message = ((AbstractCheck) check.getBean()).getErrorMessage();
-                fact.setDescription(message);
+                fact.setDescription(((AbstractCheck) check.getBean()).getErrorMessage());
+
+                try {
+                    List<FlkErr> e1 = applyCheck(check, zlList, persList);
+                    if (e1 != null && !e1.isEmpty()) {
+                        fact.setResult(e1.size() + " ошибок");
+                        flkP.getPrList().addAll(e1);
+                    } else {
+                        fact.setResult("OK");
+                    }
+                } catch (Exception e) {
+                    fact.setResult("Ошибка обработки");
+                }
             } else {
                 fact.setDescription("Проверка не реализована");
             }
 
             CheckTabController.checkFactList.add(fact);
         }
-
-        int cntActiveChecks = 0;
-        for (Q015Packet.Q015 check : q015List) {
-            ValidationResult.Line line = new ValidationResult.Line(check.getIdTest(), null);
-            if (check.getBean() != null && check.getBean() instanceof AbstractCheck) {
-                cntActiveChecks++;
-
-                String result = "";
-                try {
-                    List<FlkErr> e1 = applyCheck(check, zlList, persList);
-                    String message = ((AbstractCheck) check.getBean()).getErrorMessage();
-
-                    if (e1 != null && !e1.isEmpty()) {
-                        result = e1.size() + " ошибок";
-                        line.setComment(message + " : " + e1.size() + " ошибок");
-                        proc.getErrors().addAll(e1);
-                        proc.setDeclined(true);
-                    } else {
-                        result = "OK";
-                        line.setComment(message + " : OK");
-                    }
-                } catch (Exception e) {
-                    result = "Ошибка обработки";
-                    line.setComment("Ошибка обработчика при проведении проверки: " + e.getMessage());
-                    proc.setDeclined(true);
-                }
-
-                CheckFact checkFact = CheckTabController.checkFactList.stream()
-                        .filter(c -> check.getIdTest().equals(c.getTest()))
-                        .findFirst().orElse(null);
-                if (checkFact != null) {
-                    checkFact.setResult(result);
-                }
-
-            } else {
-                line.setComment(String.format("Проверка %s не реализована", check.getIdEl()));
-            }
-            proc.getLines().add(line);
-        }
-
-        proc.setEndedAt(LocalDateTime.now());
-        proc.addLine(String.format("%s / %s проверок выполнено", cntActiveChecks, q015List.size()));
     }
 
     private List<FlkErr> applyCheck(Q015Packet.Q015 q015, Object a, Object b) throws Exception {

@@ -74,6 +74,11 @@ public class FlkErr {
         this.znPol = value == null ? "" : value.toString();
     }
 
+    public FlkErr(String oshib, String comment) {
+        this.oshib = oshib;
+        this.comment = comment;
+    }
+
     public void fillFromQ015(Q015Packet.Q015 q015) {
         this.oshib = q015.getIdTest();
 

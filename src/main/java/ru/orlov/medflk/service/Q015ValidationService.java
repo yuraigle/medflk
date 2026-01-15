@@ -41,13 +41,11 @@ public class Q015ValidationService {
 
         // debug
         q015List = q015List.stream()
-                .filter(q -> q.getIdTest().startsWith("001"))
+                .filter(q -> q.getIdTest().startsWith("002"))
                 .toList();
 
         persCache.clear();
-        persList.getPersList().forEach(pers -> {
-            persCache.put(pers.getIdPac(), pers);
-        });
+        persList.getPersList().forEach(pers -> persCache.put(pers.getIdPac(), pers));
 
         for (Q015Packet.Q015 check : q015List) {
             CheckFact fact = CheckFact.builder().test(check.getIdTest())

@@ -9,11 +9,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Component
-public class Check_002F_00_0050 extends AbstractCheck {
+public class Check_002F_00_0030 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Версия файла L должна быть 3.2";
+        return "Версия файла L должна быть 3.1 до октября 2019";
     }
 
     @Override
@@ -26,13 +26,13 @@ public class Check_002F_00_0050 extends AbstractCheck {
         }
 
         LocalDate dFile = LocalDate.of(yr, mo, 1);
-        LocalDate dMax = LocalDate.of(2019, 11, 1);
-        if (dFile.isBefore(dMax)) {
-            return List.of(); // с ноября 2019
+        LocalDate dMax = LocalDate.of(2019, 10, 1);
+        if (dFile.isAfter(dMax)) {
+            return List.of();
         }
 
         String version = persList.getZglv().getVersion();
-        if (!"3.2".equals(version)) {
+        if (!"3.1".equals(version)) {
             return List.of(new FlkErr(null, null, null, version));
         }
 

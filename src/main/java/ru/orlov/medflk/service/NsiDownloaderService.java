@@ -31,7 +31,8 @@ public class NsiDownloaderService {
     private final Map<String, String> rmzPackages = Map.of(
             "V001", "1.2.643.5.1.13.13.11.1070",
             "M001", "1.2.643.5.1.13.13.11.1005",
-            "M002", "1.2.643.5.1.13.13.99.2.734"
+            "M002", "1.2.643.5.1.13.13.99.2.734",
+            "M003", "1.2.643.5.1.13.13.11.1119"
     );
 
     public void updateFfoms(String packet) {

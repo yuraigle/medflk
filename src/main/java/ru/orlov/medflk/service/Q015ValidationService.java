@@ -40,9 +40,9 @@ public class Q015ValidationService {
         q015List.sort(Comparator.comparing(Q015Packet.Q015::getIdTest));
 
         // debug
-        q015List = q015List.stream()
-                .filter(q -> q.getIdTest().startsWith("002"))
-                .toList();
+//        q015List = q015List.stream()
+//                .filter(q -> q.getIdTest().startsWith("002"))
+//                .toList();
 
         persCache.clear();
         persList.getPersList().forEach(pers -> persCache.put(pers.getIdPac(), pers));

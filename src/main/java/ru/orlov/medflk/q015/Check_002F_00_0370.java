@@ -5,23 +5,26 @@ import ru.orlov.medflk.jaxb.FlkErr;
 import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
-public class Check_002F_00_0280 extends AbstractCheck {
+public class Check_002F_00_0370 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Признак диспансерного наблюдения DN должен быть (1,2,4,6)";
+        return "Масса тела WEI должна быть до 500кг";
     }
 
     @Override
     public List<FlkErr> check(ZlList zlList, PersList persList) {
-        return iterateOverSl(zlList, persList, (a, zap, sl) -> {
-            Integer dn = sl.getDn();
-            if (dn != null && !List.of(1, 2, 4, 6).contains(dn)) {
-                return List.of(new FlkErr(zap, sl, null, dn));
+        return iterateOverOnkSl(zlList, persList, (a, zap, sl, onkSl) -> {
+            BigDecimal wei = onkSl.getWei();
+
+            if (wei != null && wei.compareTo(BigDecimal.valueOf(500.0)) >= 0) {
+                return List.of(new FlkErr(zap, sl, null, wei));
             }
+
             return List.of();
         });
     }

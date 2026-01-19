@@ -8,20 +8,21 @@ import ru.orlov.medflk.jaxb.ZlList;
 import java.util.List;
 
 @Component
-public class Check_002F_00_0280 extends AbstractCheck {
+public class Check_002F_00_0510 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Признак диспансерного наблюдения DN должен быть (1,2,4,6)";
+        return "Признак детского профиля в услуге должен быть 0 или 1";
     }
 
     @Override
     public List<FlkErr> check(ZlList zlList, PersList persList) {
-        return iterateOverSl(zlList, persList, (a, zap, sl) -> {
-            Integer dn = sl.getDn();
-            if (dn != null && !List.of(1, 2, 4, 6).contains(dn)) {
-                return List.of(new FlkErr(zap, sl, null, dn));
+        return iterateOverUsl(zlList, persList, (a, zap, sl, usl) -> {
+            Integer det = usl.getDet();
+            if (det != null && !List.of(0, 1).contains(det)) {
+                return List.of(new FlkErr(zap, sl, usl, det));
             }
+
             return List.of();
         });
     }

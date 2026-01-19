@@ -13,7 +13,7 @@ public class Check_006F_00_0310 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Дата направления NPR_DATE должна быть не позднее даты начала лечения";
     }
 
     @Override

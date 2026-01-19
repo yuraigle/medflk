@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="ru.orlov.medflk.controller.CheckTabController"
-      minHeight="0.0" minWidth="0.0" spacing="6.0"
->
-    <Button fx:id="btnSelectFile" mnemonicParsing="false" onAction="#selectFile" text="Выберите файл"/>
-    <TableView VBox.vgrow="ALWAYS" fx:id="factsTable">
+<VBox spacing="6.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.orlov.medflk.controller.CheckTabController">
+    <HBox prefHeight="25.0" spacing="6.0">
+        <Button fx:id="btnSelectFile" mnemonicParsing="false" onAction="#selectFile" prefHeight="25.0"
+                text="Выберите файл"/>
+        <Label fx:id="labelFileName" prefHeight="25.0"/>
+        <Label fx:id="labelFileResult" prefHeight="25.0"/>
+    </HBox>
+    <TableView fx:id="factsTable">
         <columns>
-            <TableColumn prefWidth="85.0" text="Код" fx:id="factsTableTest" />
-            <TableColumn prefWidth="450.0" text="Проверка" fx:id="factsTableDescription" />
-            <TableColumn prefWidth="85.0" text="Результат" fx:id="factsTableResult" />
+            <TableColumn fx:id="factsTableTest" prefWidth="85.0" text="Код"/>
+            <TableColumn fx:id="factsTableDescription" prefWidth="450.0" text="Проверка"/>
+            <TableColumn fx:id="factsTableResult" prefWidth="85.0" text="Результат"/>
         </columns>
     </TableView>
     <padding>

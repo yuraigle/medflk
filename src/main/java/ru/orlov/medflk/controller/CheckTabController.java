@@ -6,6 +6,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -50,6 +51,12 @@ public class CheckTabController implements Initializable {
     @FXML
     private Button btnSelectFile;
 
+    @FXML
+    private Label labelFileName;
+
+    @FXML
+    private Label labelFileResult;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         factsTableTest.setCellValueFactory(new PropertyValueFactory<>("test"));
@@ -70,14 +77,38 @@ public class CheckTabController implements Initializable {
             Task<FlkP> task = fileValidatorTask
                     .getTaskWithStatus(file, statusService.getStatusProperty());
 
-            task.setOnScheduled(ev -> btnSelectFile.setDisable(true));
-            task.setOnSucceeded(ev -> btnSelectFile.setDisable(false));
-            task.setOnFailed(ev -> btnSelectFile.setDisable(false));
-            task.setOnCancelled(ev -> btnSelectFile.setDisable(false));
+            task.setOnScheduled(ev -> {
+                btnSelectFile.setDisable(true);
+                labelFileName.setText(file.getName());
+                labelFileResult.setText("");
+            });
+
+            task.setOnSucceeded(ev -> onTaskFinished(task));
+            task.setOnFailed(ev -> onTaskFinished(task));
+            task.setOnCancelled(ev -> onTaskFinished(task));
 
             Thread thread = new Thread(task);
             thread.setDaemon(true);
             thread.start();
+        }
+    }
+
+    private void onTaskFinished(Task<FlkP> task) {
+        btnSelectFile.setDisable(false);
+
+        try {
+            FlkP flkP = task.get();
+            int cntErr = flkP.getPrList().size();
+            if (cntErr == 0) {
+                labelFileResult.setStyle("-fx-text-fill: green");
+                labelFileResult.setText("Нет ошибок");
+            } else {
+                labelFileResult.setStyle("-fx-text-fill: red");
+                labelFileResult.setText(cntErr + " ошибок");
+            }
+        } catch (Exception ex) {
+            labelFileResult.setStyle("-fx-text-fill: red");
+            labelFileResult.setText("Ошибка при проверке");
         }
     }
 }

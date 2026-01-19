@@ -8,12 +8,12 @@ import java.math.RoundingMode;
 public class BigDecimalAdapter extends XmlAdapter<String, BigDecimal> {
 
     @Override
-    public BigDecimal unmarshal(String v) throws Exception {
+    public BigDecimal unmarshal(String v) {
         return new BigDecimal(v);
     }
 
     @Override
-    public String marshal(BigDecimal v) throws Exception {
+    public String marshal(BigDecimal v) {
         if (v != null) {
             return v.setScale(2, RoundingMode.HALF_UP).toString();
         }

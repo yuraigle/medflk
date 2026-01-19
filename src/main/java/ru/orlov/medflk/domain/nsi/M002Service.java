@@ -42,7 +42,9 @@ public class M002Service extends AbstractNsiService {
         return "Топография для классификации TNM";
     }
 
-    private M002Packet readNsi(String filename) {
+    private M002Packet readNsi() {
+        String filename = "nsi/M002.ZIP";
+
         try (
                 ZipFile zf = new ZipFile(filename)
         ) {
@@ -59,7 +61,7 @@ public class M002Service extends AbstractNsiService {
 
     @Override
     public void initPacket() {
-        M002Packet packet = readNsi("nsi/M002.ZIP");
+        M002Packet packet = readNsi();
 
         if (tnmVersion == 7) {
             m002List = packet.getEntries().getEntryList().stream()

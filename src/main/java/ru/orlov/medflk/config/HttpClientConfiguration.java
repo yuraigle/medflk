@@ -10,7 +10,6 @@ import javax.net.ssl.X509ExtendedTrustManager;
 import java.net.Socket;
 import java.net.http.HttpClient;
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 /**
@@ -24,23 +23,19 @@ public class HttpClientConfiguration {
     private static final TrustManager MOCK_TRUST_MANAGER = new X509ExtendedTrustManager() {
 
         @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException {
-
+        public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) {
         }
 
         @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException {
-
+        public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket) {
         }
 
         @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine) throws CertificateException {
-
+        public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine) {
         }
 
         @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType, SSLEngine engine) throws CertificateException {
-
+        public void checkServerTrusted(X509Certificate[] chain, String authType, SSLEngine engine) {
         }
 
         @Override
@@ -49,13 +44,11 @@ public class HttpClientConfiguration {
         }
 
         @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-
+        public void checkClientTrusted(X509Certificate[] chain, String authType) {
         }
 
         @Override
-        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-
+        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
         }
     };
 

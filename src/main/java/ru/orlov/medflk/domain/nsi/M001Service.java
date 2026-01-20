@@ -35,7 +35,7 @@ public class M001Service extends AbstractNsiService {
 
     @Override
     public String getDescription() {
-        return "МКБ-10";
+        return " Международная классификация болезней МКБ-10";
     }
 
     private M001Packet readNsi() {

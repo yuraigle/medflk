@@ -3,6 +3,8 @@ package ru.orlov.medflk;
 import lombok.extern.log4j.Log4j2;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import ru.orlov.medflk.jaxb.OnkSl;
+import ru.orlov.medflk.jaxb.OnkUsl;
 import ru.orlov.medflk.jaxb.ZlList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -64,6 +66,23 @@ public class Utils {
                 """.trim().split("[, \n]+");
 
         return ds1 != null && Arrays.stream(ds1List).anyMatch(ds1::startsWith);
+    }
+
+    public static boolean onkSlHasRegNum(OnkSl onkSl, String regnum) {
+        if (onkSl == null || onkSl.getOnkUslList() == null) return false;
+
+        for (OnkUsl onkUsl : onkSl.getOnkUslList()) {
+            if (onkUsl.getLekPrList() == null) continue;
+
+            boolean hasRegNum = onkUsl.getLekPrList().stream()
+                    .anyMatch(lp -> lp.getRegnum().equals(regnum));
+
+            if (hasRegNum) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static String prettyPrintXml(String xmlString) {

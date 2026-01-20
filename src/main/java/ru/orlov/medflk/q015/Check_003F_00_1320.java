@@ -13,7 +13,7 @@ public class Check_003F_00_1320 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Код услуги в направлении NAZ_USL должен отсутствовать при виде назначения не 3";
     }
 
     @Override

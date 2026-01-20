@@ -11,7 +11,7 @@ public class Check_003F_00_1260 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Признак получения диагностики REC_RSLT должен быть заполнен";
     }
 
     @Override

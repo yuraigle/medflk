@@ -14,7 +14,7 @@ public class Check_003F_00_1250 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Результат диагностики DIAG_RSLT должен быть заполнен";
     }
 
     @Override

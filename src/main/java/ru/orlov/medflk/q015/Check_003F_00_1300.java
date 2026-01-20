@@ -13,7 +13,7 @@ public class Check_003F_00_1300 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Метод исследования NAZ_V должен отсутствовать при виде назначения не 3";
     }
 
     @Override

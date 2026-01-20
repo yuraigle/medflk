@@ -12,7 +12,7 @@ public class Check_003F_00_2110 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Номер записи N_ZAP должен быть заполнен и быть уникальным";
     }
 
     @Override

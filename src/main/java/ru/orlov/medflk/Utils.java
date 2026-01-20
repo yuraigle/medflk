@@ -47,6 +47,12 @@ public class Utils {
         return filename.toUpperCase().substring(0, 1);
     }
 
+    public static String getPluralForm(Integer n, String s1, String s2, String s0) {
+        if (n % 10 == 1 && n % 100 != 11) return s1; // 1 ошибка
+        if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return s2; // 2 ошибки
+        return s0; // 0 ошибок
+    }
+
     public static boolean dsIsOnkoC00ToD10OrD45ToD48(String ds1) {
         if (ds1 == null) return false;
 

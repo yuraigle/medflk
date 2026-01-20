@@ -25,17 +25,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import static ru.orlov.medflk.Utils.getPluralForm;
+
 @Log4j2
 @Controller
 @RequiredArgsConstructor
 public class CheckTabController implements Initializable {
 
-    private final FileValidatorTask fileValidatorTask;
-    private final StatusService statusService;
-
     public static final ObservableList<CheckFact> checkFactList
             = FXCollections.observableList(new ArrayList<>());
-
+    private final FileValidatorTask fileValidatorTask;
+    private final StatusService statusService;
     @FXML
     private TableView<CheckFact> factsTable;
 
@@ -104,7 +104,7 @@ public class CheckTabController implements Initializable {
                 labelFileResult.setText("Нет ошибок");
             } else {
                 labelFileResult.setStyle("-fx-text-fill: red");
-                labelFileResult.setText(cntErr + " ошибок");
+                labelFileResult.setText(cntErr + " " + getPluralForm(cntErr, "ошибка", "ошибки", "ошибок"));
             }
         } catch (Exception ex) {
             labelFileResult.setStyle("-fx-text-fill: red");

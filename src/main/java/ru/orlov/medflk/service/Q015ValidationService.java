@@ -13,8 +13,7 @@ import ru.orlov.medflk.q015.AbstractCheck;
 import java.time.LocalDate;
 import java.util.*;
 
-import static ru.orlov.medflk.Utils.castList;
-import static ru.orlov.medflk.Utils.getZlListMdType;
+import static ru.orlov.medflk.Utils.*;
 
 @Log4j2
 @Service
@@ -39,7 +38,7 @@ public class Q015ValidationService {
         q015List.addAll(q015Service.getChecksForType("L", q15Date));
         q015List.sort(Comparator.comparing(Q015Packet.Q015::getIdTest));
 
-//        q015List = q015List.stream().filter(q -> q.getIdTest().startsWith("002")).toList();
+//        q015List = q015List.stream().filter(q -> q.getIdTest().startsWith("003")).toList();
 
         persCache.clear();
         persList.getPersList().forEach(pers -> persCache.put(pers.getIdPac(), pers));
@@ -54,7 +53,7 @@ public class Q015ValidationService {
                 try {
                     List<FlkErr> e1 = applyCheck(check, zlList, persList);
                     if (e1 != null && !e1.isEmpty()) {
-                        fact.setResult(e1.size() + " ошибок");
+                        fact.setResult(e1.size() + " " + getPluralForm(e1.size(), "ошибка", "ошибки", "ошибок"));
                         flkP.getPrList().addAll(e1);
                     } else {
                         fact.setResult("OK");

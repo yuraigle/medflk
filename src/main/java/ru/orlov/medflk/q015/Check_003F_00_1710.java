@@ -15,7 +15,7 @@ public class Check_003F_00_1710 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Поле телефон должно отсутствовать для файлов отличных от диспансеризации";
     }
 
     @Override

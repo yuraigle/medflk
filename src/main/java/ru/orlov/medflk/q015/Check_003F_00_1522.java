@@ -15,7 +15,7 @@ public class Check_003F_00_1522 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Вид вмешательства VID_VME должен быть заполнен при онко-лечении";
     }
 
     // (C00.0<=DS1<D10 или D45<=DS1<D48) и USL_TIP={1,3,4,6}

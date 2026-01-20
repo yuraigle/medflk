@@ -18,7 +18,7 @@ public class Check_002F_00_0432 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код схемы CODE_SH должен быть 'нет'";
+        return "Код схемы CODE_SH должен быть 'нет' при оказании помощи детям";
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Check_002F_00_0432 extends AbstractCheck {
 
             if (onkUsl.getLekPrList() != null) {
                 for (LekPrOnk lekPr : onkUsl.getLekPrList()) {
-                    boolean shouldBeNet = codeShShouldBeNet(pers, zap, sl, onkUsl, lekPr);
+                    boolean shouldBeNet = codeShShouldBeNet(pers, zap, sl, onkUsl);
 
                     String codeSh = lekPr.getCodeSh();
                     if (shouldBeNet && !"нет".equals(codeSh)) {
@@ -49,7 +49,7 @@ public class Check_002F_00_0432 extends AbstractCheck {
      ИЛИ (D45<=DS1<D48 и USL_TIP>4)
      ИЛИ (Возраст ЗЛ на дату начала законченного случая (DATE_Z_1)<21 года и DET=1 и DS1={...})
      */
-    private boolean codeShShouldBeNet(Pers pers, Zap zap, Sl sl, OnkUsl onkUsl, LekPrOnk lekPr) {
+    private boolean codeShShouldBeNet(Pers pers, Zap zap, Sl sl, OnkUsl onkUsl) {
         LocalDate d1 = zap.getZSl().getDateZ1();
         LocalDate dr = pers.getDr();
         Integer uslTip = onkUsl.getUslTip();

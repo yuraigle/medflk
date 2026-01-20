@@ -14,7 +14,7 @@ public class Check_003F_00_1330 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Дата NAPR_DATE должна быть указана при направлении на консультацию";
     }
 
     @Override

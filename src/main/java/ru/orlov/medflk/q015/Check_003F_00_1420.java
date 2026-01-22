@@ -13,7 +13,7 @@ public class Check_003F_00_1420 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Тип хирургического лечения HIR_TIP должен отсутствовать при типе услуги не 1";
     }
 
     @Override

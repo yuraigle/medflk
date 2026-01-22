@@ -16,7 +16,7 @@ public class Check_003F_00_1390 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "В назначениях профиль койки NAZ_PK обязателен при виде назначения 6";
     }
 
     @Override

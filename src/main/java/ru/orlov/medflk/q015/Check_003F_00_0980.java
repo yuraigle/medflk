@@ -13,7 +13,7 @@ public class Check_003F_00_0980 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Стадия заболевания не заполнена";
+        return "Стадия заболевания STAD обязательна при поводе обращения 0,1,2,3,4";
     }
 
     @Override

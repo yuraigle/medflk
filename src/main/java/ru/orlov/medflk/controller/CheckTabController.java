@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static ru.orlov.medflk.Utils.getPluralForm;
+import static ru.orlov.medflk.service.NsiInitializerService.isNsiReady;
 
 @Log4j2
 @Controller
@@ -36,6 +37,7 @@ public class CheckTabController implements Initializable {
             = FXCollections.observableList(new ArrayList<>());
     private final FileValidatorTask fileValidatorTask;
     private final StatusService statusService;
+
     @FXML
     private TableView<CheckFact> factsTable;
 
@@ -63,6 +65,11 @@ public class CheckTabController implements Initializable {
         factsTableDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         factsTableResult.setCellValueFactory(new PropertyValueFactory<>("result"));
         factsTable.setItems(checkFactList);
+
+        btnSelectFile.setDisable(true);
+        isNsiReady.addListener((obs, v1, v2) ->
+                btnSelectFile.setDisable(!v2)
+        );
     }
 
     @FXML

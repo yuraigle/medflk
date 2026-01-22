@@ -21,7 +21,7 @@ public class Check_001F_00_0330 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Профиль медицинской помощи в назначении NAZ_PMP должен быть найден в справочнике V002";
+        return "Профиль помощи в назначении NAZ_PMP должен быть найден в справочнике V002";
     }
 
     @Override

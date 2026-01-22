@@ -15,7 +15,7 @@ public class Check_003F_00_1370 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "В назначениях профиль помощи NAZ_PMP обязателен при виде назначения 4 или 5";
     }
 
     @Override

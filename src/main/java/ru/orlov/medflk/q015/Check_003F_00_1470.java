@@ -14,7 +14,7 @@ public class Check_003F_00_1470 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Тип лучевой терапии LUCH_TIP обязателен при типе услуги 3 или 4";
     }
 
     @Override

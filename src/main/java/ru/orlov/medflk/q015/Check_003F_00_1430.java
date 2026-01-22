@@ -13,7 +13,7 @@ public class Check_003F_00_1430 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Линия лекарственной терапии LEK_TIP_L обязательна при типе услуги 2";
     }
 
     @Override

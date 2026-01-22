@@ -35,6 +35,7 @@ public class NsiDownloaderTask {
             protected Void call() {
                 List<String> nsiServices = nsiInitializerService.getAllNsiServices();
 
+                NsiInitializerService.isNsiReady.set(false);
                 NsiInitializerService.classifiers.clear();
 
                 AtomicInteger cntReady = new AtomicInteger(0);
@@ -54,6 +55,8 @@ public class NsiDownloaderTask {
                         NsiInitializerService.classifiers.add(new NsiRow(nsi));
                     }
                 });
+
+                NsiInitializerService.isNsiReady.set(true);
 
                 return null;
             }

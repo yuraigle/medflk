@@ -11,6 +11,7 @@ import ru.orlov.medflk.service.NsiInitializerService;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static ru.orlov.medflk.service.NsiInitializerService.isNsiReady;
 import static ru.orlov.medflk.service.StatusService.showStatusMessage;
 
 @Service
@@ -31,6 +32,8 @@ public class NsiInitializerTask {
             protected Void call() {
                 List<String> nsiServices = nsiInitializerService.getAllNsiServices();
 
+                isNsiReady.set(false);
+
                 NsiInitializerService.classifiers.clear();
 
                 int ttl = nsiServices.size();
@@ -42,6 +45,9 @@ public class NsiInitializerTask {
                     AbstractNsiService nsi = nsiInitializerService.initializeNsiService(code);
                     NsiInitializerService.classifiers.add(new NsiRow(nsi));
                 });
+
+                isNsiReady.set(true);
+
                 return null;
             }
 

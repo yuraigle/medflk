@@ -15,7 +15,7 @@ public class Check_003F_00_1350 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "В назначениях код МО NAPR_MO должен быть указан при виде назначения 2 или 3";
     }
 
     @Override

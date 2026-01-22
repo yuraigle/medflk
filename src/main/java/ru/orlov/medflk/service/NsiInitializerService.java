@@ -1,5 +1,6 @@
 package ru.orlov.medflk.service;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,8 @@ import java.util.List;
 public class NsiInitializerService {
 
     private final ApplicationContext ctx;
+
+    public static SimpleBooleanProperty isNsiReady = new SimpleBooleanProperty(false);
 
     public static final ObservableList<NsiRow> classifiers
             = FXCollections.observableList(new ArrayList<>());

@@ -13,7 +13,7 @@ public class Check_003F_00_1460 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Цикл лекарственной терапии LEK_TIP_V должен отсутствовать при типе услуги не 2";
     }
 
     @Override

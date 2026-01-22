@@ -18,6 +18,9 @@
             <TableColumn fx:id="factsTableDescription" prefWidth="500.0" text="Проверка"/>
             <TableColumn fx:id="factsTableResult" prefWidth="85.0" text="Результат"/>
         </columns>
+        <placeholder>
+            <Label>Выберите файл для проверки</Label>
+        </placeholder>
     </TableView>
     <padding>
         <Insets bottom="6.0" left="6.0" right="6.0" top="10.0"/>

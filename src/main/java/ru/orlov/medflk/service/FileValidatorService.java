@@ -11,6 +11,7 @@ import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 @Log4j2
 @Service
@@ -21,6 +22,9 @@ public class FileValidatorService {
     private final SchemaValidationService schemaValidationService;
     private final Q015ValidationService q015ValidationService;
 
+    Pattern hFile = Pattern.compile("^([CHT]|D[A-Z])[MST][0-9]{2,6}[MST][0-9]{2,6}_[0-9]{4}.*$");
+    Pattern lFile = Pattern.compile("^L[A-Z]?[MST][0-9]{2,6}[MST][0-9]{2,6}_[0-9]{4}.*$");
+
     public FlkP validate(File zip) {
         String fileType = zip.getName().substring(0, 1).toUpperCase();
 
@@ -29,6 +33,10 @@ public class FileValidatorService {
         PersList persList = null;
 
         try {
+            if (!hFile.matcher(zip.getName()).matches()) {
+                throw new Exception("Имя файла не соответствует шаблону");
+            }
+
             try {
                 zlList = registryReaderService.parseZlList(zip);
             } catch (Exception e) {

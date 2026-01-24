@@ -1,0 +1,20 @@
+.root {
+    -fx-font-size: 1em;
+}
+
+HBox, VBox {
+    -fx-spacing: 6.0;
+}
+
+.h1e {
+    -fx-min-height: 2em;
+    -fx-pref-height: 2em;
+}
+
+.w4e {
+    -fx-pref-width: 8em;
+}
+
+.p05e {
+    -fx-padding: 0.5em;
+}

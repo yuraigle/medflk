@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
+      xmlns:fx="http://javafx.com/fxml" styleClass="p05e" spacing="6.0"
       fx:controller="ru.orlov.medflk.controller.NsiTabController"
-      minHeight="0.0" minWidth="0.0" spacing="6.0"
 >
-    <HBox>
-        <Button fx:id="btnUpdateNsi" mnemonicParsing="false" onAction="#downloadNsi" text="Скачать пакет НСИ" />
+    <HBox spacing="6.0" styleClass="h1e">
+        <Button fx:id="btnUpdateNsi" onAction="#downloadNsi" styleClass="h1e"
+                text="Скачать пакет НСИ"/>
     </HBox>
-    <TableView VBox.vgrow="ALWAYS" fx:id="nsiTable">
+    <TableView fx:id="nsiTable" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn prefWidth="75.0" text="Код" fx:id="nsiTableCode" />
-            <TableColumn prefWidth="75.0" text="Версия" fx:id="nsiTableVersion" />
-            <TableColumn prefWidth="75.0" text="Дата" fx:id="nsiTableDate" />
-            <TableColumn prefWidth="400.0" text="Название" fx:id="nsiTableDescription" />
+            <TableColumn text="Код" fx:id="nsiTableCode" style="-fx-pref-width: 5em"/>
+            <TableColumn text="Версия" fx:id="nsiTableVersion" style="-fx-pref-width: 5em"/>
+            <TableColumn text="Дата" fx:id="nsiTableDate" style="-fx-pref-width: 7em"/>
+            <TableColumn text="Название" fx:id="nsiTableDescription" style="-fx-pref-width: 39em"/>
         </columns>
+        <placeholder>
+            <Label>Нет доступных справочников</Label>
+        </placeholder>
     </TableView>
-    <padding>
-        <Insets bottom="6.0" left="6.0" right="6.0" top="10.0" />
-    </padding>
 </VBox>

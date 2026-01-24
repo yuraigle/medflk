@@ -11,7 +11,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
-import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 @Log4j2
 public class MedflkFxApplication extends Application {
@@ -33,7 +34,7 @@ public class MedflkFxApplication extends Application {
     public void start(Stage stage) {
         primaryStage = stage;
 
-        Image appIcon = new Image(Objects.requireNonNull(
+        Image appIcon = new Image(requireNonNull(
                 getClass().getResourceAsStream("/images/icon.png")));
         primaryStage.getIcons().add(appIcon);
         primaryStage.setTitle("МедКонтроль");

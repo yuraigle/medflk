@@ -48,10 +48,10 @@
         <VBox.margin>
             <Insets top="5.0"/>
         </VBox.margin>
-        <Button mnemonicParsing="false" text="Запустить"/>
-        <Button mnemonicParsing="false" text="Остановить"/>
+        <Button mnemonicParsing="false" text="Запустить" fx:id="btnStartMonitor" onAction="#startMonitor"/>
+        <Button mnemonicParsing="false" text="Остановить" fx:id="btnStopMonitor" onAction="#stopMonitor"/>
     </HBox>
-    <TextArea VBox.vgrow="ALWAYS">
+    <TextArea VBox.vgrow="ALWAYS" fx:id="txtMonitorLog">
         <VBox.margin>
             <Insets top="5.0"/>
         </VBox.margin>

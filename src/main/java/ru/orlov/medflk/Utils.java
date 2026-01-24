@@ -13,9 +13,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,10 +48,14 @@ public class Utils {
         return filename.toUpperCase().substring(0, 1);
     }
 
-    public static String getPluralForm(Integer n, String s1, String s2, String s0) {
+    public static String pluralForm(Integer n, String s1, String s2, String s0) {
         if (n % 10 == 1 && n % 100 != 11) return s1; // 1 ошибка
         if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return s2; // 2 ошибки
         return s0; // 0 ошибок
+    }
+
+    public static String pluralErr(Integer n) {
+        return n + " " + pluralForm(n, "ошибка", "ошибки", "ошибок");
     }
 
     public static boolean dsIsOnkoC00ToD10OrD45ToD48(String ds1) {
@@ -111,6 +116,33 @@ public class Utils {
             return content;
         } catch (Exception e) {
             throw new RuntimeException("Error occurs when pretty-printing xml:\n" + xmlString, e);
+        }
+    }
+
+    public static void waitForFileUnlock(File file, long timeoutMillis) throws IOException, InterruptedException {
+        long startTime = System.currentTimeMillis();
+
+        while (true) {
+            try (
+                    RandomAccessFile raf = new RandomAccessFile(file, "rw");
+                    FileChannel channel = raf.getChannel()
+            ) {
+                FileLock lock = channel.tryLock();
+                if (lock != null) {
+                    try {
+                        return; // unlocked
+                    } finally {
+                        lock.release();
+                    }
+                }
+            } catch (IOException | OverlappingFileLockException ignore) {
+            }
+
+            if (System.currentTimeMillis() - startTime > timeoutMillis) {
+                throw new IOException("Файл заблокирован: " + file.getName());
+            }
+
+            Thread.sleep(500);
         }
     }
 }

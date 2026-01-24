@@ -25,7 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import static ru.orlov.medflk.Utils.getPluralForm;
+import static ru.orlov.medflk.Utils.pluralErr;
 import static ru.orlov.medflk.service.NsiInitializerService.isNsiReady;
 
 @Log4j2
@@ -76,7 +76,7 @@ public class CheckTabController implements Initializable {
     void selectFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters()
-                .add(new FileChooser.ExtensionFilter("Архив zip", "*.zip"));
+                .add(new FileChooser.ExtensionFilter("Архив zip", "*.zip", "*.ZIP"));
         fileChooser.setTitle("Выберите файл для проверки");
 
         File file = fileChooser.showOpenDialog(MedflkFxApplication.primaryStage);
@@ -111,7 +111,7 @@ public class CheckTabController implements Initializable {
                 labelFileResult.setText("Нет ошибок");
             } else {
                 labelFileResult.setStyle("-fx-text-fill: red");
-                labelFileResult.setText(cntErr + " " + getPluralForm(cntErr, "ошибка", "ошибки", "ошибок"));
+                labelFileResult.setText(pluralErr(cntErr));
             }
         } catch (Exception ex) {
             labelFileResult.setStyle("-fx-text-fill: red");

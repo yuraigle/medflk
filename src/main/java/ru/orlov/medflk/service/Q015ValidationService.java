@@ -53,7 +53,7 @@ public class Q015ValidationService {
                 try {
                     List<FlkErr> e1 = applyCheck(check, zlList, persList);
                     if (e1 != null && !e1.isEmpty()) {
-                        fact.setResult(e1.size() + " " + getPluralForm(e1.size(), "ошибка", "ошибки", "ошибок"));
+                        fact.setResult(pluralErr(e1.size()));
                         flkP.getPrList().addAll(e1);
                     } else {
                         fact.setResult("OK");

@@ -10,20 +10,17 @@ import java.io.File;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static ru.orlov.medflk.Utils.waitForFileUnlock;
 
 @Service
 @RequiredArgsConstructor
 public class DirMonitoringTask {
 
     private String dir = "D:\\MED\\INBOX";
-    private String out = "D:\\MED\\INBOX\\1";
-
-//    private List<File> files = new ArrayList<>();
 
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
@@ -35,27 +32,29 @@ public class DirMonitoringTask {
 
             @Override
             protected Void call() throws Exception {
+                appendLine("Запущен мониторинг папки " + dir);
+
+                // добавить существующие файлы в очередь
                 List<File> files = FileUtils
                         .listFiles(new File(dir), null, false).stream()
                         .filter(f -> rxFile.matcher(f.getName().toUpperCase()).matches())
                         .toList();
                 DirValidatorTask.queue.addAll(files);
 
+                // ожидать новых файлов
                 WatchService watchService = FileSystems.getDefault().newWatchService();
                 Paths.get(dir).register(watchService, ENTRY_CREATE);
-                appendLine("Запущен мониторинг папки " + dir);
-
                 boolean poll = true;
 
                 while (poll) {
                     WatchKey key = watchService.take();
 
-                    for (WatchEvent<?> event : key.pollEvents()) {
-                        if (event.kind().equals(ENTRY_CREATE)) {
-                            File file = Paths.get(dir, event.context().toString()).toFile();
+                    for (WatchEvent<?> ev : key.pollEvents()) {
+                        String fileName = ev.context().toString();
+                        if (rxFile.matcher(fileName).matches()) {
+                            File file = Paths.get(dir, fileName).toFile();
+                            waitForFileUnlock(file, 30000);
                             DirValidatorTask.queue.add(file);
-
-                            appendLine("Новый файл: " + event.context());
                         }
                     }
 
@@ -83,7 +82,8 @@ public class DirMonitoringTask {
             private void appendLine(String line) {
                 String dt = LocalDateTime.now().format(fmt);
 
-                String s = status.get() + dt + "  " + line + "\n";
+                String ss = status.get() == null ? "" : status.get();
+                String s = ss + dt + "  " + line + "\n";
                 status.set(s);
             }
         };

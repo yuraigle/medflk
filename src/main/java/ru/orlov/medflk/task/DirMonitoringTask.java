@@ -1,45 +1,42 @@
 package ru.orlov.medflk.task;
 
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.nio.file.*;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static ru.orlov.medflk.Utils.fmtDtRus;
 import static ru.orlov.medflk.Utils.waitForFileUnlock;
 
 @Service
 @RequiredArgsConstructor
 public class DirMonitoringTask {
 
-    @Value("${app.dir_in}")
-    private String dirIn;
-
     private final Pattern rxFile = Pattern
             .compile("^([CHT]|D[A-Z])[MST][0-9]{2,6}[MST][0-9]{2,6}_[0-9]{4}.*\\.ZIP$");
 
-    public Task<Void> getTaskWithStatus(StringProperty status) {
+    public static final ListProperty<File> queue =
+            new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    public Task<Void> getTask(String dirIn) {
         return new Task<>() {
 
             @Override
             protected Void call() throws Exception {
-                appendLine("Запущен мониторинг папки " + dirIn);
-
                 // добавить существующие файлы в очередь
                 List<File> files = FileUtils
                         .listFiles(new File(dirIn), null, false).stream()
                         .filter(f -> rxFile.matcher(f.getName().toUpperCase()).matches())
                         .toList();
-                DirValidatorTask.queue.addAll(files);
+                queue.addAll(files);
 
                 // ожидать новых файлов
                 WatchService watchService = FileSystems.getDefault().newWatchService();
@@ -54,7 +51,7 @@ public class DirMonitoringTask {
                         if (rxFile.matcher(fileName).matches()) {
                             File file = Paths.get(dirIn, fileName).toFile();
                             waitForFileUnlock(file, 30000);
-                            DirValidatorTask.queue.add(file);
+                            queue.add(file);
                         }
                     }
 
@@ -63,30 +60,6 @@ public class DirMonitoringTask {
 
                 return null;
             }
-
-            @Override
-            protected void succeeded() {
-                appendLine("Мониторинг остановлен");
-            }
-
-            @Override
-            protected void failed() {
-                appendLine("Мониторинг остановлен");
-            }
-
-            @Override
-            protected void cancelled() {
-                appendLine("Мониторинг остановлен");
-            }
-
-            private void appendLine(String line) {
-                String dt = LocalDateTime.now().format(fmtDtRus);
-
-                String ss = status.get() == null ? "" : status.get();
-                String s = ss + dt + "  " + line + "\n";
-                status.set(s);
-            }
         };
     }
-
 }

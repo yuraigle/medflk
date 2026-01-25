@@ -8,19 +8,21 @@
 >
     <HBox styleClass="h1e">
         <Label styleClass="h1e" text="Проверять все файлы в каталоге:" style="-fx-pref-width: 18em"/>
-        <TextField styleClass="h1e" HBox.hgrow="ALWAYS"/>
+        <TextField styleClass="h1e" fx:id="txtDirIn" HBox.hgrow="ALWAYS"/>
     </HBox>
     <HBox styleClass="h1e">
         <Label styleClass="h1e" text="Корректные файлы переносить:" style="-fx-pref-width: 18em"/>
-        <TextField styleClass="h1e" HBox.hgrow="ALWAYS"/>
+        <TextField styleClass="h1e" fx:id="txtDirOk" HBox.hgrow="ALWAYS"/>
     </HBox>
     <HBox styleClass="h1e">
         <Label styleClass="h1e" text="Ошибочные файлы переносить:" style="-fx-pref-width: 18em"/>
-        <TextField HBox.hgrow="ALWAYS"/>
+        <TextField styleClass="h1e" fx:id="txtDirFlk" HBox.hgrow="ALWAYS"/>
     </HBox>
     <HBox styleClass="h1e">
-        <Button mnemonicParsing="false" text="Запустить" fx:id="btnStartMonitor" onAction="#startMonitor"/>
-        <Button mnemonicParsing="false" text="Остановить" fx:id="btnStopMonitor" onAction="#stopMonitor"/>
+        <Button styleClass="h1e" text="Запустить" fx:id="btnStartMonitor" onAction="#startMonitor"/>
+        <Button styleClass="h1e" text="Остановить" fx:id="btnStopMonitor" onAction="#stopMonitor"/>
+        <Button styleClass="h1e" text="Очистить" onAction="#clearLog"/>
+        <Label styleClass="h1e" fx:id="lblQueueSize"/>
     </HBox>
     <TextArea VBox.vgrow="ALWAYS" fx:id="txtMonitorLog"/>
 </VBox>

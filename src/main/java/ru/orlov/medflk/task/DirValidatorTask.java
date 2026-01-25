@@ -3,10 +3,8 @@ package ru.orlov.medflk.task;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
-import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.orlov.medflk.jaxb.FlkP;
 import ru.orlov.medflk.service.FileValidatorService;
@@ -18,37 +16,28 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static ru.orlov.medflk.Utils.*;
+import static ru.orlov.medflk.Utils.pluralErr;
+import static ru.orlov.medflk.Utils.waitForFileUnlock;
 
 @Service
 @RequiredArgsConstructor
 public class DirValidatorTask {
 
-    @Value("${app.dir_ok}")
-    private String dirOk;
-
-    @Value("${app.dir_flk}")
-    private String dirFlk;
-
-    public static final List<File> queue = new ArrayList<>();
     private final FileValidatorService validator;
 
-    public Task<Void> getTaskWithStatus(StringProperty status) {
+    public Task<Void> getTask(String dirOk, String dirFlk) {
         return new Task<>() {
 
             @Override
             protected Void call() throws Exception {
                 while (true) {
-                    if (!queue.isEmpty()) {
-                        File file = queue.getFirst();
+                    if (!DirMonitoringTask.queue.isEmpty()) {
+                        File file = DirMonitoringTask.queue.getFirst();
                         process(file);
-                        queue.remove(file);
+                        DirMonitoringTask.queue.remove(file);
                     } else {
                         Thread.sleep(500);
                     }
@@ -56,8 +45,10 @@ public class DirValidatorTask {
             }
 
             private void process(File file) throws Exception {
+                long startedAt = System.currentTimeMillis();
                 waitForFileUnlock(file, 30000);
 
+                long fileSize = file.length() / 1024;
                 FlkP flkP = validator.validate(file, false);
 
                 int cntErr = flkP.getPrList() == null ? 0 : flkP.getPrList().size();
@@ -67,8 +58,11 @@ public class DirValidatorTask {
                     generateProtocol(flkP);
                 }
 
-                appendLine(String.format("Проверен файл %s. %s",
-                        file.getName(), cntErr == 0 ? "OK" : pluralErr(cntErr)));
+                String statusLine = String.format("Файл %s (%sКб) проверен за %sс. %s",
+                        file.getName(), fileSize,
+                        (System.currentTimeMillis() - startedAt) / 1000,
+                        cntErr == 0 ? "OK" : pluralErr(cntErr));
+                updateMessage(statusLine);
             }
 
             private void generateProtocol(FlkP flkP) {
@@ -89,14 +83,6 @@ public class DirValidatorTask {
                 } catch (IOException | JAXBException e) {
                     System.err.println(e.getMessage());
                 }
-            }
-
-            private void appendLine(String line) {
-                String dt = LocalDateTime.now().format(fmtDtRus);
-
-                String ss = status.get() == null ? "" : status.get();
-                String s = ss + dt + "  " + line + "\n";
-                status.set(s);
             }
         };
     }

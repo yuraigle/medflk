@@ -37,7 +37,7 @@ public class MedflkFxApplication extends Application {
         Image appIcon = new Image(requireNonNull(
                 getClass().getResourceAsStream("/images/icon.png")));
         primaryStage.getIcons().add(appIcon);
-        primaryStage.setTitle("МедКонтроль");
+        primaryStage.setTitle("МедКонтроль версия 0.21");
 
         Parent rootNode = loadRootNode();
         primaryStage.setScene(new Scene(rootNode));

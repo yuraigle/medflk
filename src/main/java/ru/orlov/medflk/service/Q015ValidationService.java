@@ -28,7 +28,7 @@ public class Q015ValidationService {
         return persCache.getOrDefault(idPac, null);
     }
 
-    public void validate(ZlList zlList, PersList persList, FlkP flkP) {
+    public void validate(ZlList zlList, PersList persList, FlkP flkP, boolean verbose) {
         String zlType = getZlListMdType(zlList);
 
         // список проверок Q015 берём на дату счёта
@@ -65,7 +65,9 @@ public class Q015ValidationService {
                 fact.setDescription("Проверка не реализована");
             }
 
-            CheckTabController.checkFactList.add(fact);
+            if (verbose) {
+                CheckTabController.checkFactList.add(fact);
+            }
         }
     }
 

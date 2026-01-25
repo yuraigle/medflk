@@ -26,7 +26,7 @@ public class FileValidatorTask {
                 CheckTabController.checkFactList.clear();
 
                 updateMessage("Проверяем файл " + file.getName());
-                FlkP flkP = validator.validate(file);
+                FlkP flkP = validator.validate(file, true);
                 updateMessage("");
 
                 return flkP;

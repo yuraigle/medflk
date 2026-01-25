@@ -1,29 +1,41 @@
 package ru.orlov.medflk;
 
 import lombok.extern.log4j.Log4j2;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 import ru.orlov.medflk.jaxb.OnkSl;
 import ru.orlov.medflk.jaxb.OnkUsl;
 import ru.orlov.medflk.jaxb.ZlList;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Log4j2
 public class Utils {
+
+    public static final DateTimeFormatter fmtDtRus = DateTimeFormatter
+            .ofPattern("dd.MM.yyyy HH:mm:ss");
+
+    public static final Pattern rxFile = Pattern
+            .compile("^([CHT]|D[A-Z])[MST][0-9]{2,6}[MST][0-9]{2,6}_[0-9]{4}.*$");
+
+    public static String pluralForm(Integer n, String s1, String s2, String s0) {
+        if (n % 10 == 1 && n % 100 != 11) return s1; // 1 ошибка
+        if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return s2; // 2 ошибки
+        return s0; // 0 ошибок
+    }
+
+    public static String pluralErr(Integer n) {
+        return n + " " + pluralForm(n, "ошибка", "ошибки", "ошибок");
+    }
 
     public static <T> List<T> castList(Class<? extends T> clazz, Collection<?> rawCollection) {
         List<T> result = new ArrayList<>(rawCollection.size());
@@ -46,16 +58,6 @@ public class Utils {
             return "X";
         }
         return filename.toUpperCase().substring(0, 1);
-    }
-
-    public static String pluralForm(Integer n, String s1, String s2, String s0) {
-        if (n % 10 == 1 && n % 100 != 11) return s1; // 1 ошибка
-        if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return s2; // 2 ошибки
-        return s0; // 0 ошибок
-    }
-
-    public static String pluralErr(Integer n) {
-        return n + " " + pluralForm(n, "ошибка", "ошибки", "ошибок");
     }
 
     public static boolean dsIsOnkoC00ToD10OrD45ToD48(String ds1) {
@@ -94,29 +96,6 @@ public class Utils {
         }
 
         return false;
-    }
-
-    public static String prettyPrintXml(String xmlString) {
-        int indent = 4;
-
-        try {
-            InputSource src = new InputSource(new StringReader(xmlString));
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(src);
-
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setAttribute("indent-number", indent);
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.ENCODING, "windows-1251");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-
-            Writer out = new StringWriter();
-            transformer.transform(new DOMSource(document), new StreamResult(out));
-            String content = out.toString();
-            content = content.replaceAll("\r?\n\\s+\r?\n", "\n");
-            return content;
-        } catch (Exception e) {
-            throw new RuntimeException("Error occurs when pretty-printing xml:\n" + xmlString, e);
-        }
     }
 
     public static void waitForFileUnlock(File file, long timeoutMillis) throws IOException, InterruptedException {

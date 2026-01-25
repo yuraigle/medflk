@@ -11,7 +11,8 @@ import ru.orlov.medflk.jaxb.PersList;
 import ru.orlov.medflk.jaxb.ZlList;
 
 import java.io.File;
-import java.util.regex.Pattern;
+
+import static ru.orlov.medflk.Utils.rxFile;
 
 @Log4j2
 @Service
@@ -22,20 +23,21 @@ public class FileValidatorService {
     private final SchemaValidationService schemaValidationService;
     private final Q015ValidationService q015ValidationService;
 
-    Pattern hFile = Pattern.compile("^([CHT]|D[A-Z])[MST][0-9]{2,6}[MST][0-9]{2,6}_[0-9]{4}.*$");
-    Pattern lFile = Pattern.compile("^L[A-Z]?[MST][0-9]{2,6}[MST][0-9]{2,6}_[0-9]{4}.*$");
+    public FlkP validate(File zip, boolean verbose) {
+        FlkP flkP = new FlkP(zip.getName());
 
-    public FlkP validate(File zip) {
-        String fileType = zip.getName().substring(0, 1).toUpperCase();
-
-        FlkP flkP = new FlkP();
-        ZlList zlList = null;
-        PersList persList = null;
+        if (verbose) {
+            CheckTabController.checkFactList.clear();
+        }
 
         try {
-            if (!hFile.matcher(zip.getName()).matches()) {
+            if (!rxFile.matcher(zip.getName()).matches()) {
                 throw new Exception("Имя файла не соответствует шаблону");
             }
+
+            ZlList zlList;
+            PersList persList;
+            String fileType = zip.getName().substring(0, 1).toUpperCase();
 
             try {
                 zlList = registryReaderService.parseZlList(zip);
@@ -64,16 +66,16 @@ public class FileValidatorService {
             if (!schemaValidationService.validate(persList).isEmpty()) {
                 throw new Exception("L-файл не должен содержать ошибок схемы");
             }
+
+            q015ValidationService.validate(zlList, persList, flkP, verbose);
         } catch (Exception e) {
             CheckFact fact0 = CheckFact.builder().test("001T.00.0000")
                     .description(e.getMessage()).result("Ошибка").build();
             flkP.getPrList().add(new FlkErr(fact0.getTest(), fact0.getDescription()));
-            CheckTabController.checkFactList.add(fact0);
-        }
 
-
-        if (zlList != null && persList != null && flkP.getPrList().isEmpty()) {
-            q015ValidationService.validate(zlList, persList, flkP);
+            if (verbose) {
+                CheckTabController.checkFactList.add(fact0);
+            }
         }
 
         return flkP;

@@ -2,10 +2,16 @@ package ru.orlov.medflk.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,7 +26,6 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import static org.apache.commons.lang3.StringUtils.substringBetween;
-import static ru.orlov.medflk.Utils.prettyPrintXml;
 
 /**
  * Создаём деперсонализированные файлы реестров на базе реальных
@@ -252,5 +257,28 @@ public class DepersonalizeService {
 
         int index = random.nextInt(alphabet.length());
         return String.valueOf(alphabet.charAt(index));
+    }
+
+    public static String prettyPrintXml(String xmlString) {
+        int indent = 4;
+
+        try {
+            InputSource src = new InputSource(new StringReader(xmlString));
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(src);
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            transformerFactory.setAttribute("indent-number", indent);
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "windows-1251");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+            Writer out = new StringWriter();
+            transformer.transform(new DOMSource(document), new StreamResult(out));
+            String content = out.toString();
+            content = content.replaceAll("\r?\n\\s+\r?\n", "\n");
+            return content;
+        } catch (Exception e) {
+            throw new RuntimeException("Error occurs when pretty-printing xml:\n" + xmlString, e);
+        }
     }
 }

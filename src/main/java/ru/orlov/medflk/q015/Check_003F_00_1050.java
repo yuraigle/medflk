@@ -13,7 +13,7 @@ public class Check_003F_00_1050 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Кол-во фракций K_FR обязательно для лучевой или химиолучевой терапии";
     }
 
     @Override

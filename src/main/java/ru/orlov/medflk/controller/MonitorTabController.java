@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import ru.orlov.medflk.task.DirMonitoringTask;
 import ru.orlov.medflk.task.DirValidatorTask;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
@@ -83,12 +84,31 @@ public class MonitorTabController implements Initializable {
 
     @FXML
     public void startMonitor() {
+        File dirIn = new File(txtDirIn.getText());
+        File dirOk = new File(txtDirOk.getText());
+        File dirFlk = new File(txtDirFlk.getText());
+
+        if (txtDirIn.getText().isBlank() || !dirIn.exists() || !dirIn.isDirectory()) {
+            appendLogLine("Каталог не найден: " + txtDirIn.getText());
+            return;
+        }
+
+        if (txtDirOk.getText().isBlank() || !dirOk.exists() || !dirOk.isDirectory()) {
+            appendLogLine("Каталог не найден: " + txtDirOk.getText());
+            return;
+        }
+
+        if (txtDirFlk.getText().isBlank() || !dirFlk.exists() || !dirFlk.isDirectory()) {
+            appendLogLine("Каталог не найден: " + txtDirFlk.getText());
+            return;
+        }
+
+        appendLogLine("Запущен мониторинг папки " + txtDirIn.getText());
         btnStartMonitor.setDisable(true);
         btnStopMonitor.setDisable(false);
-        appendLogLine("Запущен мониторинг папки " + txtDirIn.getText());
 
-        task = dirMonitoringTask.getTask(txtDirIn.getText());
-        task2 = dirValidatorTask.getTask(txtDirOk.getText(), txtDirFlk.getText());
+        task = dirMonitoringTask.getTask(dirIn);
+        task2 = dirValidatorTask.getTask(dirOk, dirFlk);
         task2.messageProperty().addListener((obs, v1, v2) ->
                 appendLogLine(v2)
         );
@@ -104,15 +124,23 @@ public class MonitorTabController implements Initializable {
 
     @FXML
     public void stopMonitor() {
+        appendLogLine("Мониторинг остановлен");
         btnStartMonitor.setDisable(false);
         btnStopMonitor.setDisable(true);
-        appendLogLine("Мониторинг остановлен");
 
-        task.cancel();
-        thread.interrupt();
+        if (task != null && task.isRunning()) {
+            task.cancel();
+        }
+        if (thread != null) {
+            thread.interrupt();
+        }
 
-        task2.cancel();
-        thread2.interrupt();
+        if (task2 != null && task2.isRunning()) {
+            task2.cancel();
+        }
+        if (thread2 != null) {
+            thread2.interrupt();
+        }
     }
 
     @FXML

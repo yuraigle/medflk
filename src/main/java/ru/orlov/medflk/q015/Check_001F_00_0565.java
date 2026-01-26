@@ -21,7 +21,7 @@ public class Check_001F_00_0565 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Расширенный идентификатор REGNUM_DOP должен быть найден в справочнике N021 для схемы";
+        return "REGNUM_DOP должен быть найден в справочнике N021 для схемы";
     }
 
     @Override

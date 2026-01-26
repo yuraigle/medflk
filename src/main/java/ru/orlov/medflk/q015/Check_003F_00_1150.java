@@ -13,7 +13,7 @@ public class Check_003F_00_1150 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Примененный коэффициент IT_SL должен отсутствовать, если нет КСЛП";
     }
 
     @Override

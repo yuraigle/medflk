@@ -13,7 +13,7 @@ public class Check_003F_00_1070 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Вес пациента WEI должен быть заполнен при заполненном BSA";
     }
 
     @Override

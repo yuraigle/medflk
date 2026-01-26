@@ -21,7 +21,7 @@ public class Check_001F_00_0560 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Идентификатор лекарственного препарата REGNUM должен быть найден в справочнике N020";
+        return "Идентификатор препарата REGNUM должен быть найден в справочнике N020";
     }
 
     @Override

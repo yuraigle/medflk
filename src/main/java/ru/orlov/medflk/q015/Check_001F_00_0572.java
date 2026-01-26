@@ -22,7 +22,7 @@ public class Check_001F_00_0572 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код схемы лекарственной терапии CODE_SH должен быть найден в справочнике V024";
+        return "Код схемы CODE_SH должен быть найден в справочнике V024";
     }
 
     @Override

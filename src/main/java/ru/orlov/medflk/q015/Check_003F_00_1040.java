@@ -13,7 +13,7 @@ public class Check_003F_00_1040 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Очаговая доза SOD должна отсутствовать если нет услуг лучевой терапии";
     }
 
     @Override

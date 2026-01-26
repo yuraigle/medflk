@@ -14,7 +14,7 @@ public class Check_003F_00_1240 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Дата проведения консилиума указана при цели не 1,2 или 3";
+        return "Дата проведения консилиума должна отсутствовать при цели не 1,2,3";
     }
 
     @Override

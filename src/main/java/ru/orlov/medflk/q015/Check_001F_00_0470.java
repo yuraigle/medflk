@@ -21,7 +21,7 @@ public class Check_001F_00_0470 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Код диагностического показателя DIAG_CODE должен быть найден в справочнике N010";
+        return "Код диагностики DIAG_CODE должен быть найден в справочнике N010";
     }
 
     @Override

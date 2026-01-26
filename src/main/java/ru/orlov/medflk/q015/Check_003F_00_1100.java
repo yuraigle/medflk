@@ -12,7 +12,7 @@ public class Check_003F_00_1100 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "При IDSP=33 и отсутствии N_KPG должен быть указан N_KSG";
     }
 
     @Override

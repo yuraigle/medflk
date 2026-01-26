@@ -12,7 +12,7 @@ public class Check_003F_00_1090 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Онко-услуги должны присутствовать при лечении в стационаре";
     }
 
     @Override

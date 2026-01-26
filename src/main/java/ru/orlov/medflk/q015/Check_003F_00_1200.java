@@ -14,7 +14,7 @@ public class Check_003F_00_1200 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Метод исследования MET_ISSL должен отсутствовать при виде направления не 3";
     }
 
     @Override

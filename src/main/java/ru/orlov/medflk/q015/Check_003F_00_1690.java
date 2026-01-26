@@ -16,7 +16,7 @@ public class Check_003F_00_1690 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "ДР законного представителя должна быть указана при мед. помощи новорожденному";
+        return "ДР представителя должна быть указана при мед. помощи новорожденному";
     }
 
     @Override

@@ -16,7 +16,7 @@ public class Check_003F_00_1700 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "ДР законного представителя должна отсутствовать при NOVOR=0";
+        return "ДР представителя должна отсутствовать при NOVOR=0";
     }
 
     @Override

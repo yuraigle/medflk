@@ -12,7 +12,7 @@ public class Check_003F_00_2100 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Тип диспансеризации DISP должен быть заполнен";
     }
 
     @Override

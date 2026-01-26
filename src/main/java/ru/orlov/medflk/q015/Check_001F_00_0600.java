@@ -21,7 +21,7 @@ public class Check_001F_00_0600 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "Коэффициент затратоёмкости KOEF_Z должен соответствовать найденному в справочнике V023";
+        return "Коэффициент затратоёмкости KOEF_Z должен соответствовать справочнику V023";
     }
 
     @Override

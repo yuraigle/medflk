@@ -12,7 +12,7 @@ public class Check_003F_00_1110 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "N_KSG должен отсутствовать при заполненном N_KPG";
     }
 
     @Override
@@ -23,7 +23,6 @@ public class Check_003F_00_1110 extends AbstractCheck {
             String nKpg = sl.getKsgKpg().getNKpg();
             String nKsg = sl.getKsgKpg().getNKsg();
 
-            // если N_KPG присутствует, то N_KSG должен отсутствовать
             if (nKpg != null && nKsg != null) {
                 return List.of(new FlkErr(zap, sl, null, null));
             }

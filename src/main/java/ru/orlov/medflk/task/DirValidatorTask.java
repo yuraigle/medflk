@@ -28,7 +28,7 @@ public class DirValidatorTask {
 
     private final FileValidatorService validator;
 
-    public Task<Void> getTask(String dirOk, String dirFlk) {
+    public Task<Void> getTask(File dirOk, File dirFlk) {
         return new Task<>() {
 
             @Override
@@ -52,7 +52,8 @@ public class DirValidatorTask {
                 FlkP flkP = validator.validate(file, false);
 
                 int cntErr = flkP.getPrList() == null ? 0 : flkP.getPrList().size();
-                Path out = Paths.get(cntErr == 0 ? dirOk : dirFlk, file.getName());
+                File dir = cntErr == 0 ? dirOk : dirFlk;
+                Path out = Paths.get(dir.getAbsolutePath(), file.getName());
                 Files.move(file.toPath(), out, StandardCopyOption.REPLACE_EXISTING);
                 if (cntErr > 0) {
                     generateProtocol(flkP);
@@ -66,7 +67,7 @@ public class DirValidatorTask {
             }
 
             private void generateProtocol(FlkP flkP) {
-                File outZip = Paths.get(dirFlk, flkP.getFname() + ".ZIP").toFile();
+                File outZip = Paths.get(dirFlk.getAbsolutePath(), flkP.getFname() + ".ZIP").toFile();
 
                 try (
                         FileOutputStream fos = new FileOutputStream(outZip);

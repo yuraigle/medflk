@@ -1,0 +1,35 @@
+package ru.orlov.medflk.q015;
+
+import org.springframework.stereotype.Component;
+import ru.orlov.medflk.jaxb.FlkErr;
+import ru.orlov.medflk.jaxb.PersList;
+import ru.orlov.medflk.jaxb.ZlList;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@Component
+public class Check_003F_00_1170 extends AbstractCheck {
+
+    @Override
+    public String getErrorMessage() {
+        return "КСЛП должны отсутствовать, если не заполнен примененный коэффициент IT_SL";
+    }
+
+    @Override
+    public List<FlkErr> check(ZlList zlList, PersList persList) {
+        return iterateOverSl(zlList, persList, (a, zap, sl) -> {
+            if (sl.getKsgKpg() == null) return List.of();
+
+            boolean hasSlKoef = sl.getKsgKpg().getSlKoefList() != null
+                    && !sl.getKsgKpg().getSlKoefList().isEmpty();
+
+            BigDecimal itSl = sl.getKsgKpg().getItSl();
+            if (itSl == null && hasSlKoef) {
+                return List.of(new FlkErr(zap, sl, null, null));
+            }
+
+            return List.of();
+        });
+    }
+}

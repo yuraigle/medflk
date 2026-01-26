@@ -259,7 +259,7 @@ public class DepersonalizeService {
         return String.valueOf(alphabet.charAt(index));
     }
 
-    public static String prettyPrintXml(String xmlString) {
+    private String prettyPrintXml(String xmlString) {
         int indent = 4;
 
         try {

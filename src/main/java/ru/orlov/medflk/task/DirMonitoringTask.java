@@ -26,21 +26,21 @@ public class DirMonitoringTask {
     public static final ListProperty<File> queue =
             new SimpleListProperty<>(FXCollections.observableArrayList());
 
-    public Task<Void> getTask(String dirIn) {
+    public Task<Void> getTask(File dirIn) {
         return new Task<>() {
 
             @Override
             protected Void call() throws Exception {
                 // добавить существующие файлы в очередь
                 List<File> files = FileUtils
-                        .listFiles(new File(dirIn), null, false).stream()
+                        .listFiles(dirIn, null, false).stream()
                         .filter(f -> rxFile.matcher(f.getName().toUpperCase()).matches())
                         .toList();
                 queue.addAll(files);
 
                 // ожидать новых файлов
                 WatchService watchService = FileSystems.getDefault().newWatchService();
-                Paths.get(dirIn).register(watchService, ENTRY_CREATE);
+                dirIn.toPath().register(watchService, ENTRY_CREATE);
                 boolean poll = true;
 
                 while (poll) {
@@ -49,7 +49,7 @@ public class DirMonitoringTask {
                     for (WatchEvent<?> ev : key.pollEvents()) {
                         String fileName = ev.context().toString();
                         if (rxFile.matcher(fileName).matches()) {
-                            File file = Paths.get(dirIn, fileName).toFile();
+                            File file = Paths.get(dirIn.getAbsolutePath(), fileName).toFile();
                             waitForFileUnlock(file, 30000);
                             queue.add(file);
                         }

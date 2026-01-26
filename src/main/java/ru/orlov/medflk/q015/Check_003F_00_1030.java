@@ -13,7 +13,7 @@ public class Check_003F_00_1030 extends AbstractCheck {
 
     @Override
     public String getErrorMessage() {
-        return "";
+        return "Очаговая доза SOD обязательна для лучевой или химиолучевой терапии";
     }
 
     @Override

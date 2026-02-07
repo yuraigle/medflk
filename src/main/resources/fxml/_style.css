@@ -1,3 +1,8 @@
+.root {
+    -fx-pref-width: 60em;
+    -fx-pref-height: 40em;
+}
+
 HBox, VBox {
     -fx-spacing: 6.0;
 }

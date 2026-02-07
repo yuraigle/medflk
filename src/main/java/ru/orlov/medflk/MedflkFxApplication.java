@@ -38,13 +38,14 @@ public class MedflkFxApplication extends Application {
         Image appIcon = new Image(requireNonNull(
                 getClass().getResourceAsStream("/images/icon.png")));
         primaryStage.getIcons().add(appIcon);
-        primaryStage.setTitle("МедКонтроль версия 0.21");
+        primaryStage.setTitle("МедГарм 1.02");
 
         Parent rootNode = loadRootNode();
         primaryStage.setScene(new Scene(rootNode));
 
         boolean x2 = Screen.getPrimary().getDpi() > 100;
-        rootNode.setStyle("-fx-font-size: " + (x2 ? "25px" : "15px"));
+        String fs = x2 ? "20px" : "1em";
+        rootNode.setStyle(String.format("-fx-font-size: %s;", fs));
 
         primaryStage.show();
     }

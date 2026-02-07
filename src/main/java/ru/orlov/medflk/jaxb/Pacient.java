@@ -54,10 +54,19 @@ public class Pacient {
     @XmlElement(name = "NOVOR")
     private String novor;
 
+    @XmlElement(name = "VNOV_D")
+    private Integer vnovD;
+
     @XmlElement(name = "SOC")
     private String soc;
 
-    @XmlElement(name = "VNOV_D")
-    private Integer vnovD;
+    @XmlElement(name = "NEXT_D")
+    private Integer nextD;
+
+    @XmlElement(name = "MO_PR")
+    private String moPr;
+
+    @XmlElement(name = "VZ")
+    private String vz;
 
 }

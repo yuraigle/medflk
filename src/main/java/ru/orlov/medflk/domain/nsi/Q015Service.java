@@ -49,9 +49,9 @@ public class Q015Service extends AbstractNsiService {
 
     public List<Q015Packet.Q015> getChecksForType(String type, LocalDate d1) {
         return packet.getZapList().stream()
-                .filter(q015 -> q015.getTypeMd().getTypeD().contains(type))
-                .filter(q015 -> !q015.getDatebeg().isAfter(d1))
-                .filter(q015 -> q015.getDateend() == null || q015.getDateend().isAfter(d1))
+                .filter(o -> !o.getDatebeg().isAfter(d1))
+                .filter(o -> o.getDateend() == null || !o.getDateend().isBefore(d1))
+                .filter(o -> o.getTypeMd().getTypeD().contains(type))
                 .toList();
     }
 

@@ -74,7 +74,6 @@ public class NsiDownloaderService {
             String version = getLatestFfomsVersion(id);
             String url = "https://nsi.ffoms.ru/refbook?type=XML&id=-1&version=" + version;
             downloadFile(url, saveAs);
-            log.info("Справочник {} загружен с сайта ФФОМС", saveAs.getName());
         } catch (Exception e) {
             log.error(e.getMessage());
         }

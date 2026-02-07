@@ -44,6 +44,9 @@ public class ZSl {
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate nprDate;
 
+    @XmlElement(name = "NPR_NUM")
+    private String nprNum;
+
     @XmlElement(name = "LPU")
     private String lpu;
 

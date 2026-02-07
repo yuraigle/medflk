@@ -1,7 +1,6 @@
 package ru.orlov.medflk.jaxb;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Digits;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -30,27 +29,21 @@ public class KsgKpg {
     @XmlElement(name = "N_KPG")
     private String nKpg;
 
-    @Digits(integer = 2, fraction = 6)
     @XmlElement(name = "KOEF_Z")
     private BigDecimal koefZ;
 
-    @Digits(integer = 2, fraction = 6)
     @XmlElement(name = "KOEF_UP")
     private BigDecimal koefUp;
 
-    @Digits(integer = 6, fraction = 2)
     @XmlElement(name = "BZTSZ")
     private BigDecimal bztsz;
 
-    @Digits(integer = 2, fraction = 6)
     @XmlElement(name = "KOEF_D")
     private BigDecimal koefD;
 
-    @Digits(integer = 2, fraction = 6)
     @XmlElement(name = "KOEF_U")
     private BigDecimal koefU;
 
-    @Digits(integer = 2, fraction = 5)
     @XmlElement(name = "K_ZP")
     private BigDecimal kZp;
 
@@ -60,12 +53,17 @@ public class KsgKpg {
     @XmlElement(name = "SL_K")
     private Integer slK;
 
-    @Digits(integer = 1, fraction = 5)
     @XmlElement(name = "IT_SL")
     private BigDecimal itSl;
 
     @XmlElement(name = "SL_KOEF")
     private List<@Valid SlKoef> slKoefList;
+
+    @XmlElement(name = "PR_PR")
+    private String prPr;
+
+    @XmlElement(name = "KOEF_PR")
+    private BigDecimal koefPr;
 
     @Getter
     @Setter
@@ -76,7 +74,6 @@ public class KsgKpg {
         @XmlElement(name = "IDSL")
         private String idsl;
 
-        @Digits(integer = 1, fraction = 5)
         @XmlElement(name = "Z_SL")
         private BigDecimal zSl;
     }

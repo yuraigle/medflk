@@ -36,6 +36,9 @@ public class Naz {
     @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     private LocalDate naprDate;
 
+    @XmlElement(name = "NAPR_NUM")
+    private String naprNum;
+
     @XmlElement(name = "NAPR_MO")
     private String naprMo;
 

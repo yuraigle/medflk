@@ -1,7 +1,3 @@
-.root {
-    -fx-font-size: 1em;
-}
-
 HBox, VBox {
     -fx-spacing: 6.0;
 }

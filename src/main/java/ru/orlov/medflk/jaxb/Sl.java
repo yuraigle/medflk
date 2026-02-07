@@ -43,6 +43,9 @@ public class Sl {
     @XmlElement(name = "PROFIL")
     private Integer profil;
 
+    @XmlElement(name = "PROFIL_M")
+    private Integer profilM;
+
     @XmlElement(name = "PROFIL_K")
     private Integer profilK;
 

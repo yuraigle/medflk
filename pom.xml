@@ -11,7 +11,7 @@
 
     <groupId>ru.orlov</groupId>
     <artifactId>medflk</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.2.0</version>
     <name>medflk</name>
     <description>medflk</description>
     <url>https://github.com/yuraigle/medflk</url>

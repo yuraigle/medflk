@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -41,6 +42,10 @@ public class MedflkFxApplication extends Application {
 
         Parent rootNode = loadRootNode();
         primaryStage.setScene(new Scene(rootNode));
+
+        boolean x2 = Screen.getPrimary().getDpi() > 100;
+        rootNode.setStyle("-fx-font-size: " + (x2 ? "25px" : "15px"));
+
         primaryStage.show();
     }
 

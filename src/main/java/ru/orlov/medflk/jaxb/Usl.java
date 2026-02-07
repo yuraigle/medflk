@@ -38,6 +38,9 @@ public class Usl {
     @XmlElement(name = "PROFIL")
     private Integer profil;
 
+    @XmlElement(name = "PROFIL_M")
+    private Integer profilM;
+
     @XmlElement(name = "VID_VME")
     private String vidVme;
 

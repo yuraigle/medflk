@@ -8,7 +8,7 @@ import ru.orlov.medflk.jaxb.ZlList;
 
 import java.util.List;
 
-import static ru.orlov.medflk.Utils.dsIsOnkoC00ToD10OrD45ToD48;
+import static ru.orlov.medflk.OmsUtils.dsIsOnkoC00ToD10OrD45ToD48;
 
 @Component
 public class Check_003F_00_0772 extends AbstractCheck {

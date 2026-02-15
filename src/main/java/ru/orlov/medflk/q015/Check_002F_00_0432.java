@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static ru.orlov.medflk.Utils.dsIsOnkoDetTill21;
+import static ru.orlov.medflk.OmsUtils.dsIsOnkoDetTill21;
 import static ru.orlov.medflk.service.Q015ValidationService.getPersById;
 
 @Component

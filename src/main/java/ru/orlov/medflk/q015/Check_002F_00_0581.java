@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static ru.orlov.medflk.Utils.onkSlHasRegNum;
+import static ru.orlov.medflk.OmsUtils.onkSlHasRegNum;
 
 @Component
 public class Check_002F_00_0581 extends AbstractCheck {

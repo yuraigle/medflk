@@ -1,7 +1,6 @@
 package ru.orlov.medflk;
 
 import lombok.extern.log4j.Log4j2;
-import ru.orlov.medflk.jaxb.ZlList;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,10 +23,20 @@ public class Utils {
     public static final Pattern rxFile = Pattern
             .compile("^([CHT]|D[A-Z])[MST][0-9]{2,6}[MST][0-9]{2,6}_[0-9]{4}.*$");
 
+    public static String getMdTypeFromFilename(String filename) {
+        if (filename == null || filename.isBlank()) {
+            return "H";
+        }
+        if (filename.toUpperCase().startsWith("D")) {
+            return "X";
+        }
+        return filename.toUpperCase().substring(0, 1);
+    }
+
     public static String pluralForm(Integer n, String s1, String s2, String s0) {
-        if (n % 10 == 1 && n % 100 != 11) return s1; // 1 ошибка
-        if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return s2; // 2 ошибки
-        return s0; // 0 ошибок
+        if (n % 10 == 1 && n % 100 != 11) return s1; // 1 год, 21 год, 151 год
+        if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return s2; // 4 года, 42 года
+        return s0; // 0 лет, 27 лет
     }
 
     public static String pluralErr(Integer n) {
@@ -45,18 +54,6 @@ public class Utils {
         }
         return result;
     }
-
-    public static String getZlListMdType(ZlList zlList) {
-        String filename = zlList.getZglv().getFilename(); // CHTX
-        if (filename == null || filename.isBlank()) {
-            return "H";
-        }
-        if (filename.toUpperCase().startsWith("D")) {
-            return "X";
-        }
-        return filename.toUpperCase().substring(0, 1);
-    }
-
 
     public static void waitForFileUnlock(File file, long timeoutMillis) throws IOException {
         long startTime = System.currentTimeMillis();

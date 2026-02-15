@@ -19,7 +19,7 @@ public class NsiInitializerService {
 
     private final ApplicationContext ctx;
 
-    public static SimpleBooleanProperty isNsiReady = new SimpleBooleanProperty(false);
+    public static final SimpleBooleanProperty isNsiReady = new SimpleBooleanProperty(false);
 
     public static final ObservableList<NsiRow> classifiers
             = FXCollections.observableList(new ArrayList<>());

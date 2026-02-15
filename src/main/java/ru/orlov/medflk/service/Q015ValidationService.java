@@ -29,7 +29,7 @@ public class Q015ValidationService {
     }
 
     public void validate(ZlList zlList, PersList persList, FlkP flkP, boolean verbose) {
-        String zlType = getZlListMdType(zlList);
+        String zlType = getMdTypeFromFilename(zlList.getZglv().getFilename());
 
         // список проверок Q015 берём на дату счёта
         List<Q015Packet.Q015> q015List = new ArrayList<>();
@@ -37,8 +37,6 @@ public class Q015ValidationService {
         q015List.addAll(q015Service.getChecksForType(zlType, q15Date));
         q015List.addAll(q015Service.getChecksForType("L", q15Date));
         q015List.sort(Comparator.comparing(Q015Packet.Q015::getIdTest));
-
-//        q015List = q015List.stream().filter(q -> q.getIdTest().startsWith("003")).toList();
 
         persCache.clear();
         persList.getPersList().forEach(pers -> persCache.put(pers.getIdPac(), pers));

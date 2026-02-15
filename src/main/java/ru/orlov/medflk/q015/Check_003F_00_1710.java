@@ -8,7 +8,7 @@ import ru.orlov.medflk.jaxb.ZlList;
 
 import java.util.List;
 
-import static ru.orlov.medflk.Utils.getZlListMdType;
+import static ru.orlov.medflk.Utils.getMdTypeFromFilename;
 
 @Component
 public class Check_003F_00_1710 extends AbstractCheck {
@@ -20,7 +20,7 @@ public class Check_003F_00_1710 extends AbstractCheck {
 
     @Override
     public List<FlkErr> check(ZlList zlList, PersList persList) {
-        String typeMd = getZlListMdType(zlList);
+        String typeMd = getMdTypeFromFilename(zlList.getZglv().getFilename());
         if (!List.of("H", "T", "C").contains(typeMd)) return List.of();
 
         for (Pers pers : persList.getPersList()) {

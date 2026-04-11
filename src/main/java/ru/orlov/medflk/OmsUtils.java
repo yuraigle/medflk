@@ -10,7 +10,7 @@ public class OmsUtils {
     /**
      * Проверка, находится ли диагноз в диапазоне онко-диагнозов
      *
-     * @param ds1 дагноз
+     * @param ds1 диагноз
      * @return true, если является онко-диагнозом
      */
     public static boolean dsIsOnkoC00ToD10OrD45ToD48(String ds1) {

@@ -8,9 +8,10 @@ import ru.orlov.medflk.domain.nsi.V023Service;
 import ru.orlov.medflk.jaxb.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.requireNonNullElse;
 
 @Log4j2
 @Service
@@ -20,6 +21,7 @@ public class CalculatorService {
     private final V023Service v023Service;
     private final KsgGrouperService ksgGrouperService;
     private final KsgMathsService ksgMathsService;
+    private final InterruptedReasonsService interruptedReasonsService;
 
     public void calcFile(ZlList zlList, PersList persList) {
         for (Zap zap : zlList.getZapList()) {
@@ -54,14 +56,16 @@ public class CalculatorService {
             // Это значение надо перепроверить за МО
             Integer kd = sl.getKd(); // кол-во койко-дней
 
+            // 8.2.5 на третьем этапе осуществляется фильтрация основной таблицы "Группировщик"
             List<GroupKsg> ksgList = ksgGrouperService.findAllPossibleKsg(sl, pers, uslOk, kd);
 
-            for (GroupKsg groupKsg : ksgList) {
-                V023Packet.V023 v023 = v023Service.getKsgOnDate(groupKsg.getNKsg(), sl.getDate2());
+            // и заполнение временной таблицы значениями.
+            for (GroupKsg gKsg : ksgList) {
+                V023Packet.V023 v023 = v023Service.getKsgOnDate(gKsg.getNKsg(), sl.getDate2());
 
                 BigDecimal koefUp = ksgKpg.getKoefUp(); // КС_КСГ - коэффициент специфики // todo из базы
-                BigDecimal dolZp = ksgGrouperService.getDolZp(v023.getNKsg());
-                List<KsgKpg.SlKoef> kslp = ksgKpg.getSlKoefList(); // Коэффициенты Сложности ЛП
+                BigDecimal dolZp = gKsg.getDZp() == null ? BigDecimal.ONE : gKsg.getDZp();
+                List<KsgKpg.SlKoef> kslp = ksgKpg.getSlKoefList(); // коэффициенты сложности
 
                 BigDecimal sumWithKsg = ksgMathsService
                         .calcSumSlWithKsg(v023, basicRate, koefD, koefU, koefUp, dolZp, kslp);
@@ -69,16 +73,25 @@ public class CalculatorService {
                 CalcData c = new CalcData();
                 c.setNZap(zap.getNZap());
                 c.setSlId(sl.getSlId());
-                c.setNKsg(groupKsg.getNKsg());
+                c.setNKsg(gKsg.getNKsg());
                 c.setKoefZ(v023.getKoefZ());
                 c.setSumKsg(sumWithKsg);
 
                 calcData.add(c);
             }
+
+            // проставляем флаги прерванности
+            Set<String> possibleKsg = calcData.stream().map(CalcData::getNKsg).collect(Collectors.toSet());
+            Set<String> critList = new HashSet<>(requireNonNullElse(ksgKpg.getCritList(), Collections.emptyList()));
+            for (CalcData c : calcData) {
+                Set<String> reasons = interruptedReasonsService
+                        .findInterruptedReasons(zap.getZSl(), sl.getSlId(), kd, c.getNKsg(), possibleKsg, critList);
+                c.getInterruptReasons().addAll(reasons);
+            }
+
         }
 
         calcData.forEach(log::info);
     }
-
 
 }

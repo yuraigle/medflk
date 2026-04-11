@@ -2,6 +2,8 @@ package ru.orlov.medflk.calc.hospital;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * Информация о КСГ из группировщика
  */
@@ -22,4 +24,6 @@ public class GroupKsg {
     private String nKsg;
     private Integer ngr;
 
+    // не используется в группировщике, но тоже лежит в Excel
+    private BigDecimal dZp;
 }

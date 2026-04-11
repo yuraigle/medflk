@@ -6,7 +6,6 @@ import ru.orlov.medflk.jaxb.Pers;
 import ru.orlov.medflk.jaxb.Sl;
 import ru.orlov.medflk.jaxb.Usl;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -31,7 +30,8 @@ public class KsgGrouperService {
             String s1 = ksgDsTest.substring(0, 3);
             String s2 = ksgDsTest.substring(4, 7);
             String sMo = slDs.substring(0, 3);
-            // Диапазоны тоже включаются в фильтр, МР стр. 166
+
+            // Диапазоны тоже включаются в фильтр
             return sMo.compareTo(s1) >= 0 && sMo.compareTo(s2) <= 0;
         }
 
@@ -149,10 +149,5 @@ public class KsgGrouperService {
                 .filter(g -> isKdMatch(kd, g.getKd()))
                 .filter(g -> g.getSex() == null || g.getSex() == sex)
                 .toList();
-    }
-
-    public BigDecimal getDolZp(String nKsg) {
-        GroupKsgData d = ksgGrouperRepo.getKsgData(nKsg);
-        return d == null ? null : d.getDolZp();
     }
 }

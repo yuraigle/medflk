@@ -10,16 +10,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Log4j2
 @Repository
 public class KsgGrouperRepo {
 
     private final List<GroupKsg> groupKsgList = new ArrayList<>();
-    private final Map<String, GroupKsgData> ksgData = new HashMap<>();
 
     public KsgGrouperRepo() {
         File nsiDir = new File("nsi");
@@ -35,10 +32,6 @@ public class KsgGrouperRepo {
         return groupKsgList.stream()
                 .filter(g -> g.getNKsg().startsWith(uslOk == 1 ? "st" : "ds"))
                 .toList();
-    }
-
-    public GroupKsgData getKsgData(String nKsg) {
-        return ksgData.get(nKsg);
     }
 
     private void readExcelGrouper(String filename) {
@@ -81,13 +74,12 @@ public class KsgGrouperRepo {
             Row row = sheet.getRow(i);
             if (row == null) continue;
 
-            GroupKsgData d = new GroupKsgData();
-            d.setNKsg(getStringCell(row, 1));   // B
-            d.setKoefZ(getDecimalCell(row, 3)); // D
-            d.setProfil(getIntCell(row, 4));    // E
-            d.setDolZp(getDecimalCell(row, 6)); // G
+            String nKsg = getStringCell(row, 1); // B
+            BigDecimal dZp = getDecimalCell(row, 6); // G
 
-            ksgData.put(d.getNKsg(), d);
+            groupKsgList.stream()
+                    .filter(g -> nKsg != null && nKsg.equals(g.getNKsg()))
+                    .forEach(g -> g.setDZp(dZp));
         }
     }
 

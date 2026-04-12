@@ -32,6 +32,7 @@ public class HospCalculatorService {
     private final InterruptReasonsService interruptReasonsService;
     private final PriorityReasonsService priorityReasonsService;
     private final ExceptionalReasonsService exceptionalReasonsService;
+    private final MultiKsgReasonsService multiKsgReasonsService;
 
     public void calcFile(ZlList zlList, PersList persList) {
         for (Zap zap : zlList.getZapList()) {
@@ -57,6 +58,8 @@ public class HospCalculatorService {
             if (ksgKpg == null) {
                 continue;
             }
+
+            List<CalcData> calcData1 = new ArrayList<>();
 
             // Эти значения можно взять из реестра, но обязательно проверять на ФЛК
             BigDecimal basicRate = ksgKpg.getBztsz(); // БС - базовая ставка
@@ -88,29 +91,45 @@ public class HospCalculatorService {
                 c.setSumKsg(sumWithKsg);
                 c.setGKsg(gKsg);
 
-                calcData.add(c);
+                calcData1.add(c);
             }
 
             // проставляем флаги прерванности
-            Set<String> possibleKsg = calcData.stream().map(CalcData::getNKsg).collect(Collectors.toSet());
+            Set<String> possibleKsg = calcData1.stream().map(CalcData::getNKsg).collect(Collectors.toSet());
             List<String> critList = requireNonNullElse(ksgKpg.getCritList(), Collections.emptyList());
-            for (CalcData c : calcData) {
+            for (CalcData c : calcData1) {
                 Set<String> reasons = interruptReasonsService
                         .findInterruptReasons(zap.getZSl(), sl.getSlId(), kd, c.getNKsg(), possibleKsg, critList);
                 c.getInterruptReasons().addAll(reasons);
             }
 
-            // проставляем приоритеты
-            for (CalcData c : calcData) {
+            // проставляем приоритеты и исключительность
+            for (CalcData c : calcData1) {
                 priorityReasonsService.checkPriority(c, possibleKsg, zap.getZSl().getRslt());
-            }
 
-            // проставляем исключительность
-            for (CalcData c : calcData) {
                 String reason = exceptionalReasonsService
                         .findExceptionalReason(zap.getZSl(), sl.getSlId(), c.getNKsg());
                 c.setExceptionalReason(reason);
             }
+
+            // выбираем КСГ для случая
+            boolean isExceptional = calcData1.stream().anyMatch(c -> c.getExceptionalReason() != null);
+            calcData1.stream()
+                    // если особый случай, выбираем только среди исключительных КСГ
+                    .filter(c -> !isExceptional || c.getExceptionalReason() != null)
+                    .sorted( // по приоритету, затем по стоимости
+                            Comparator.comparing(CalcData::getPriority).reversed()
+                            .thenComparing(Comparator.comparing(CalcData::getSumKsg).reversed())
+                    )
+                    .findFirst()
+                    .ifPresent(c -> c.setSelected(true));
+
+            calcData.addAll(calcData1);
+        }
+
+        // проставляем возможность оплаты по двум и более КСГ
+        for (CalcData c : calcData) {
+
         }
 
         log.info(CalcData.toStringHeader());

@@ -31,6 +31,7 @@ public class CalcData {
     private Set<String> interruptReasons = new HashSet<>();
     private Set<String> paymentReason = new HashSet<>();
     private GroupKsg gKsg;
+    private boolean selected;
 
     private final DateTimeFormatter dmy = DateTimeFormatter.ofPattern("dd.MM.yy");
 
@@ -42,8 +43,9 @@ public class CalcData {
         // PRIOR - приоритет и причина его установки из Приложения 8
         // EXC - причина особенного алгоритма расчёта из Приложения 9
         // PR - причина прерванности случая оплаты по КСГ
+        // SEL - флаг выбранного КСГ для случая
         // K2 - флаг оплаты по 1 или нескольким КСГ
-        return "SL_ID|DATES            |DS|N_KSG   |KF_Z|  SUM_KSG|PRIOR|EXC|PR|K2";
+        return "SL_ID|DATES            |DS|N_KSG   |KF_Z|  SUM_KSG|PRIOR|EXC|PR|SEL|K2";
     }
 
     @Override
@@ -52,13 +54,14 @@ public class CalcData {
         String slIdFmt = slId.length() >= 5 ? ".." + right(slId, 3) : leftPad(slId, 5);
         String datesFmt = sl.getDate1().format(dmy) + "-" + sl.getDate2().format(dmy);
         return """
-                %s|%s| %s|%s|%s|%s|%s%s |%s |%s|%s
+                %s|%s| %s|%s|%s|%s|%s%s |%s |%s| %s |%s
                 """.formatted(
                 slIdFmt, datesFmt, sl.getDs1().substring(0, 1), nKsg, koefZ,
                 String.format("%9.2f", sumKsg), String.format("%2d", priority),
                 priorityReason == null ? "  " : "." + priorityReason,
                 exceptionalReason == null ? "  " : leftPad(exceptionalReason, 2),
                 leftPad(String.join("", interruptReasons), 2),
+                selected ? "1" : " ",
                 leftPad(String.join("", paymentReason), 2)
         ).replaceAll("\\n", "");
     }

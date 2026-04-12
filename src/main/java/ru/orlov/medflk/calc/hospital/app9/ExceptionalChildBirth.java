@@ -19,24 +19,24 @@ public class ExceptionalChildBirth {
     private final Set<String> uslChildBirth013;
     private final Set<String> uslNewBorn003;
 
-    public ExceptionalChildBirth(GroupKsgRepo groupKsgService) {
+    public ExceptionalChildBirth(GroupKsgRepo groupKsgRepo) {
         uslNewBorn003 = Set.of("B01.001.006", "B01.001.009", "B02.001.002",
                 "A16.20.007", "A16.20.015", "A16.20.023", "A16.20.024", "A16.20.030");
 
-        dsChildBirth003 = groupKsgService.getGrouper(1).stream()
+        dsChildBirth003 = groupKsgRepo.getGrouper(1).stream()
                 .filter(g -> "st02.003".equals(g.getNKsg()))
                 .map(GroupKsg::getDs1)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        uslChildBirth012 = groupKsgService.getGrouper(1).stream()
+        uslChildBirth012 = groupKsgRepo.getGrouper(1).stream()
                 .filter(g -> "st02.012".equals(g.getNKsg()))
                 .map(GroupKsg::getCodeUsl)
                 .filter(Objects::nonNull)
                 .filter(s -> !uslNewBorn003.contains(s))
                 .collect(Collectors.toSet());
 
-        uslChildBirth013 = groupKsgService.getGrouper(1).stream()
+        uslChildBirth013 = groupKsgRepo.getGrouper(1).stream()
                 .filter(g -> "st02.013".equals(g.getNKsg()))
                 .map(GroupKsg::getCodeUsl)
                 .filter(Objects::nonNull)

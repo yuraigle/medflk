@@ -1,4 +1,4 @@
-package ru.orlov.medflk.calc.hospital;
+package ru.orlov.medflk.calc.hospital.domain;
 
 import lombok.Data;
 import ru.orlov.medflk.jaxb.Sl;
@@ -10,6 +10,11 @@ import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.leftPad;
 import static org.apache.commons.lang3.StringUtils.right;
+
+/**
+ * "Временная таблица" из приложения 8.
+ * Класс для хранения промежуточных вычислений
+ */
 
 @Data
 public class CalcData {
@@ -30,6 +35,14 @@ public class CalcData {
     private final DateTimeFormatter dmy = DateTimeFormatter.ofPattern("dd.MM.yy");
 
     public static String toStringHeader() {
+        // DS - группа диагноза (1-й символ)
+        // N_KSG - возможный КСГ, выбранный по базовому алгоритму группировщика
+        // KF_Z - коэффициент затратоёмкости из V023
+        // SUM_KSG - сумма случая с прерыванием, если он будет рассчитан по этому КСГ
+        // PRIOR - приоритет и причина его установки из Приложения 8
+        // EXC - причина особенного алгоритма расчёта из Приложения 9
+        // PR - причина прерванности случая оплаты по КСГ
+        // K2 - флаг оплаты по 1 или нескольким КСГ
         return "SL_ID|DATES            |DS|N_KSG   |KF_Z|  SUM_KSG|PRIOR|EXC|PR|K2";
     }
 

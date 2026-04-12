@@ -1,4 +1,4 @@
-package ru.orlov.medflk.calc.hospital;
+package ru.orlov.medflk.calc.hospital.domain;
 
 import lombok.Data;
 

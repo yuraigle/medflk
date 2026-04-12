@@ -1,4 +1,4 @@
-package ru.orlov.medflk.calc.hospital;
+package ru.orlov.medflk.calc.hospital.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,11 +10,15 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+/**
+ * Логика выбора КСГ из группировщика, описанная в Приложении 8
+ */
+
 @Service
 @RequiredArgsConstructor
-public class KsgGrouperService {
+public class GroupKsgService {
 
-    private final KsgGrouperRepo ksgGrouperRepo;
+    private final GroupKsgRepo groupKsgRepo;
 
     private static boolean isDsMatch(String slDs, String ksgDsTest) {
         if (ksgDsTest == null) {
@@ -138,7 +142,7 @@ public class KsgGrouperService {
         final List<String> critList = sl.getKsgKpg() == null || sl.getKsgKpg().getCritList() == null ? List.of() :
                 sl.getKsgKpg().getCritList();
 
-        return ksgGrouperRepo.getGrouper(uslOk).stream()
+        return groupKsgRepo.getGrouper(uslOk).stream()
                 .filter(g -> isDsMatch(ds1, g.getDs1()))
                 .filter(g -> isAnyDsMatch(ds2List, g.getDs2()))
                 .filter(g -> isAnyDsMatch(ds3List, g.getDs3()))

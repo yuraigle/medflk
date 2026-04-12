@@ -1,6 +1,7 @@
 package ru.orlov.medflk.calc.hospital;
 
 import org.springframework.stereotype.Service;
+import ru.orlov.medflk.calc.hospital.domain.CalcData;
 
 import java.util.List;
 import java.util.Set;

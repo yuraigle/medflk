@@ -3,7 +3,9 @@ package ru.orlov.medflk.calc.hospital;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import ru.orlov.medflk.calc.hospital.app9.KsgExceptionalSelector;
+import ru.orlov.medflk.calc.hospital.domain.CalcData;
+import ru.orlov.medflk.calc.hospital.domain.GroupKsg;
+import ru.orlov.medflk.calc.hospital.domain.GroupKsgService;
 import ru.orlov.medflk.domain.nsi.V023Packet;
 import ru.orlov.medflk.domain.nsi.V023Service;
 import ru.orlov.medflk.jaxb.*;
@@ -20,11 +22,11 @@ import static java.util.Objects.requireNonNullElse;
 public class CalculatorService {
 
     private final V023Service v023Service;
-    private final KsgGrouperService ksgGrouperService;
+    private final GroupKsgService groupKsgService;
     private final KsgMathsService ksgMathsService;
     private final InterruptReasonsService interruptReasonsService;
     private final PriorityReasonsService priorityReasonsService;
-    private final KsgExceptionalSelector ksgExceptionalSelector;
+    private final ExceptionalReasonsService exceptionalReasonsService;
 
     public void calcFile(ZlList zlList, PersList persList) {
         for (Zap zap : zlList.getZapList()) {
@@ -60,7 +62,7 @@ public class CalculatorService {
             Integer kd = sl.getKd(); // кол-во койко-дней
 
             // 8.2.5 на третьем этапе осуществляется фильтрация основной таблицы "Группировщик"
-            List<GroupKsg> ksgList = ksgGrouperService.findAllPossibleKsg(sl, pers, uslOk, kd);
+            List<GroupKsg> ksgList = groupKsgService.findAllPossibleKsg(sl, pers, uslOk, kd);
 
             // и заполнение временной таблицы значениями.
             for (GroupKsg gKsg : ksgList) {
@@ -100,7 +102,7 @@ public class CalculatorService {
 
             // проставляем исключительность
             for (CalcData c : calcData) {
-                String reason = ksgExceptionalSelector
+                String reason = exceptionalReasonsService
                         .findExceptionalReason(zap.getZSl(), sl.getSlId(), c.getNKsg());
                 c.setExceptionalReason(reason);
             }

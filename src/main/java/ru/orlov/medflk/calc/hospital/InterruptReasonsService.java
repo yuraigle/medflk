@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/**
+ * 4.1. Список причин, по которым случай считается прерванным
+ */
+
 @Log4j2
 @Service
 public class InterruptReasonsService {
@@ -23,7 +27,6 @@ public class InterruptReasonsService {
     // КСГ случаев лечения хронического вирусного гепатита B и C
     private final Pattern rxChronGepBC = Pattern.compile("^ds12\\.02[0-8]$");
 
-    // 4.1 Список причин, по которым случай считается прерванным
     public Set<String> findInterruptReasons(
             ZSl zSl, String slId, Integer kd, String nKsg, Set<String> nKsgPossible, List<String> critList
     ) {

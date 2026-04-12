@@ -1,8 +1,8 @@
 package ru.orlov.medflk.calc.hospital.app9;
 
 import org.springframework.stereotype.Service;
-import ru.orlov.medflk.calc.hospital.GroupKsg;
-import ru.orlov.medflk.calc.hospital.KsgGrouperRepo;
+import ru.orlov.medflk.calc.hospital.domain.GroupKsg;
+import ru.orlov.medflk.calc.hospital.domain.GroupKsgRepo;
 import ru.orlov.medflk.jaxb.Sl;
 import ru.orlov.medflk.jaxb.Usl;
 
@@ -19,7 +19,7 @@ public class ExceptionalChildBirth {
     private final Set<String> uslChildBirth013;
     private final Set<String> uslNewBorn003;
 
-    public ExceptionalChildBirth(KsgGrouperRepo groupKsgService) {
+    public ExceptionalChildBirth(GroupKsgRepo groupKsgService) {
         uslNewBorn003 = Set.of("B01.001.006", "B01.001.009", "B02.001.002",
                 "A16.20.007", "A16.20.015", "A16.20.023", "A16.20.024", "A16.20.030");
 

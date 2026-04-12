@@ -1,7 +1,8 @@
-package ru.orlov.medflk.calc.hospital.app9;
+package ru.orlov.medflk.calc.hospital;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.orlov.medflk.calc.hospital.app9.ExceptionalChildBirth;
 import ru.orlov.medflk.jaxb.Sl;
 import ru.orlov.medflk.jaxb.ZSl;
 
@@ -10,9 +11,14 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNullElse;
 
+/**
+ * Приложение 9. ОСОБЕННОСТИ ФОРМИРОВАНИЯ ОТДЕЛЬНЫХ КСГ
+ * Алгоритмы формирования отдельных групп, имеющих определенные особенности.
+ */
+
 @Service
 @RequiredArgsConstructor
-public class KsgExceptionalSelector {
+public class ExceptionalReasonsService {
 
     private final ExceptionalChildBirth childBirth;
 

@@ -1,4 +1,4 @@
-package ru.orlov.medflk.calc.hospital;
+package ru.orlov.medflk.calc.hospital.domain;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.*;
@@ -14,11 +14,11 @@ import java.util.List;
 
 @Log4j2
 @Repository
-public class KsgGrouperRepo {
+public class GroupKsgRepo {
 
     private final List<GroupKsg> groupKsgList = new ArrayList<>();
 
-    public KsgGrouperRepo() {
+    public GroupKsgRepo() {
         File nsiDir = new File("nsi");
         if (!nsiDir.exists() && !nsiDir.mkdir()) {
             throw new RuntimeException("Не удалось создать каталог " + nsiDir.getAbsolutePath());

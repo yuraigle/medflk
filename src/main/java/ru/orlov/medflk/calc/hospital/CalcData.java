@@ -1,8 +1,10 @@
 package ru.orlov.medflk.calc.hospital;
 
 import lombok.Data;
+import ru.orlov.medflk.jaxb.Sl;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +14,7 @@ import static org.apache.commons.lang3.StringUtils.right;
 @Data
 public class CalcData {
     private Integer nZap;
-    private String slId;
+    private Sl sl;
     private String nKsg;
     private BigDecimal koefZ;
     private BigDecimal sumKsg;
@@ -20,21 +22,31 @@ public class CalcData {
 
     private Integer priority = 0;
     private String priorityReason;
-    private String specialReason;
+    private String exceptionalReason;
     private Set<String> interruptReasons = new HashSet<>();
     private Set<String> paymentReason = new HashSet<>();
+    private GroupKsg gKsg;
+
+    private final DateTimeFormatter dmy = DateTimeFormatter.ofPattern("dd.MM.yy");
+
+    public static String toStringHeader() {
+        return "SL_ID|DATES            |DS|N_KSG   |KF_Z|  SUM_KSG|PRIOR|EXC|PR|K2";
+    }
 
     @Override
     public String toString() {
+        String slId = sl.getSlId();
+        String slIdFmt = slId.length() >= 5 ? ".." + right(slId, 3) : leftPad(slId, 5);
+        String datesFmt = sl.getDate1().format(dmy) + "-" + sl.getDate2().format(dmy);
         return """
-                SL_ID=%s | N_KSG=%s | KZ=%s | SUM1=%s | PRIOR=%s%s | SPEC=%s | PR=%s | M_KSG=%s
+                %s|%s| %s|%s|%s|%s|%s%s |%s |%s|%s
                 """.formatted(
-                slId.length() >= 5 ? ".." + right(slId, 3) : leftPad(slId, 5),
-                nKsg, koefZ, String.format("%9.2f", sumKsg), String.format("%2d", priority),
+                slIdFmt, datesFmt, sl.getDs1().substring(0, 1), nKsg, koefZ,
+                String.format("%9.2f", sumKsg), String.format("%2d", priority),
                 priorityReason == null ? "  " : "." + priorityReason,
-                specialReason == null ? "  " : leftPad(specialReason, 2),
+                exceptionalReason == null ? "  " : leftPad(exceptionalReason, 2),
                 leftPad(String.join("", interruptReasons), 2),
                 leftPad(String.join("", paymentReason), 2)
-        ).trim().replaceAll("\\n", "");
+        ).replaceAll("\\n", "");
     }
 }

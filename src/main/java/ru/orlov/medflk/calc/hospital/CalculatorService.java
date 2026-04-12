@@ -3,6 +3,7 @@ package ru.orlov.medflk.calc.hospital;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import ru.orlov.medflk.calc.hospital.app9.KsgExceptionalSelector;
 import ru.orlov.medflk.domain.nsi.V023Packet;
 import ru.orlov.medflk.domain.nsi.V023Service;
 import ru.orlov.medflk.jaxb.*;
@@ -21,14 +22,16 @@ public class CalculatorService {
     private final V023Service v023Service;
     private final KsgGrouperService ksgGrouperService;
     private final KsgMathsService ksgMathsService;
-    private final InterruptedReasonsService interruptedReasonsService;
+    private final InterruptReasonsService interruptReasonsService;
+    private final PriorityReasonsService priorityReasonsService;
+    private final KsgExceptionalSelector ksgExceptionalSelector;
 
     public void calcFile(ZlList zlList, PersList persList) {
         for (Zap zap : zlList.getZapList()) {
             Integer uslOk = zap.getZSl().getUslOk();
             boolean isHosp = uslOk != null && List.of(1, 2).contains(uslOk);
 
-            if (isHosp && zap.getNZap() == 219) {
+            if (isHosp && zap.getNZap() == 33) {
                 Pers pers = persList.getPersList().stream()
                         .filter(p -> Objects.equals(p.getIdPac(), zap.getPacient().getIdPac()))
                         .findFirst().orElseThrow();
@@ -72,25 +75,38 @@ public class CalculatorService {
 
                 CalcData c = new CalcData();
                 c.setNZap(zap.getNZap());
-                c.setSlId(sl.getSlId());
+                c.setSl(sl);
                 c.setNKsg(gKsg.getNKsg());
                 c.setKoefZ(v023.getKoefZ());
                 c.setSumKsg(sumWithKsg);
+                c.setGKsg(gKsg);
 
                 calcData.add(c);
             }
 
             // проставляем флаги прерванности
             Set<String> possibleKsg = calcData.stream().map(CalcData::getNKsg).collect(Collectors.toSet());
-            Set<String> critList = new HashSet<>(requireNonNullElse(ksgKpg.getCritList(), Collections.emptyList()));
+            List<String> critList = requireNonNullElse(ksgKpg.getCritList(), Collections.emptyList());
             for (CalcData c : calcData) {
-                Set<String> reasons = interruptedReasonsService
-                        .findInterruptedReasons(zap.getZSl(), sl.getSlId(), kd, c.getNKsg(), possibleKsg, critList);
+                Set<String> reasons = interruptReasonsService
+                        .findInterruptReasons(zap.getZSl(), sl.getSlId(), kd, c.getNKsg(), possibleKsg, critList);
                 c.getInterruptReasons().addAll(reasons);
             }
 
+            // проставляем приоритеты
+            for (CalcData c : calcData) {
+                priorityReasonsService.checkPriority(c, possibleKsg, zap.getZSl().getRslt());
+            }
+
+            // проставляем исключительность
+            for (CalcData c : calcData) {
+                String reason = ksgExceptionalSelector
+                        .findExceptionalReason(zap.getZSl(), sl.getSlId(), c.getNKsg());
+                c.setExceptionalReason(reason);
+            }
         }
 
+        log.info(CalcData.toStringHeader());
         calcData.forEach(log::info);
     }
 

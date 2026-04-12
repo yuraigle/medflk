@@ -8,14 +8,24 @@ import ru.orlov.medflk.jaxb.ZSl;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @Log4j2
 @Service
-public class InterruptedReasonsService {
+public class InterruptReasonsService {
+
+    // для случаев мед реабилитации по этим КСГ определена норма длительности
+    private final List<String> reabWithSpecialKdKsgList = List.of("""
+            st37.002 st37.003 st37.006 st37.007 st37.024 st37.025 st37.026 st37.027
+            st37.028 st37.029 st37.030 st37.031 ds37.017 ds37.018 ds37.019
+            """.split("[ \n]"));
+
+    // КСГ случаев лечения хронического вирусного гепатита B и C
+    private final Pattern rxChronGepBC = Pattern.compile("^ds12\\.02[0-8]$");
 
     // 4.1 Список причин, по которым случай считается прерванным
-    public Set<String> findInterruptedReasons(
-            ZSl zSl, String slId, Integer kd, String nKsg, Set<String> nKsgPossible, Set<String> critList
+    public Set<String> findInterruptReasons(
+            ZSl zSl, String slId, Integer kd, String nKsg, Set<String> nKsgPossible, List<String> critList
     ) {
         Set<String> reasons = new HashSet<>();
 
@@ -69,16 +79,9 @@ public class InterruptedReasonsService {
     }
 
     // 9. случаи медицинской реабилитации по КСГ с длительностью лечения менее...
-    private boolean isShortRehab(String nKsg, Integer kd, Set<String> critList) {
-
-        // для случаев мед реабилитации по этим КСГ определена норма длительности
-        final List<String> reabWithSpecialKdKsgList = List.of("""
-                st37.002 st37.003 st37.006 st37.007 st37.024 st37.025 st37.026 st37.027
-                st37.028 st37.029 st37.030 st37.031 ds37.017 ds37.018 ds37.019
-                """.split("[ \n]"));
-
+    private boolean isShortRehab(String nKsg, Integer kd, List<String> critList) {
         boolean isRehab = reabWithSpecialKdKsgList.contains(nKsg);
-        boolean isChronGepBC = nKsg.matches("^ds12\\.02[0-7]$");
+        boolean isChronGepBC = rxChronGepBC.matcher(nKsg).matches();
 
         if (isRehab || isChronGepBC) {
             int normDays = 0;

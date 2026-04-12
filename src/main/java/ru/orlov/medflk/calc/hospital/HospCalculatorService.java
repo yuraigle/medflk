@@ -16,10 +16,15 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNullElse;
 
+/**
+ * Класс реализует расчёт стоимости случаев оказания медицинской помощи
+ * в стационаре, согласно Методическим Рекомендациям от 2026 года
+ */
+
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class CalculatorService {
+public class HospCalculatorService {
 
     private final V023Service v023Service;
     private final GroupKsgService groupKsgService;

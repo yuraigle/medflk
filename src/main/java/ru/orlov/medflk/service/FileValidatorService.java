@@ -3,7 +3,7 @@ package ru.orlov.medflk.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import ru.orlov.medflk.calc.hospital.CalculatorService;
+import ru.orlov.medflk.calc.hospital.HospCalculatorService;
 import ru.orlov.medflk.controller.CheckTabController;
 import ru.orlov.medflk.domain.CheckFact;
 import ru.orlov.medflk.jaxb.FlkErr;
@@ -23,7 +23,7 @@ public class FileValidatorService {
     private final RegistryReaderService registryReaderService;
     private final SchemaValidationService schemaValidationService;
     private final Q015ValidationService q015ValidationService;
-    private final CalculatorService calculatorService;
+    private final HospCalculatorService hospCalculatorService;
 
     public FlkP validate(File zip, boolean verbose) {
         FlkP flkP = new FlkP(zip.getName());
@@ -70,7 +70,7 @@ public class FileValidatorService {
             }
 
             q015ValidationService.validate(zlList, persList, flkP, verbose);
-            calculatorService.calcFile(zlList, persList);
+            hospCalculatorService.calcFile(zlList, persList);
         } catch (Exception e) {
             CheckFact fact0 = CheckFact.builder().test("001T.00.0000")
                     .description(e.getMessage()).result("Ошибка").build();

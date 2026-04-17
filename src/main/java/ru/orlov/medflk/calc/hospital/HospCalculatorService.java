@@ -12,6 +12,7 @@ import ru.orlov.medflk.domain.nsi.V023Service;
 import ru.orlov.medflk.jaxb.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -42,19 +43,39 @@ public class HospCalculatorService {
         Map<String, Pers> persMap = new HashMap<>();
         persList.getPersList().forEach(p -> persMap.put(p.getIdPac(), p));
 
-        for (Zap zap : zlList.getZapList()) {
+        int i = 0;
+        for (Zap zap : zlList.getZapList().stream().sorted(Comparator.comparing(Zap::getNZap)).toList()) {
             Integer uslOk = zap.getZSl().getUslOk();
             boolean isHosp = uslOk != null && List.of(1, 2).contains(uslOk);
             if (!isHosp) continue;
 
             Pers pers = persMap.get(zap.getPacient().getIdPac());
-            if (zap.getNZap() == 33) {
-                calcZapHospital(zap, pers);
+            List<CalcData> calcData = calcZapHospital(zap, pers);
+
+            boolean isCorrect = calcData.stream()
+                    .filter(CalcData::getSelected)
+                    .allMatch(c -> {
+                        if (!c.getPaymentReason().isEmpty()) {
+                            return c.getSumMo().compareTo(c.getSumTotal()) == 0;
+                        } else {
+                            return c.getSumMo().compareTo(BigDecimal.ZERO) == 0;
+                        }
+                    });
+
+            if (!isCorrect) {
+                log.info("N_ZAP={}", zap.getNZap());
+                log.info(CalcData.toStringHeader());
+                calcData.forEach(log::info);
+                break;
             }
+
+            i++;
         }
+
+        log.info("{} passed", i);
     }
 
-    public void calcZapHospital(Zap zap, Pers pers) {
+    public List<CalcData> calcZapHospital(Zap zap, Pers pers) {
         Integer uslOk = zap.getZSl().getUslOk();
         List<CalcData> calcData = new ArrayList<>();
 
@@ -141,7 +162,7 @@ public class HospCalculatorService {
         for (CalcData c : calcData) {
             boolean isInterrupted = !c.getInterruptReasons().isEmpty();
             BigDecimal koef = !isInterrupted ? BigDecimal.ONE : findInterruptedKoef(c.getKd(), c.getNKsg());
-            c.setSumTotal(c.getSumKsg().multiply(koef).add(c.getSumDial()));
+            c.setSumTotal(c.getSumKsg().multiply(koef).add(c.getSumDial()).setScale(2, RoundingMode.HALF_UP));
         }
 
         // выбираем КСГ для каждого случая
@@ -170,8 +191,7 @@ public class HospCalculatorService {
                     .ifPresent(c -> c.getPaymentReason().add("0"));
         }
 
-        log.info(CalcData.toStringHeader());
-        calcData.forEach(log::info);
+        return calcData;
     }
 
     // коэффициент принимается регионально

@@ -2,6 +2,7 @@ package ru.orlov.medflk.calc.hospital;
 
 import org.springframework.stereotype.Service;
 import ru.orlov.medflk.calc.hospital.domain.CalcData;
+import ru.orlov.medflk.jaxb.Sl;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -11,6 +12,7 @@ import java.util.List;
 public class MultiKsgReasonsService {
 
     public void fillMultiKsgReasons(List<CalcData> calcData) {
+        String mainSlId = guessMainSlId(calcData);
 
         // 6. дородовая госпитализация
         List<String> newBornSlIdList = calcData.stream()
@@ -38,5 +40,26 @@ public class MultiKsgReasonsService {
                     .forEach(c -> c.getPaymentReason().add("6")); // и последние роды
         }
 
+        // 9. проведение антимикробной терапии
+        List<CalcData> amtList = calcData.stream()
+                .filter(c -> c.getNKsg().matches("^st36\\.05[0-4]$"))
+                .toList();
+        if (!amtList.isEmpty()) {
+            amtList.forEach(c -> c.getPaymentReason().add("9")); // оплачивается амт
+            calcData.stream().filter(c -> c.getSl().getSlId().equals(mainSlId))
+                    .forEach(c -> c.getPaymentReason().add("9")); // и основной случай
+        }
+
+    }
+
+    // "Основная" КСГ, оказание медицинской помощи по которой послужило поводом для госпитализации
+    private String guessMainSlId(List<CalcData> calcData) {
+        return calcData.stream().map(CalcData::getSl)
+                .sorted(Comparator.comparing(Sl::getDate1) // самый ранний
+                        .thenComparing(Comparator.comparing(Sl::getDate2).reversed())
+                        // если даты совпадают, "основной" у ЕЦП имеет длинный ID
+                        .thenComparing(Comparator.comparingInt((Sl s) -> s.getSlId().length()).reversed()))
+                .map(Sl::getSlId)
+                .findFirst().orElse(null);
     }
 }

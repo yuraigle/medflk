@@ -2,6 +2,7 @@ package ru.orlov.medflk.calc.hospital;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.orlov.medflk.calc.hospital.app9.ExceptionalAmt;
 import ru.orlov.medflk.calc.hospital.app9.ExceptionalChildBirth;
 import ru.orlov.medflk.jaxb.Sl;
 import ru.orlov.medflk.jaxb.ZSl;
@@ -21,6 +22,7 @@ import static java.util.Objects.requireNonNullElse;
 public class ExceptionalReasonsService {
 
     private final ExceptionalChildBirth childBirth;
+    private final ExceptionalAmt amtEx;
 
     public String findExceptionalReason(ZSl zSl, String slId, String nKsg) {
         Sl sl = zSl.getSlList().stream()
@@ -34,6 +36,13 @@ public class ExceptionalReasonsService {
         // 3. Особенности формирования КСГ акушерско-гинекологического профиля
         if (ds1.startsWith("O") && uslOk == 1 && childBirth.isExceptional(sl, nKsg)) {
             return "3";
+        }
+
+        // 19. Особенности формирования КСГ st36.050 - st36.054 для случаев АМТ
+        if (critList.stream().anyMatch(s -> s.startsWith("amt"))
+                && amtEx.isExceptional(zSl, sl.getSlId(), nKsg)
+        ) {
+            return "19";
         }
 
         return null;

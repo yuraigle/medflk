@@ -35,15 +35,16 @@ public class HospCalculatorService {
     private final MultiKsgReasonsService multiKsgReasonsService;
 
     public void calcFile(ZlList zlList, PersList persList) {
+        Map<String, Pers> persMap = new HashMap<>();
+        persList.getPersList().forEach(p -> persMap.put(p.getIdPac(), p));
+
         for (Zap zap : zlList.getZapList()) {
             Integer uslOk = zap.getZSl().getUslOk();
             boolean isHosp = uslOk != null && List.of(1, 2).contains(uslOk);
+            if (!isHosp) continue;
 
-            if (isHosp && zap.getNZap() == 33) {
-                Pers pers = persList.getPersList().stream()
-                        .filter(p -> Objects.equals(p.getIdPac(), zap.getPacient().getIdPac()))
-                        .findFirst().orElseThrow();
-
+            Pers pers = persMap.get(zap.getPacient().getIdPac());
+            if (zap.getNZap() == 33) {
                 calcZapHospital(zap, pers);
             }
         }
@@ -65,6 +66,8 @@ public class HospCalculatorService {
             BigDecimal basicRate = ksgKpg.getBztsz(); // БС - базовая ставка
             BigDecimal koefD = ksgKpg.getKoefD(); // КД - коэффициент дифференциации
             BigDecimal koefU = ksgKpg.getKoefU(); // КУС_МО - коэффициент уровня/подуровня МО
+
+            BigDecimal sumDial = BigDecimal.ZERO; // todo: сумма диализа
 
             // Это значение надо перепроверить за МО
             Integer kd = sl.getKd(); // кол-во койко-дней
@@ -89,6 +92,7 @@ public class HospCalculatorService {
                 c.setNKsg(gKsg.getNKsg());
                 c.setKoefZ(v023.getKoefZ());
                 c.setSumKsg(sumWithKsg);
+                c.setSumDial(sumDial);
                 c.setGKsg(gKsg);
 
                 calcData1.add(c);
@@ -103,6 +107,17 @@ public class HospCalculatorService {
                 c.getInterruptReasons().addAll(reasons);
             }
 
+            // сумма с учётом прерванности
+            Set<String> uslList = sl.getUslList() == null ? new HashSet<>() :
+                    sl.getUslList().stream().map(Usl::getCodeUsl).collect(Collectors.toSet());
+            for (CalcData c : calcData1) {
+                boolean isInterrupted = !c.getInterruptReasons().isEmpty();
+                boolean isSurgery = uslList.stream().anyMatch(u -> u.startsWith("A16"));
+                boolean isTromb = uslList.stream().anyMatch(u -> u.equals("A25.30.036.001"));
+                BigDecimal koef = !isInterrupted ? BigDecimal.ONE : findInterruptedKoef(kd, isSurgery || isTromb);
+                c.setSumTotal(c.getSumKsg().multiply(koef).add(c.getSumDial()));
+            }
+
             // проставляем приоритеты и исключительность
             for (CalcData c : calcData1) {
                 priorityReasonsService.checkPriority(c, possibleKsg, zap.getZSl().getRslt());
@@ -113,27 +128,41 @@ public class HospCalculatorService {
             }
 
             // выбираем КСГ для случая
-            boolean isExceptional = calcData1.stream().anyMatch(c -> c.getExceptionalReason() != null);
+            boolean isExceptional = calcData1.stream()
+                    .anyMatch(c -> c.getExceptionalReason() != null);
             calcData1.stream()
                     // если особый случай, выбираем только среди исключительных КСГ
                     .filter(c -> !isExceptional || c.getExceptionalReason() != null)
-                    .sorted( // по приоритету, затем по стоимости
-                            Comparator.comparing(CalcData::getPriority).reversed()
+                    // по приоритету, затем по стоимости
+                    .min(Comparator.comparing(CalcData::getPriority).reversed()
                             .thenComparing(Comparator.comparing(CalcData::getSumKsg).reversed())
                     )
-                    .findFirst()
                     .ifPresent(c -> c.setSelected(true));
 
             calcData.addAll(calcData1);
         }
 
         // проставляем возможность оплаты по двум и более КСГ
-        for (CalcData c : calcData) {
 
+        // По умолчанию только случай с максимальной суммой
+        boolean hasMultiKsg = calcData.stream()
+                .anyMatch(c -> c.getSelected() && !c.getPaymentReason().isEmpty());
+        if (!hasMultiKsg) {
+            calcData.stream().filter(CalcData::getSelected)
+                    .max(Comparator.comparing(CalcData::getSumKsg))
+                    .ifPresent(c -> c.getPaymentReason().add("1"));
         }
 
         log.info(CalcData.toStringHeader());
         calcData.forEach(log::info);
     }
 
+    // коэффициент принимается регионально
+    private BigDecimal findInterruptedKoef(Integer kd, Boolean isHir) {
+        if (isHir) {
+            return BigDecimal.valueOf(kd <= 3 ? 0.8 : 1);
+        } else {
+            return BigDecimal.valueOf(kd <= 3 ? 0.5 : 0.8);
+        }
+    }
 }

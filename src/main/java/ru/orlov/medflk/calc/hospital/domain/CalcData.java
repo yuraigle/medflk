@@ -22,8 +22,9 @@ public class CalcData {
     private Sl sl;
     private String nKsg;
     private BigDecimal koefZ;
-    private BigDecimal sumKsg;
-    private BigDecimal sumDial;
+    private BigDecimal sumKsg = BigDecimal.ZERO;
+    private BigDecimal sumDial = BigDecimal.ZERO;
+    private BigDecimal sumTotal = BigDecimal.ZERO;
 
     private Integer priority = 0;
     private String priorityReason;
@@ -31,21 +32,20 @@ public class CalcData {
     private Set<String> interruptReasons = new HashSet<>();
     private Set<String> paymentReason = new HashSet<>();
     private GroupKsg gKsg;
-    private boolean selected;
+    private Boolean selected = false;
 
-    private final DateTimeFormatter dmy = DateTimeFormatter.ofPattern("dd.MM.yy");
+    private final DateTimeFormatter dmy = DateTimeFormatter.ofPattern("dd.MM");
 
     public static String toStringHeader() {
         // DS - группа диагноза (1-й символ)
         // N_KSG - возможный КСГ, выбранный по базовому алгоритму группировщика
-        // KF_Z - коэффициент затратоёмкости из V023
         // SUM_KSG - сумма случая с прерыванием, если он будет рассчитан по этому КСГ
         // PRIOR - приоритет и причина его установки из Приложения 8
         // EXC - причина особенного алгоритма расчёта из Приложения 9
-        // PR - причина прерванности случая оплаты по КСГ
+        // PPR - причина прерванности случая оплаты по КСГ
         // SEL - флаг выбранного КСГ для случая
         // K2 - флаг оплаты по 1 или нескольким КСГ
-        return "SL_ID|DATES            |DS|N_KSG   |KF_Z|  SUM_KSG|PRIOR|EXC|PR|SEL|K2";
+        return "SL_ID|DATES      |DS|N_KSG   |  SUM_KSG|PRIOR|EXC|PPR|SUM_TOTAL|SEL|K2";
     }
 
     @Override
@@ -54,13 +54,14 @@ public class CalcData {
         String slIdFmt = slId.length() >= 5 ? ".." + right(slId, 3) : leftPad(slId, 5);
         String datesFmt = sl.getDate1().format(dmy) + "-" + sl.getDate2().format(dmy);
         return """
-                %s|%s| %s|%s|%s|%s|%s%s |%s |%s| %s |%s
+                %s|%s| %s|%s|%s|%s%s |%s |%s |%s| %s |%s
                 """.formatted(
-                slIdFmt, datesFmt, sl.getDs1().substring(0, 1), nKsg, koefZ,
+                slIdFmt, datesFmt, sl.getDs1().substring(0, 1), nKsg,
                 String.format("%9.2f", sumKsg), String.format("%2d", priority),
                 priorityReason == null ? "  " : "." + priorityReason,
                 exceptionalReason == null ? "  " : leftPad(exceptionalReason, 2),
                 leftPad(String.join("", interruptReasons), 2),
+                String.format("%9.2f", sumTotal),
                 selected ? "1" : " ",
                 leftPad(String.join("", paymentReason), 2)
         ).replaceAll("\\n", "");

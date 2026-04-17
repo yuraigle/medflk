@@ -1,7 +1,9 @@
 package ru.orlov.medflk.calc.hospital;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import ru.orlov.medflk.calc.hospital.domain.KsgSpecificRepo;
 import ru.orlov.medflk.jaxb.Sl;
 import ru.orlov.medflk.jaxb.ZSl;
 
@@ -16,7 +18,10 @@ import java.util.regex.Pattern;
 
 @Log4j2
 @Service
+@RequiredArgsConstructor
 public class InterruptReasonsService {
+
+    private final KsgSpecificRepo ksgSpecificRepo;
 
     // для случаев мед реабилитации по этим КСГ определена норма длительности
     private final List<String> reabWithSpecialKdKsgList = List.of("""
@@ -68,8 +73,7 @@ public class InterruptReasonsService {
         оптимальной длительностью лечения до 3 дней включительно, – выбор КСГ
         определяется с учетом доли оплаты прерванного случая
          */
-        Set<String> ksgOptimalShort = Set.of("wtf"); // todo Приложение № 8 к Программе
-        boolean isShort = ksgOptimalShort.containsAll(nKsgPossible);
+        boolean isShort = ksgSpecificRepo.getKsgShortList().containsAll(nKsgPossible);
         if (kd <= 3 && reasons.isEmpty() && !isShort) {
             reasons.add("8"); // по кол-ву дней
         }

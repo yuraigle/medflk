@@ -20,11 +20,13 @@ import static org.apache.commons.lang3.StringUtils.right;
 public class CalcData {
     private Integer nZap;
     private Sl sl;
+    private Integer kd;
     private String nKsg;
     private BigDecimal koefZ;
     private BigDecimal sumKsg = BigDecimal.ZERO;
     private BigDecimal sumDial = BigDecimal.ZERO;
     private BigDecimal sumTotal = BigDecimal.ZERO;
+    private BigDecimal sumMo = BigDecimal.ZERO; // сумма от МО, для отладки
 
     private Integer priority = 0;
     private String priorityReason;
@@ -45,7 +47,7 @@ public class CalcData {
         // PPR - причина прерванности случая оплаты по КСГ
         // SEL - флаг выбранного КСГ для случая
         // K2 - флаг оплаты по 1 или нескольким КСГ
-        return "SL_ID|DATES      |DS|N_KSG   |  SUM_KSG|PRIOR|EXC|PPR|SUM_TOTAL|SEL|K2";
+        return "SL_ID|DATES      |KD|DS|N_KSG   |  SUM_KSG|PRIOR|EXC|PPR|SUM_TOTAL|SEL|K2|   SUM_MO";
     }
 
     @Override
@@ -54,16 +56,17 @@ public class CalcData {
         String slIdFmt = slId.length() >= 5 ? ".." + right(slId, 3) : leftPad(slId, 5);
         String datesFmt = sl.getDate1().format(dmy) + "-" + sl.getDate2().format(dmy);
         return """
-                %s|%s| %s|%s|%s|%s%s |%s |%s |%s| %s |%s
+                %s|%s|%s| %s|%s|%s|%s%s |%s |%s |%s| %s |%s|%s
                 """.formatted(
-                slIdFmt, datesFmt, sl.getDs1().substring(0, 1), nKsg,
+                slIdFmt, datesFmt, String.format("%2d", kd), sl.getDs1().substring(0, 1), nKsg,
                 String.format("%9.2f", sumKsg), String.format("%2d", priority),
                 priorityReason == null ? "  " : "." + priorityReason,
                 exceptionalReason == null ? "  " : leftPad(exceptionalReason, 2),
                 leftPad(String.join("", interruptReasons), 2),
                 String.format("%9.2f", sumTotal),
                 selected ? "1" : " ",
-                leftPad(String.join("", paymentReason), 2)
+                leftPad(String.join("", paymentReason), 2),
+                sumMo.compareTo(BigDecimal.ZERO) > 0 ? String.format("%9.2f", sumMo) : ""
         ).replaceAll("\\n", "");
     }
 }

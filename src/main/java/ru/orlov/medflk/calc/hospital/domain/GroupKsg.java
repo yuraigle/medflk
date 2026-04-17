@@ -24,6 +24,6 @@ public class GroupKsg {
     private String nKsg;
     private Integer ngr;
 
-    // не используется в группировщике, но тоже лежит в Excel
-    private BigDecimal dZp;
+    // не используется в группировке, но тоже нужно
+    private BigDecimal dZp; // из группировщика
 }

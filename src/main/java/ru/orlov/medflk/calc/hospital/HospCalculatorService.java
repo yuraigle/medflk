@@ -46,7 +46,8 @@ public class HospCalculatorService {
         persList.getPersList().forEach(p -> persMap.put(p.getIdPac(), p));
 
         // эти скорее всего неправильно посчитаны у МО
-        List<Integer> excluded = List.of(104, 216, 374, 398, 1995, 2646);
+//        List<Integer> excluded = List.of(104, 216, 374, 398, 1995, 2646);
+        List<Integer> excluded = List.of(104, 216, 374, 398, 1995);
 
         int i = 0;
         for (Zap zap : zlList.getZapList().stream().sorted(Comparator.comparing(Zap::getNZap)).toList()) {
@@ -71,7 +72,7 @@ public class HospCalculatorService {
                         }
                     });
 
-            List<Integer> testZapList = List.of(-1);
+            List<Integer> testZapList = List.of(-1, 1407);
             if (!isCorrect || testZapList.contains(zap.getNZap())) {
                 log.info(CalcData.toStringHeader());
                 calcData.stream()

@@ -78,6 +78,17 @@ public class MultiKsgReasonsService {
             }
         }
 
+        // 8. иммунизация против РСВИ
+        List<String> rsviKsg = List.of("st36.025", "ds36.012", "st36.026", "ds36.013");
+        List<CalcData> irsList = calcData.stream()
+                .filter(c -> rsviKsg.contains(c.getNKsg()))
+                .toList();
+        if (!irsList.isEmpty()) {
+            irsList.forEach(c -> c.getPaymentReason().add("8")); // оплачивается ирс
+            calcData.stream().filter(c -> c.getSl().getSlId().equals(mainSlId))
+                    .forEach(c -> c.getPaymentReason().add("0")); // и основной случай
+        }
+
         // 9. проведение антимикробной терапии
         List<CalcData> amtList = calcData.stream()
                 .filter(c -> c.getNKsg().matches("^st36\\.05[0-4]$"))

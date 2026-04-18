@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.orlov.medflk.calc.hospital.app9.ExceptionalAmt;
 import ru.orlov.medflk.calc.hospital.app9.ExceptionalChildBirth;
+import ru.orlov.medflk.calc.hospital.app9.ExceptionalPlt;
 import ru.orlov.medflk.jaxb.Sl;
 import ru.orlov.medflk.jaxb.ZSl;
 
@@ -23,6 +24,7 @@ public class ExceptionalReasonsService {
 
     private final ExceptionalChildBirth childBirth;
     private final ExceptionalAmt amtEx;
+    private final ExceptionalPlt pltEx;
 
     public String findExceptionalReason(ZSl zSl, String slId, String nKsg) {
         Sl sl = zSl.getSlList().stream()
@@ -38,9 +40,16 @@ public class ExceptionalReasonsService {
             return "3";
         }
 
+        // 13. Особенности формирования КСГ st29.007 "политравма"
+        if (critList.stream().anyMatch(s -> s.startsWith("plt"))
+                && pltEx.isExceptional(zSl, slId, nKsg)
+        ) {
+            return "13";
+        }
+
         // 19. Особенности формирования КСГ st36.050 - st36.054 для случаев АМТ
         if (critList.stream().anyMatch(s -> s.startsWith("amt"))
-                && amtEx.isExceptional(zSl, sl.getSlId(), nKsg)
+                && amtEx.isExceptional(zSl, slId, nKsg)
         ) {
             return "19";
         }

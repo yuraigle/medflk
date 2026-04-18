@@ -39,6 +39,17 @@ public class MultiKsgReasonsService {
                 .filter(c -> !c.getSl().getDs1().substring(0, 1).equals(finalLastDsGr))
                 .forEach(c -> c.getInterruptReasons().add("2"));
 
+        // 5. Проведение реинфузии аутокрови, ...
+        List<String> reanimationKsg = List.of("st36.009", "st36.010", "st36.011"); // МР 9.18
+        List<CalcData> reanimList = calcData.stream()
+                .filter(c -> reanimationKsg.contains(c.getNKsg()))
+                .toList();
+        if (!reanimList.isEmpty()) {
+            reanimList.forEach(c -> c.getPaymentReason().add("5")); // оплачивается реанимация
+            calcData.stream().filter(c -> c.getSl().getSlId().equals(mainSlId))
+                    .forEach(c -> c.getPaymentReason().add("0")); // и основной случай
+        }
+
         // 6. дородовая госпитализация >=6 дней
         List<String> newBornSlIdList = calcData.stream()
                 .filter(c -> List.of("st02.003", "st02.004").contains(c.getNKsg()))

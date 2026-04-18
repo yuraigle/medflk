@@ -46,7 +46,7 @@ public class HospCalculatorService {
         persList.getPersList().forEach(p -> persMap.put(p.getIdPac(), p));
 
         // эти скорее всего неправильно посчитаны у МО
-        List<Integer> excluded =  List.of(104, 216, 374, 398, 1995, 2646);
+        List<Integer> excluded = List.of(104, 216, 374, 398, 1995, 2646);
 
         int i = 0;
         for (Zap zap : zlList.getZapList().stream().sorted(Comparator.comparing(Zap::getNZap)).toList()) {
@@ -205,7 +205,8 @@ public class HospCalculatorService {
                 .anyMatch(c -> c.getSelected() && !c.getPaymentReason().isEmpty());
         if (!hasMultiKsg) {
             calcData.stream().filter(CalcData::getSelected)
-                    .max(Comparator.comparing(CalcData::getSumSubtotal))
+                    .max(Comparator.comparing(CalcData::getSumSubtotal)
+                            .thenComparing(CalcData::getN)) // МО ставят на последний случай, если суммы равны
                     .ifPresent(c -> c.getPaymentReason().add("0"));
         }
 

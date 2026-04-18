@@ -41,7 +41,6 @@ public class ExceptionalAmt {
                 .stream()
                 .sorted(Comparator.comparing(Sl::getDate1) // самый ранний
                         .thenComparing(Comparator.comparing(Sl::getDate2).reversed())
-                        // если даты совпадают, "основной" у ЕЦП имеет длинный ID
                         .thenComparing(Comparator.comparingInt((Sl s) -> s.getSlId().length()).reversed()))
                 .map(Sl::getSlId)
                 .findFirst().orElse(null);

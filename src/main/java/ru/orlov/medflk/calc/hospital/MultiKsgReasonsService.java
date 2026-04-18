@@ -6,7 +6,9 @@ import ru.orlov.medflk.jaxb.Sl;
 
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MultiKsgReasonsService {
@@ -14,7 +16,30 @@ public class MultiKsgReasonsService {
     public void fillMultiKsgReasons(List<CalcData> calcData) {
         String mainSlId = guessMainSlId(calcData);
 
-        // 6. дородовая госпитализация
+        // 1. перевод с новой группой диагнозов
+        Set<String> dsGrSet = new HashSet<>();
+        Set<Integer> nWithNewDsGr = new HashSet<>();
+        String lastDsGr = null;
+        for (CalcData c : calcData.stream().sorted(Comparator.comparing(CalcData::getN)).toList()) {
+            String dsGr = c.getSl().getDs1().substring(0, 1);
+            if (!dsGrSet.contains(dsGr)) {
+                dsGrSet.add(dsGr);
+                nWithNewDsGr.add(c.getN());
+                lastDsGr = dsGr;
+            }
+        }
+        // оба случая лечения подлежат оплате
+        if (nWithNewDsGr.size() > 1) {
+            calcData.stream().filter(c -> nWithNewDsGr.contains(c.getN()))
+                    .forEach(c -> c.getPaymentReason().add("1"));
+        }
+        // при этом случай до перевода относится к прерванным по 4.1.2
+        String finalLastDsGr = lastDsGr;
+        calcData.stream().filter(c -> c.getPaymentReason().contains("1"))
+                .filter(c -> !c.getSl().getDs1().substring(0, 1).equals(finalLastDsGr))
+                .forEach(c -> c.getInterruptReasons().add("2"));
+
+        // 6. дородовая госпитализация >=6 дней
         List<String> newBornSlIdList = calcData.stream()
                 .filter(c -> List.of("st02.003", "st02.004").contains(c.getNKsg()))
                 .map(c -> c.getSl().getSlId())
@@ -49,7 +74,7 @@ public class MultiKsgReasonsService {
         if (!amtList.isEmpty()) {
             amtList.forEach(c -> c.getPaymentReason().add("9")); // оплачивается амт
             calcData.stream().filter(c -> c.getSl().getSlId().equals(mainSlId))
-                    .forEach(c -> c.getPaymentReason().add("9")); // и основной случай
+                    .forEach(c -> c.getPaymentReason().add("0")); // и основной случай
         }
 
     }

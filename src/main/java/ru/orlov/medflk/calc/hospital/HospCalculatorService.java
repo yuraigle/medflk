@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNullElse;
+import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 
 /**
  * Класс реализует расчёт стоимости случаев оказания медицинской помощи
@@ -44,8 +45,15 @@ public class HospCalculatorService {
         Map<String, Pers> persMap = new HashMap<>();
         persList.getPersList().forEach(p -> persMap.put(p.getIdPac(), p));
 
+        // эти скорее всего неправильно посчитаны у МО
+        List<Integer> excluded =  List.of(104, 216, 374, 398, 1995, 2646);
+
         int i = 0;
         for (Zap zap : zlList.getZapList().stream().sorted(Comparator.comparing(Zap::getNZap)).toList()) {
+            if (excluded.contains(zap.getNZap())) {
+                continue;
+            }
+
             Integer uslOk = zap.getZSl().getUslOk();
             boolean isHosp = uslOk != null && List.of(1, 2).contains(uslOk);
             if (!isHosp) continue;
@@ -63,12 +71,14 @@ public class HospCalculatorService {
                         }
                     });
 
-            List<Integer> excluded =  List.of(104);
-
-            if (!isCorrect && !excluded.contains(zap.getNZap())) {
-                log.info("N_ZAP={}", zap.getNZap());
+            List<Integer> testZapList = List.of(-1);
+            if (!isCorrect || testZapList.contains(zap.getNZap())) {
                 log.info(CalcData.toStringHeader());
-                calcData.forEach(log::info);
+                calcData.stream()
+                        .sorted(Comparator.comparing(CalcData::getN))
+                        .forEach(log::info);
+                log.info("N_ZAP={}, ENP={}", zap.getNZap(),
+                        defaultIfBlank(zap.getPacient().getEnp(), zap.getPacient().getNpolis()));
                 break;
             }
 
@@ -149,6 +159,9 @@ public class HospCalculatorService {
             calcData.addAll(calcData1);
         }
 
+        // проставляем порядок движений
+        fillSlNumeration(calcData);
+
         // проставляем возможность оплаты по двум и более КСГ
         multiKsgReasonsService.fillMultiKsgReasons(calcData);
 
@@ -187,7 +200,7 @@ public class HospCalculatorService {
         calcData.stream().filter(CalcData::getSelected)
                 .forEach(c -> c.setSumDial(hemodialysisService.calcSumDial(c.getSl())));
 
-        // 0. По умолчанию только случай с максимальной суммой
+        // 0. По умолчанию оплачивается только случай с максимальной суммой
         boolean hasMultiKsg = calcData.stream()
                 .anyMatch(c -> c.getSelected() && !c.getPaymentReason().isEmpty());
         if (!hasMultiKsg) {
@@ -239,6 +252,26 @@ public class HospCalculatorService {
             int kdMo = sl.getKd(); // подала МО
 
             return Math.min(kdMo, kdMax);
+        }
+    }
+
+    private void fillSlNumeration(List<CalcData> calcData) {
+        Comparator<Sl> earlierFirst = Comparator.comparing(Sl::getDate1)
+                .thenComparing(Sl::getDate2)
+                .thenComparing(Comparator.comparingInt((Sl s) -> s.getSlId().length()).reversed());
+
+        List<String> slIdsOrdered = calcData.stream()
+                .map(CalcData::getSl)
+                .sorted(earlierFirst)
+                .map(Sl::getSlId)
+                .distinct()
+                .toList();
+
+        for (int i = 0; i < slIdsOrdered.size(); i++) {
+            String slId = slIdsOrdered.get(i);
+            int finalN = i + 1;
+            calcData.stream().filter(c -> c.getSl().getSlId().equals(slId))
+                    .forEach(c -> c.setN(finalN));
         }
     }
 }

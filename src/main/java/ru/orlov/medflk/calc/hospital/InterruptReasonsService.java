@@ -37,6 +37,8 @@ public class InterruptReasonsService {
     ) {
         Set<String> reasons = new HashSet<>();
 
+        /*
+        // todo если роженица лежала с патологией, а потом в родовом, это перевод или нет?
         Sl sl0 = zSl.getSlList().stream()
                 .filter(sl1 -> sl1.getSlId().equals(slId))
                 .findFirst().orElseThrow();
@@ -48,6 +50,7 @@ public class InterruptReasonsService {
         if (hasLaterSl) {
             reasons.add("2"); // есть последующее движение внутри Z_SL
         }
+        */
 
         Integer rslt = zSl.getRslt();
 

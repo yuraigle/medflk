@@ -63,7 +63,9 @@ public class HospCalculatorService {
                         }
                     });
 
-            if (!isCorrect) {
+            List<Integer> excluded =  List.of(104);
+
+            if (!isCorrect && !excluded.contains(zap.getNZap())) {
                 log.info("N_ZAP={}", zap.getNZap());
                 log.info(CalcData.toStringHeader());
                 calcData.forEach(log::info);

@@ -24,20 +24,22 @@ public class MultiKsgReasonsService {
                 .map(c -> c.getSl().getDate2())
                 .max(Comparator.naturalOrder()).orElse(null); // дата родов
 
-        List<String> dsPathologyShortList = List.of("O14.1", "O34.2", "O36.3", "O36.4", "O42.2");
-        List<CalcData> pathologyList = calcData.stream()
-                .filter(c -> c.getNKsg().equals("st02.001"))
-                .filter(c -> c.getKd() >= 6 ||
-                        (c.getKd() >= 2 && dsPathologyShortList.contains(c.getSl().getDs1())))
-                .filter(c -> c.getSl().getDate1().isBefore(dateNewBorn))
-                .toList();
+        if (dateNewBorn != null) {
+            List<String> dsPathologyShortList = List.of("O14.1", "O34.2", "O36.3", "O36.4", "O42.2");
+            List<CalcData> pathologyList = calcData.stream()
+                    .filter(c -> c.getNKsg().equals("st02.001"))
+                    .filter(c -> c.getKd() >= 6 ||
+                            (c.getKd() >= 2 && dsPathologyShortList.contains(c.getSl().getDs1())))
+                    .filter(c -> c.getSl().getDate1().isBefore(dateNewBorn))
+                    .toList();
 
-        if (dateNewBorn != null && !pathologyList.isEmpty()) {
-            pathologyList.forEach(c -> c.getPaymentReason().add("6")); // патология оплачивается
-            calcData.stream()
-                    .filter(c -> newBornSlIdList.contains(c.getSl().getSlId()))
-                    .filter(c -> c.getSl().getDate2().equals(dateNewBorn))
-                    .forEach(c -> c.getPaymentReason().add("6")); // и последние роды
+            if (!pathologyList.isEmpty()) {
+                pathologyList.forEach(c -> c.getPaymentReason().add("6")); // патология оплачивается
+                calcData.stream()
+                        .filter(c -> newBornSlIdList.contains(c.getSl().getSlId()))
+                        .filter(c -> c.getSl().getDate2().equals(dateNewBorn))
+                        .forEach(c -> c.getPaymentReason().add("6")); // и последние роды
+            }
         }
 
         // 9. проведение антимикробной терапии

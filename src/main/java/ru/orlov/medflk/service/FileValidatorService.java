@@ -79,6 +79,8 @@ public class FileValidatorService {
             if (verbose) {
                 CheckTabController.checkFactList.add(fact0);
             }
+
+            e.printStackTrace();
         }
 
         return flkP;

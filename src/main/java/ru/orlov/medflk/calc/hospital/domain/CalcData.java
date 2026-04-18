@@ -30,11 +30,11 @@ public class CalcData {
     private BigDecimal sumMo = BigDecimal.ZERO; // сумма от МО, для отладки
 
     private Integer priority = 0;
-    private String priorityReason;
-    private String exceptionalReason;
+    private String priorityReason = null;
+    private String exceptionalReason = null;
     private Set<String> interruptReasons = new HashSet<>();
     private Set<String> paymentReason = new HashSet<>();
-    private GroupKsg gKsg;
+    private GroupKsg gKsg = null;
     private Boolean selected = false;
 
     private final DateTimeFormatter dmy = DateTimeFormatter.ofPattern("dd.MM");

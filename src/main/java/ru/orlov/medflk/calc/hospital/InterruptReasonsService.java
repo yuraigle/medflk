@@ -33,7 +33,7 @@ public class InterruptReasonsService {
     private final Pattern rxChronGepBC = Pattern.compile("^ds12\\.02[0-8]$");
 
     public Set<String> findInterruptReasons(
-            ZSl zSl, String slId, Integer kd, String nKsg, Set<String> nKsgPossible, List<String> critList
+            ZSl zSl, String slId, Integer kd, String nKsg, List<String> critList
     ) {
         Set<String> reasons = new HashSet<>();
 
@@ -67,13 +67,7 @@ public class InterruptReasonsService {
             reasons.add("6"); // смерть
         }
 
-        /*
-        В случае, если длительность случая составляет 3 дня и менее, при этом
-        хотя бы одна из КСГ во временной таблице не входит в перечень КСГ с
-        оптимальной длительностью лечения до 3 дней включительно, – выбор КСГ
-        определяется с учетом доли оплаты прерванного случая
-         */
-        boolean isShort = ksgSpecificRepo.getKsgShortList().containsAll(nKsgPossible);
+        boolean isShort = ksgSpecificRepo.getKsgShortList().contains(nKsg);
         if (kd <= 3 && reasons.isEmpty() && !isShort) {
             reasons.add("8"); // по кол-ву дней
         }

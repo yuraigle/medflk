@@ -38,6 +38,7 @@ public class HospCalculatorService {
     private final ExceptionalReasonsService exceptionalReasonsService;
     private final MultiKsgReasonsService multiKsgReasonsService;
     private final KsgSpecificRepo ksgSpecificRepo;
+    private final HemodialysisService hemodialysisService;
 
     public void calcFile(ZlList zlList, PersList persList) {
         Map<String, Pers> persMap = new HashMap<>();
@@ -58,7 +59,7 @@ public class HospCalculatorService {
                         if (!c.getPaymentReason().isEmpty()) {
                             return c.getSumMo().compareTo(c.getSumTotal()) == 0;
                         } else {
-                            return c.getSumMo().compareTo(BigDecimal.ZERO) == 0;
+                            return c.getSumMo().compareTo(c.getSumDial()) == 0;
                         }
                     });
 
@@ -92,8 +93,6 @@ public class HospCalculatorService {
             BigDecimal koefD = ksgKpg.getKoefD(); // КД - коэффициент дифференциации
             BigDecimal koefU = ksgKpg.getKoefU(); // КУС_МО - коэффициент уровня/подуровня МО
 
-            BigDecimal sumDial = BigDecimal.ZERO; // todo: сумма диализа
-
             // Это значение надо перепроверить за МО
             Integer kd = calculateKd(sl, zap.getZSl().getUslOk()); // кол-во койко-дней
 
@@ -118,7 +117,6 @@ public class HospCalculatorService {
                 c.setNKsg(gKsg.getNKsg());
                 c.setKoefZ(v023.getKoefZ());
                 c.setSumKsg(sumWithKsg);
-                c.setSumDial(sumDial);
                 c.setGKsg(gKsg);
 
                 if (gKsg.getNKsg().equals(sl.getKsgKpg().getNKsg())) {
@@ -133,7 +131,7 @@ public class HospCalculatorService {
             List<String> critList = requireNonNullElse(ksgKpg.getCritList(), Collections.emptyList());
             for (CalcData c : calcData1) {
                 Set<String> reasons = interruptReasonsService
-                        .findInterruptReasons(zap.getZSl(), sl.getSlId(), kd, c.getNKsg(), possibleKsg, critList);
+                        .findInterruptReasons(zap.getZSl(), sl.getSlId(), kd, c.getNKsg(), critList);
                 c.getInterruptReasons().addAll(reasons);
             }
 
@@ -155,14 +153,15 @@ public class HospCalculatorService {
         // При оплате по 2 КСГ по основаниям 2-10 случай до перевода не считается прерванным по 2-4
         calcData.stream()
                 .filter(c -> c.getPaymentReason() != null && !c.getPaymentReason().isEmpty())
-                .filter(c -> c.getPaymentReason().stream().map(Integer::parseInt).anyMatch(i -> i >= 2 && i <= 10))
+                .filter(c -> c.getPaymentReason().stream().map(Integer::parseInt)
+                        .anyMatch(i -> i >= 2 && i <= 10))
                 .forEach(c -> c.getInterruptReasons().removeAll(Set.of("2", "3", "4")));
 
-        // сумма с учётом прерванности
+        // subtotal: сумма по КСГ с учётом прерванности
         for (CalcData c : calcData) {
             boolean isInterrupted = !c.getInterruptReasons().isEmpty();
             BigDecimal koef = !isInterrupted ? BigDecimal.ONE : findInterruptedKoef(c.getKd(), c.getNKsg());
-            c.setSumTotal(c.getSumKsg().multiply(koef).add(c.getSumDial()).setScale(2, RoundingMode.HALF_UP));
+            c.setSumSubtotal(c.getSumKsg().multiply(koef).setScale(2, RoundingMode.HALF_UP));
         }
 
         // выбираем КСГ для каждого случая
@@ -177,19 +176,39 @@ public class HospCalculatorService {
                     .filter(c -> !isExceptional || c.getExceptionalReason() != null)
                     // по приоритету, затем по стоимости
                     .min(Comparator.comparing(CalcData::getPriority).reversed()
-                            .thenComparing(Comparator.comparing(CalcData::getSumKsg).reversed())
+                            .thenComparing(Comparator.comparing(CalcData::getSumSubtotal).reversed())
                     )
                     .ifPresent(c -> c.setSelected(true));
         }
+
+        // добавляем сумму диализа
+        calcData.stream().filter(CalcData::getSelected)
+                .forEach(c -> c.setSumDial(hemodialysisService.calcSumDial(c.getSl())));
 
         // 0. По умолчанию только случай с максимальной суммой
         boolean hasMultiKsg = calcData.stream()
                 .anyMatch(c -> c.getSelected() && !c.getPaymentReason().isEmpty());
         if (!hasMultiKsg) {
             calcData.stream().filter(CalcData::getSelected)
-                    .max(Comparator.comparing(CalcData::getSumKsg))
+                    .max(Comparator.comparing(CalcData::getSumSubtotal))
                     .ifPresent(c -> c.getPaymentReason().add("0"));
         }
+
+        // Если МО подала сумму 0.00 по ЗСЛ, соглашаемся (?)
+        if (zap.getZSl().getSumv().compareTo(BigDecimal.ZERO) == 0) {
+            calcData.forEach(c -> c.getPaymentReason().clear());
+        }
+
+        calcData.forEach(c -> {
+            if (c.getSelected()) {
+                BigDecimal total = BigDecimal.ZERO;
+                if (!c.getPaymentReason().isEmpty()) {
+                    total = total.add(c.getSumSubtotal());
+                }
+                total = total.add(c.getSumDial());
+                c.setSumTotal(total);
+            }
+        });
 
         return calcData;
     }
